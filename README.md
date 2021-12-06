@@ -1,4 +1,4 @@
-<img src="assets/csd-python-api-logo.png" width="250px">
+<img src="assets/csd-python-api-logo.png" width="125px">
 
 # CSD - Python API Scripts
 
