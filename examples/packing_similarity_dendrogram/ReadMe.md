@@ -158,5 +158,5 @@ The tool considers only the heaviest component in each crystal structure to enab
 with pure forms. Results for _Z_ ’ > 1 systems may not fully reflect differences between structures as the best match is
 retained by default in the packing-similarity analysis.
 
-##Authors: 
+## Authors: 
 _Anthony Reilly(2016)_
