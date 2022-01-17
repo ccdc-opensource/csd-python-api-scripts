@@ -1,0 +1,28 @@
+---
+# This status check is updated on all repositories by the moan.py script
+# in the github-repository-management repository.
+# Changes in this file will be overwritten periodically.
+# To make changes persistent, please mark this repository with update_status_check: false
+# or make your changes in the github-repository-management/status_check.yml file
+name: Common CCDC PR Checks
+on: [pull_request]
+jobs:
+  ccdc-commit-hooks-on-pull-request-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Get the commit message
+        run: |
+          echo 'commit_message<<EOF' >> $GITHUB_ENV
+          git log --format=%B -n 1 ${{ github.event.after }} >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: Check pull request files with commit hook action
+        uses: ccdc-opensource/commit-hooks@main
+        with:
+          commitMessage: ${{ env.commit_message }}
