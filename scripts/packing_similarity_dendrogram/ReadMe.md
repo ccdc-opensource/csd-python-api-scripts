@@ -14,6 +14,9 @@ CSD Python API (v. 1.0 or later), `matplotlib` and standard python packages.
 
 > Instructions on running example scripts through the CSD-Python API miniconda installation can be found in [the repository ReadMe.md](https://github.com/ccdc-opensource/csd-python-api-scripts#readme)
 
+## Licensing Requirements 
+\#TODO [LIST]
+
 ## Usage and Output:
 
 `python Packing_Similarity_Dendrogram.py -h` will show the help text:
