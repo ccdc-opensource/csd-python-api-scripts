@@ -10,7 +10,7 @@ the [CSD-Python API ](https://www.ccdc.cam.ac.uk/solutions/csd-core/components/c
 
 The purpose of this platform is to distribute knowledge and allow for scientific collaborations. Scripts are provided on an as-is basis and while their use is not supported we do welcome feedback on potential improvements. All scripts are tested against the latest version of the CSD Python API as installed with the CSD Portfolio.
 
-> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk.](support@ccdc.cam.ac.uk.)
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
 
 ## Content 
 
@@ -25,6 +25,8 @@ The purpose of this platform is to distribute knowledge and allow for scientific
 ## Licensing Requirements 
 
 Valid CSD Portfolio licence is required for all scripts, some will require additional licence levels for use, such as Discovery and Materials. Requirements are clearly displayed in the `ReadMe` that accompanies each script. 
+
+Don’t have a licence? Contact us [here to request a quote or demonstration.](https://www.ccdc.cam.ac.uk/theccdcprofile/contactus/)
 
 ## Downloading Scripts
 
@@ -42,8 +44,8 @@ This section will focus on how to download multiple or individual scripts:
 #### TO DO - write instructions on how to download
 
 
-## Running scripts through the CSD-Python API Miniconda installed 
+## Running scripts through the CSD Python API Miniconda installed 
 
-This requires you to already have the CSD-Python API installed. 
+This requires you to already have the CSD Python API installed. 
 
 ##### TODO - Write instructions 

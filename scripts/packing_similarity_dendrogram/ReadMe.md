@@ -163,3 +163,5 @@ retained by default in the packing-similarity analysis.
 
 ## Authors: 
 _Anthony Reilly(2016)_
+
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
