@@ -12,10 +12,11 @@ another.
 
 CSD Python API (v. 1.0 or later), `matplotlib` and standard python packages.
 
-> Instructions on running example scripts through the CSD-Python API miniconda installation can be found in [the repository ReadMe.md](https://github.com/ccdc-opensource/csd-python-api-scripts#readme)
+> Instructions on running example scripts through the CSD Python API miniconda installation can be found in [the repository ReadMe.md](https://github.com/ccdc-opensource/csd-python-api-scripts#readme)
 
 ## Licensing Requirements 
-\#TODO [LIST]
+
+- CSD-Materials or CSD-Enterprise
 
 ## Usage and Output:
 
@@ -73,7 +74,7 @@ Fractional tolerance for distances (0.0 - 1.0) used by
 packing similarity.
 ```
 
-Basic usage (in a command prompt) is:
+## Basic usage (in a command prompt):
 
 ```cmd
 python Packing_Similarity_Dendrogram.py input_file
@@ -84,17 +85,16 @@ output of the tool consists of figures (as .png files) of the packing-similarity
 packing similarity between the structures. The file names are prefixed with the stem of the input file ( _i.e._ if
 roy.gcd is the input, then the similarity dendrogram will be called `roy_packing_similarity_tree.png`).
 
-If a large set of structures are inputted, the top _N_ structures can be selected using the -nm options.
+If a large set of structures are inputted, the top _N_ structures can be selected using the `-nm` options.
 
 Using the `-o` option will result in overlays being saved for each comparison (as .mol2 files). The matrix of
 similarities is also saved as a raw numpy matrix ( _i.e._ as
 `roy_similarity_matrix.txt`), and can be read back in (with `-m`) to skip the packing-similarity analysis, if, for
 example, a different clustering algorithm is desired or part of the script has been changed.
 
-The `--allow_molecular_differences` option can be used when comparing crystal structures of closely related molecules _
-e.g._ salts and free forms.
+The `--allow_molecular_differences` option can be used when comparing crystal structures of closely related moleculese.g. salts and free forms.
 
-The `-s` option will strip all terminal atoms and carbon atom chains up to hetero atoms ( _e.g._
+The `-s` option will strip all terminal atoms and carbon atom chains up to hetero atoms (e.g.
 the methyl of a methoxy will be removed), which may be useful for identifying more coarse- grained similarity that
 ignores small changes in the periphery of the molecule. A new cif is created containing the stripped molecule and
 analysis is performed using this file. Note that disordered experimental structures present in the input database will
