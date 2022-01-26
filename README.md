@@ -2,7 +2,6 @@
 
 # CSD Python API Scripts
 
-----
 
 A repository containing scripts that have been created to leverage the toolkit found within
 the [CCDC portfolio](https://www.ccdc.cam.ac.uk/solutions/) that are accessible via
@@ -32,16 +31,17 @@ Don’t have a licence? Contact us [here to request a quote or demonstration.](h
 
 This section will focus on how to download multiple or individual scripts: 
 
-### 1. Downloading all scripts 
-
-#### TO DO - Add gif of downloading Repo 
-#### TO DO - write instructions on how to download
+### 1. Downloading All Scripts 
 
 
-### 2. Downloading individual scripts
+#### TODO - Add gif of downloading Repo 
+#### TODO - write instructions on how to download
 
-#### TO DO - Add gif of downloading single file
-#### TO DO - write instructions on how to download
+
+### 2. Downloading Individual Scripts
+
+#### TODO - Add gif of downloading single file
+#### TODO - write instructions on how to download
 
 
 ## Running scripts through the CSD Python API Miniconda installed 
