@@ -34,8 +34,10 @@ This section will focus on how to download multiple or individual scripts:
 ### 1. Downloading All Scripts 
 
 
-#### TODO - Add gif of downloading Repo 
-#### TODO - write instructions on how to download
+#### Downloading Zip file: 
+Click `Code` and Select `Download Zip`:
+
+<img src="assets/download_zip.png" width="250px">
 
 
 ### 2. Downloading Individual Scripts
@@ -48,4 +50,8 @@ This section will focus on how to download multiple or individual scripts:
 
 This requires you to already have the CSD Python API installed. 
 
-##### TODO - Write instructions 
+Windows: 
+```cmd
+"<CCDC_INSTALL_LOCATION>\CCDC\Python_API_2022\miniconda\Scripts\activate.bat"
+python script_example.py
+```
