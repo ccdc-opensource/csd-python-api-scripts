@@ -3,7 +3,7 @@
 Writes a .docx report of a hydrogen bond propensity calculation
 
 ----
-Inlucded in the report:
+Included in the report:
 - Hydrogen bond propensity chart.
 - Table of Predicted intermolecular hydrogen bond propensities. 
 - Table of Hydrogen bond coordination likelihood.

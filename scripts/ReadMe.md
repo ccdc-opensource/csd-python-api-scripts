@@ -12,6 +12,5 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 -  Construct a dendrogram for an input set of structures based on packing-similarity
 analysis
 
-
 ## Tips 
-### Searching tips: 
+### Searching tips:
