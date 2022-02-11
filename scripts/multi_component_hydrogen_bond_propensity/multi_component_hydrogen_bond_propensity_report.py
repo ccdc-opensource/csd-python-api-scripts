@@ -13,6 +13,7 @@
 multi_component_hydrogen_bond_propensity_report.py
  - Performs a multi-component HBP calculation for a given library of co-formers
 """
+
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -100,9 +101,9 @@ def make_mc_chart(dictionary, directory, mol):
     plt.xlabel('Co-Former Rank', fontweight='bold', fontsize='12')
     plt.ylabel('Multi-Component Score', fontweight='bold', fontsize='12')
     plt.title('MCHBP screening results', fontweight='bold', fontsize='12')
-    ax.axhspan(0.025, ymax + 0.1, facecolor='lightgreen', alpha=1.5)
-    ax.axhspan(-0.025, ymin - 0.1, facecolor='lightpink', alpha=1.5)
-    ax.axhspan(0.025, -0.025, facecolor='grey', alpha=1.5)
+    ax.axhspan(0.025, ymax + 0.1, facecolor='lightgreen', alpha=0.5)
+    ax.axhspan(-0.025, ymin - 0.1, facecolor='lightpink', alpha=0.5)
+    ax.axhspan(0.025, -0.025, facecolor='grey', alpha=0.5)
     plt.ylim(ymin - 0.025, ymax + 0.025)
     fname = str(os.path.join(directory, '%s_MC_HBP_plot.png' % mol.identifier))
     plt.savefig(fname, format='png', dpi=600)
@@ -112,7 +113,7 @@ def make_mc_chart(dictionary, directory, mol):
 def add_picture_subdoc(picture_location, docx_template, wd=7):
     # This function adds a picture to the .docx file
     return docxtpl.InlineImage(
-            docx_template, image_descriptor=picture_location, width=Cm(cm))
+            docx_template, image_descriptor=picture_location, width=Cm(wd))
 
 
 def propensity_calc(crystal, directory):
