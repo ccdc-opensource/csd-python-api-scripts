@@ -12,8 +12,8 @@ from __future__ import division, absolute_import, print_function
 
 """
 This script will generate a generic Gaussian input file
-Input: CSD Identifier as a string
-Output: HTML File to working Directory
+Input: CSD Identifier as a string or .mol2 
+Output: GJF input file
 Author: Andy Maloney 2015
 """
 

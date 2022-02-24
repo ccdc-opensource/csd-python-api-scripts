@@ -4,7 +4,7 @@
 
 ## Summary
 
-Allows the user to generate a CASTEP input set of files (.cell and .params) for a structure viewed in Mercury. 
+Allows the user to generate a set of CASTEP input files (.cell and .params) for a structure viewed in Mercury. 
 
 ![img.png](assets/file_output.png)
 
