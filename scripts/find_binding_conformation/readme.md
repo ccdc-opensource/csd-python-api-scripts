@@ -2,7 +2,7 @@
 
 We know that most pharmaceutically relevant compounds bind to their targets in a relaxed conformation. The challenge in discovery is to figure out rapidly which conformations are readily accessible for the molecules we are considering. There is now a new solution to address this based on statistical, rather than just energetic approaches.
 
-Driven by the wealth and diversity of bond, angle and torsion information in the Cambridge Structural Database, the CSD Conformer Generator produces realistic ensembles of low energy ligand structures. These are ready to be exploited for drug design in the presence and also in the absence of detailed knowledge about the three-dimensional structure of the protein active site.
+Driven by the wealth and diversity of bond, angle and torsion information in the Cambridge Structural Database (CSD), the CSD Conformer Generator produces realistic ensembles of low energy ligand structures. These are ready to be exploited for drug design in the presence and also in the absence of detailed knowledge about the three-dimensional structure of the protein active site.
 
 Starting from a list of PDB-codes, this script generates idealized conformers
 for ligands and evaluates their RMSD to the conformation in the PDB.
