@@ -5,7 +5,7 @@
 # This permission notice and the following statement of attribution must be
 # included in all copies or substantial portions of this script.
 #
-# 2015-06-17: created by the Cambridge Crystallographic Data Centre
+# 2015-06-17: created by Andrew Maloney the Cambridge Crystallographic Data Centre
 #
 
 from __future__ import division, absolute_import, print_function
