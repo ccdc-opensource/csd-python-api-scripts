@@ -18,6 +18,7 @@ The output  are subdirectories for each PDB entry with the conformers generated 
 - CSD-Core
 
 ## Instructions on Running
+Using the [activated CSD Python API environment](../../README.md#running-scripts-through-the-csd-python-api-miniconda-installed)
 
 ```cmd
 python find_binding_conformation.py pdb_example.txt
