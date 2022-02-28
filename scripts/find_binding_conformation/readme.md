@@ -1,4 +1,6 @@
-#find_binding_conformation.py 
+# Find Binding Conformation
+
+## Summary
 
 We know that most pharmaceutically relevant compounds bind to their targets in a relaxed conformation. The challenge in discovery is to figure out rapidly which conformations are readily accessible for the molecules we are considering. There is now a new solution to address this based on statistical, rather than just energetic approaches.
 
@@ -7,22 +9,23 @@ Driven by the wealth and diversity of bond, angle and torsion information in the
 Starting from a list of PDB-codes, this script generates idealized conformers
 for ligands and evaluates their RMSD to the conformation in the PDB.
 
-#Author
-'Brandl, Giangreco, Higueruelo, Schaerfer and Sykes'
+The output  are subdirectories for each PDB entry with the conformers generated for each ligand, and a spreadsheet (.csv) with the results of the comparison.
+## Requirements
+- Tested with CSD Python API 3.0.9 
+- This script uses PDBe's and RCSB's API to obtain PDB related information.
 
-#Requirements
-This script uses the CSD Python API and needs full installation of CSD. 
-This script also uses PDBe's and RCSB's API to obtain PDB related information.
+## Licensing Requirements 
+- CSD-Core
 
-#Usage
+## Instructions on Running
 
-```Python
+```cmd
 python find_binding_conformation.py pdb_example.txt
 ```
 
-#Output
+## Author
+_'Brandl, Giangreco, Higueruelo, Schaerfer and Sykes'_
 
-Subdirectories for each PDB entry with the conformers generated for each ligand, and a spreadsheet (.csv) with the results of the comparison.
 
 
-For more details about conformer generator see this blog https://www.ccdc.cam.ac.uk/Community/blog/post-61/
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
