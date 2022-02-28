@@ -1,7 +1,5 @@
 # Create CASTEP Input
 
-----
-
 ## Summary
 
 Allows the user to generate a set of CASTEP input files (.cell and .params) for a structure viewed in Mercury. 
@@ -16,7 +14,7 @@ Requires user to add script to Mercury interface.
 
 ## Licensing Requirements
 
-CSD-Core
+- CSD-Core
 
 If you wish to run CASTEP, you will need to acquire a licence for CASTEP, this is not supplied by the CCDC.
 
@@ -26,7 +24,7 @@ Add script with Folder to Mercury interface (Mercury -> CSD Python API-> Options
 
 ![img.png](assets/add_script_location.png)
 
-Select refcode interested in or load structure into Mercury. 
+Select refcode of interest or load structure into Mercury. 
 
 Select script from CSD Python API dropdown. 
 
@@ -34,6 +32,6 @@ Select script from CSD Python API dropdown.
 
 ## Author
 
-_Anthony Reilly_ 
+_Anthony Reilly_ (2016)
 
-> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)

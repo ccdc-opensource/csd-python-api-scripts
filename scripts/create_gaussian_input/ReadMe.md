@@ -1,7 +1,5 @@
 # Create Gaussian Input
 
-----
-
 ## Summary
 
 Allows the user to generate a Gaussian input file (.gjf) for a given CSD refcode or .mol2. If you wish to run different keywords the script will need to be changed manually. 
@@ -31,6 +29,6 @@ To create an input file for the
 
 ## Author
 
-_Andrew Maloney_
+_Andrew Maloney_ (2015)
 
-> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
