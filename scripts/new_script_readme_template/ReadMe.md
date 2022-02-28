@@ -1,7 +1,5 @@
 # Script Name
 
-----
-
 ## Summary
 
 \#Description of what the script does
@@ -22,7 +20,7 @@
 
 \#CCDC Licence requirements, e.g. CSD-Core, CSD-Materials, CSD-Enterprise, RP
 
-## Instructions on running
+## Instructions on Running
 
 \#Command line usage
 
@@ -34,4 +32,4 @@
 
 \#Author name and date created
 
-> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)

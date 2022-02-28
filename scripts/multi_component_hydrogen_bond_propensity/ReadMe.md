@@ -48,4 +48,4 @@ The default coformer library is the one supplied with your Mercury install in ``
 ## Author
 _Andrew Maloney_ (CCDC) 2017
 
-> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)

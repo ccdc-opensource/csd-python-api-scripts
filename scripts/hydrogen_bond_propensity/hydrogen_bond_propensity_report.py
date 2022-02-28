@@ -14,7 +14,14 @@
 hydrogen_bond_propensity_report.py
 - Writes a .docx report of a hydrogen bond propensity calculation
 """
+
+import argparse
+import os
+import sys
+import subprocess
+import csv
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -23,14 +30,9 @@ from ccdc.diagram import DiagramGenerator
 from ccdc.search import SubstructureSearch, ConnserSubstructure
 from ccdc.descriptors import CrystalDescriptors
 
-import argparse
-import os
-import sys
-import subprocess
-import csv
-
 try:
     import warnings
+
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=DeprecationWarning)
         import docxtpl
@@ -81,7 +83,7 @@ def fg_diagram(mol, directory, con):
 def add_picture_subdoc(picture_location, docx_template, cm=7):
     # This function adds a picture to the .docx file
     return docxtpl.InlineImage(
-            docx_template, image_descriptor=picture_location, width=Cm(cm))
+        docx_template, image_descriptor=picture_location, width=Cm(cm))
 
 
 def launch_word_processor(output_file):
@@ -137,7 +139,7 @@ def propensity_calc(crystal, directory):
     observed_group = hbp.target_hbond_grouping()
 
     return hbp.functional_groups, hbp.fitting_data, hbp.donors, hbp.acceptors, model, \
-        propensities, intra_flag, groups, observed_group
+           propensities, intra_flag, groups, observed_group
 
 
 def coordination_scores_calc(crystal, directory):
@@ -214,8 +216,8 @@ def main(structure, directory, csdrefcode, noopen=False):
     work_directory = os.path.join(directory, str(structure).split('.')[0])
 
     # Get all the necessary data from a HBP calculation
-    functional_groups, fitting_data, donors, acceptors, model, propensities, intra_flag,\
-        groups, observed_groups = propensity_calc(crystal, work_directory)
+    functional_groups, fitting_data, donors, acceptors, model, propensities, intra_flag, \
+    groups, observed_groups = propensity_calc(crystal, work_directory)
 
     # Calculate the coordination scores separately
     coordination_scores = coordination_scores_calc(crystal, work_directory)
@@ -322,8 +324,8 @@ def main(structure, directory, csdrefcode, noopen=False):
 if __name__ == '__main__':
     # Set up the necessary arguments to run the script
     parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=__doc__)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__)
     parser.add_argument('input_structure', type=str,
                         help='Refcode or mol2 file of the component to be screened')
     parser.add_argument('-d', '--directory', default=os.getcwd(),

@@ -14,14 +14,6 @@ multi_component_hydrogen_bond_propensity_report.py
  - Performs a multi-component HBP calculation for a given library of co-formers
 """
 
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
-
-from ccdc import io, molecule
-from ccdc.diagram import DiagramGenerator
-from ccdc.descriptors import CrystalDescriptors
-
 import sys
 import os
 import glob
@@ -29,8 +21,18 @@ import argparse
 import tempfile
 import subprocess
 
+import matplotlib
+
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+
+from ccdc import io, molecule
+from ccdc.diagram import DiagramGenerator
+from ccdc.descriptors import CrystalDescriptors
+
 try:
     import warnings
+
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=DeprecationWarning)
         import docxtpl
@@ -54,9 +56,9 @@ PAIR_TEMPLATE_FILE = os.path.join(SCRIPT_DIR, PAIR_TEMPLATE_FILENAME)
 def cm2inch(*tupl):
     inch = 2.54
     if isinstance(tupl[0], tuple):
-        return tuple(i/inch for i in tupl[0])
+        return tuple(i / inch for i in tupl[0])
     else:
-        return tuple(i/inch for i in tupl)
+        return tuple(i / inch for i in tupl)
 
 
 def launch_word_processor(output_file):
@@ -113,7 +115,7 @@ def make_mc_chart(dictionary, directory, mol):
 def add_picture_subdoc(picture_location, docx_template, wd=7):
     # This function adds a picture to the .docx file
     return docxtpl.InlineImage(
-            docx_template, image_descriptor=picture_location, width=Cm(wd))
+        docx_template, image_descriptor=picture_location, width=Cm(wd))
 
 
 def propensity_calc(crystal, directory):
@@ -147,7 +149,7 @@ def propensity_calc(crystal, directory):
     # Perform regression
     model = hbp.perform_regression()
     print(model.equation)
-    print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3),  model.advice_comment))
+    print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
     hbp.calculate_propensities()
     propensities = hbp.inter_propensities
 
@@ -293,7 +295,7 @@ def make_mc_report(identifier, results, directory, diagram_file, chart_file):
 
     # Generate content for the report
     diagram = add_picture_subdoc(diagram_file, docx_template)
-    chart = add_picture_subdoc(chart_file, docx_template,wd=18)
+    chart = add_picture_subdoc(chart_file, docx_template, wd=18)
 
     # The context is the information that is given to the template to allow it to be populated
     context = {
@@ -375,15 +377,15 @@ if __name__ == '__main__':
             'ccdc_coformers'
         )
     parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=__doc__)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__)
     parser.add_argument('input_structure', type=str,
-            help='Refcode or mol2 file of the component to be screened')
+                        help='Refcode or mol2 file of the component to be screened')
     parser.add_argument('-d', '--directory', default=os.getcwd(),
-            help='the working directory for the calculation')
+                        help='the working directory for the calculation')
     parser.add_argument('-c', '--coformer_library', type=str,
-            help='the directory of the desired coformer library',
-            default=ccdc_coformers_dir)
+                        help='the directory of the desired coformer library',
+                        default=ccdc_coformers_dir)
 
     args = parser.parse_args()
 
