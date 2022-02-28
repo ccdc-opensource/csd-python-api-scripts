@@ -29,6 +29,6 @@ To create an input file for the
 
 ## Author
 
-_Andrew Maloney_ (2015)
+_Andrew Maloney_(2015)
 
 > For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)

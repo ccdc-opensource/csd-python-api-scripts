@@ -1,4 +1,4 @@
-# Packing_Similarity_Dendrogram.py
+# Packing Similarity Dendrogram
 
 ## Summary:
 
@@ -162,6 +162,6 @@ with pure forms. Results for _Z_ ’ > 1 systems may not fully reflect differenc
 retained by default in the packing-similarity analysis.
 
 ## Authors: 
-_Anthony Reilly(2016)_
+_Anthony Reilly_(2016)
 
-> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](support@ccdc.cam.ac.uk)
+> For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
