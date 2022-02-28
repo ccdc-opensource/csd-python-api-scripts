@@ -23,7 +23,6 @@ Using the [activated CSD Python API environment](../../README.md#running-scripts
 ```cmd
 python find_binding_conformation.py pdb_example.txt
 ```
-
 ## Author
 _'Brandl, Giangreco, Higueruelo, Schaerfer and Sykes'_
 

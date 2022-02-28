@@ -1,11 +1,11 @@
 #
-# Copyright (c) 2015 The Cambridge Crystallographic Data Centre (CCDC)
-#
 # This script can be used for any purpose without limitation subject to the
-# conditions at http://www.ccdc.cam.ac.uk/Community/Licenses/pages/v1.aspx
+# conditions at http://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
 #
-# The above copyright statement and this permission notice must be included
-# in all copies or substantial portions of the script.
+# This permission notice and the following statement of attribution must be
+# included in all copies or substantial portions of this script.
+#
+# 2022-02-28: Submitted by Abhik Mukhopadhyay , The Cambridge Crystallographic Data Centre
 #
 
 import requests
