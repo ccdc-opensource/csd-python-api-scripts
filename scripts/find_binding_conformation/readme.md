@@ -28,5 +28,4 @@ python find_binding_conformation.py pdb_example.txt
 _'Brandl, Giangreco, Higueruelo, Schaerfer and Sykes'_
 
 
-
 > For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
