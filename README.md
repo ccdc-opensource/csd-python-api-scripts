@@ -5,7 +5,7 @@
 
 A repository containing scripts that have been created to leverage the toolkit found within
 the [CCDC portfolio](https://www.ccdc.cam.ac.uk/solutions/) that are accessible via
-the [CSD Python API ](https://www.ccdc.cam.ac.uk/solutions/csd-core/components/csd-python-api/).
+the [CSD Python API](https://www.ccdc.cam.ac.uk/solutions/csd-core/components/csd-python-api/).
 
 The purpose of this platform is to distribute knowledge and allow for scientific collaborations. Scripts are provided on an as-is basis and while their use is not supported we do welcome feedback on potential improvements. All scripts are tested against the latest version of the CSD Python API as installed with the CSD Portfolio.
 

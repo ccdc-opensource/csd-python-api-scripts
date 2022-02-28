@@ -15,6 +15,7 @@ analysis
 
 import sys
 import argparse
+import os
 import matplotlib
 
 matplotlib.use('Agg')
@@ -23,7 +24,6 @@ from ccdc.crystal import PackingSimilarity
 import numpy as np
 
 import matplotlib.pyplot as plt
-import os
 
 
 def strip_terminal(name, reader):

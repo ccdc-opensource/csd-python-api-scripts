@@ -19,7 +19,6 @@ Output: GJF input file
 import sys
 import os
 import ccdc.io
-import glob
 
 
 def fatal(*args):

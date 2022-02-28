@@ -78,13 +78,12 @@ def make_castep_input(crystal, kp_spacing=0.06, cut_off=750.000, task='SinglePoi
         param_file.write('write_cell_structure : true\n')
         param_file.write('#continuation : default\n')
 
-
     return True
-    
+
+
 if __name__ == '__main__':
     helper = ApplicationInterface()
     entry = helper.current_entry
     crystal = entry.crystal
     os.chdir(helper.output_directory_path)
     make_castep_input(crystal)
-
