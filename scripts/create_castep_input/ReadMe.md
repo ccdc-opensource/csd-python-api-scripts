@@ -16,7 +16,7 @@ Requires user to add script to Mercury interface.
 
 - CSD-Core
 
-If you wish to run CASTEP, you will need to acquire a licence for CASTEP, this is not supplied by the CCDC.
+If you wish to run CASTEP, you will need to acquire a license for CASTEP, this is not supplied by the CCDC.
 
 ## Instructions on running
 
