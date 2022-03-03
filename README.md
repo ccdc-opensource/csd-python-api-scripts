@@ -18,7 +18,7 @@ The purpose of this platform is to distribute knowledge and allow for scientific
 ├─ assets                  # Images for documentation
 ├─ scripts                 # Python scripts 
 ├─ LICENSE
-└─ README.md
+└─ README.md  
 ```
 
 ## Licensing Requirements 
