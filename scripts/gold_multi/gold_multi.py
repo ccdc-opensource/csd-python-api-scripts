@@ -17,13 +17,13 @@ from argparse import ArgumentParser
 from platform import platform
 from pathlib import Path
 from os import mkdir, chdir
-from shutil import rmtree, copy
+from shutil import copy
 from time import time
 from dataclasses import dataclass, field
 from multiprocessing import Pool
 
 import ccdc
-from ccdc.io import csd_version, EntryReader
+from ccdc.io import EntryReader
 from ccdc.docking import Docker
 
 ########################################################################################################################
@@ -177,6 +177,20 @@ def main():
 
     settings = Docker.Settings().from_file(str(conf_file))
 
+    # Ensure the output directory exists (a sub-directory for each batch is created within it)...
+
+    output_dir = Path(settings.output_directory)
+
+    if not str(output_dir) == '.':  # Skip directory (re)creation if output dir is current directory
+
+        if output_dir.exists():
+
+            logger.error(f"Error! Output dir '{output_dir}' already exists.")
+
+            sys.exit(1)
+
+        mkdir(output_dir)
+
     # Count the molecules to dock in the input file...
 
     input_file = Path(settings.ligand_files[0].file_name)
@@ -186,18 +200,6 @@ def main():
         n_molecules = len(reader)
 
     logger.info(f"There are {n_molecules} molecules to dock on {n_processes} processes...")
-
-    # Ensure the output directory exists (a sub-directory for each batch is created within it)...
-
-    output_dir = Path(settings.output_directory)
-
-    if not str(output_dir) == '.':  # Skip directory (re)creation if output dir is current directory
-
-        if output_dir.exists():
-
-            rmtree(output_dir)
-
-        mkdir(output_dir)
 
     ######
 
