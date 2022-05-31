@@ -1,0 +1,9 @@
+smiles,name,data_1,data_2,data_3
+n1ccnc2c(NCCCC[NH3+])nc(c3ccc(C)cc3)cc12,5LMA,10,aaa,1.1
+n1ccnc2c(NC(CC3)CCC3[NH3+])nc(c3ccc(C)cc3)cc12,5LMA_1,20,bbb,2.2
+n1ccnc2c(NCCC(OCC3)C[NH2+]3)nc(c3ccc(C)cc3)cc12,5LMA_2,30,ccc,3.3
+O=c1[nH]cnc2cc(N[C@H]3[C@@H]([NH3+])CCCC3)nc(Nc4cccc5cc[nH]c45)c12,4PX6,40,ddd,4.4
+O=c1[nH]cnc2cc(N[C@H]3[C@@H]([NH3+])CCCC3)nc(Nc4ccc(C)cc4)c12,4PX6_1,50,eee,5.5
+n1ccc(N(CCO)c2cccc3[nH]ncc23)nc1N(c4cc5S(=O)(=O)[NH]Cc5cc4),4YJP,60,fff,6.6
+# zzz,rubbish,-1,bad,66.6
+n(cc1)c(Nc2cc3c(Cl)nn(C)c3cc2)nc1n(c4)nc(C)c4CN5CC(O)C5,4XG8,70,ggg,7.7

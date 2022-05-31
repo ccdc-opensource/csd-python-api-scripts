@@ -1,0 +1,1 @@
+Remove-Item -Recurse .\test.mol, .\conformer_generator.*, input.sdf, .\output_*,.\complexed_*, complexes_*

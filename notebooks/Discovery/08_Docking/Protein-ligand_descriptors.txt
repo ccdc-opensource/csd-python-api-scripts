@@ -1,0 +1,20 @@
+The calculation of descriptors for protein-ligand complexes, such as are producted by GOLD docking, 
+is described in the Hermes User Guide. In particular, see the following sections:
+
+16      Defining Descriptors
+17      Calculating and Using Descriptors
+23.9    Calculating Descriptors for a Set of Docked Ligands
+23.9.4  Running Descriptor Calculations via the Command Line
+24      Appendix C: Calculating Descriptors: Computational Details
+25      Appendix D: Using Descriptors Tutorial
+
+An example of CLI usage on Windows would be:
+ 
+& 'C:\Program Files\CCDC\Discovery_2021\Hermes\descriptor_calculator.exe' `
+        -xml     .\descriptors.xml `
+        -ligands .\gold_solns.mol2 `
+        -csvout  .\descriptors.csv `
+        -sdout   .\descriptors.sdf
+
+Note that there is a Descriptors module in the API; however, it's emphasis is rather different.
+It is described here: https://downloads.ccdc.cam.ac.uk/documentation/API/descriptive_docs/descriptors.html
