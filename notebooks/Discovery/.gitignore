@@ -4,22 +4,18 @@
 *.rlbcoor
 *.pkl
 conformer_generator.*
-
-scratch*
 output*
-private/
-OLD/
 
 01_CSD_Search/aryl_sulphonamide.csv
-01_CSD_Search/Lapatinib_from_SMILES.mol
 
 04_Conformer_generation/ci500358p.pdf
 04_Conformer_generation/superimposed/
 04_Conformer_generation/conformers.sdf
-04_Conformer_generation/lapatinib.mol2
 04_Conformer_generation/minimised.mol2
 
 06_Interaction_maps/2UW7/
+06_Interaction_maps/A_GVP1351.mol
+06_Interaction_maps/A_GVP1351/
 
 07_Cavities/cavities.db
 07_Cavities/cavity.py
@@ -39,5 +35,7 @@ OLD/
 09_Covalent_Docking/input.sdf
 09_Covalent_Docking/output_substructure/
 09_Covalent_Docking/output_atom/
-
-Docking_input_file_prep/
+09_Covalent_Docking/complexed_atom.mol2
+09_Covalent_Docking/complexed_substructure.mol2
+09_Covalent_Docking/complexes_atom/
+09_Covalent_Docking/complexes_substructure/
