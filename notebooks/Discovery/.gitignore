@@ -4,7 +4,7 @@
 *.rlbcoor
 *.pkl
 conformer_generator.*
-output*
+
 
 01_CSD_Search/aryl_sulphonamide.csv
 
@@ -23,11 +23,11 @@ output*
 07_Cavities/overlaid_via_cavities.pdb
 07_Cavities/overlaid_via_sequence.pdb
 
-08_Docking/input_files/input.mol2
-08_Docking/input_files/input.sdf
+# N.B. The 'target' directory is excluded by a rule in the global .gitignore to do with builds
+!08_Docking/input_files/target
+08_Docking/input_files/input.*
+08_Docking/output*/
 08_Docking/parameter_tests/
-08_Docking/target_prep
-08_Docking/Hermes
 
 09_Covalent_Docking/complexes/
 09_Covalent_Docking/test.mol
