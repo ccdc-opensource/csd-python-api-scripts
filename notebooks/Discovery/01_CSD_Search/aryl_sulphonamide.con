@@ -1,0 +1,33 @@
+T1 *CONN
+NFRAG -99
+ELDEF BB = AA H
+ELDEF QA = C N
+AT1 C 3                :XY  250  167
+AT2 C 2 1               :XY  198  197
+AT3 C 2 1               :XY  198  257
+AT4 C 2 1               :XY  249  287
+AT5 C 2 1               :XY  301  257
+AT6 C 3                :XY  301  197
+AT7 S 4    A            :XY  354  167
+AT8 O 1                :XY  324  115
+AT9 O 1                :XY  384  115
+AT10 QA 1                :XY  406  197
+AT11 BB 1                :XY  250  107
+BO 6 7 1 
+BO 1 2 5 
+BO 2 3 5 
+BO 1 11 1 
+BO 7 8 2 
+BO 7 9 2 
+BO 3 4 5 
+BO 6 1 5 
+BO 5 6 5 
+BO 4 5 5 
+BO 7 10 1 
+GEOM
+DEFINE ANO1 11
+DEFINE ?TR1 1 6 7 10
+TRAN TOR1 = ABS ?TR1
+SYMCHK ON
+ENANT NORMAL
+END
