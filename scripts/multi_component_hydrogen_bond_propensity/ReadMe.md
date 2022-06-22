@@ -45,6 +45,9 @@ optional arguments:
 ```
 
 The default coformer library is the one supplied with your Mercury install in ```<CSD Install Location>\Mercury\molecular_libraries\ccdc_coformers```
+
+If the calculation fails for any API-coformer combinations, they will be recorded with N/A in the summary report table
+
 ## Author
 _Andrew Maloney_ (CCDC) 2017
 
