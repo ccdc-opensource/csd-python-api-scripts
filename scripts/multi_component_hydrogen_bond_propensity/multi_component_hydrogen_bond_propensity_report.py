@@ -137,7 +137,7 @@ def propensity_calc(crystal, directory):
 
     # Generate Training Dataset
 
-    hbp.match_fitting_data(count=500)  # set to >300
+    hbp.match_fitting_data(count=500)  # set to >300, preferably 500 for better representation of functional groups
 
     hbp.analyse_fitting_data()
 
