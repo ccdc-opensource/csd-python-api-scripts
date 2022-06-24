@@ -137,7 +137,7 @@ def propensity_calc(crystal, directory):
 
     # Generate Training Dataset
 
-    hbp.match_fitting_data(count=300)  # set to >300
+    hbp.match_fitting_data(count=500)  # set to >300, preferably 500 for better representation of functional groups
 
     hbp.analyse_fitting_data()
 
@@ -355,7 +355,7 @@ def main(structure, work_directory, library, csdrefcode):
             mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
 
     # Make sense of the outputs of all the calculations
-    mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: e[1][0], reverse=True)
+    mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
     diagram_file = make_diagram(api_molecule, work_directory)
     chart_file = make_mc_chart(mc_hbp_screen, directory, api_molecule)
     make_mc_report(structure, mc_hbp_screen, work_directory, diagram_file, chart_file)
