@@ -5,7 +5,7 @@
 # To make changes persistent, please mark this repository with update_status_check: false
 # or make your changes in the github-repository-management/status_check.yml file
 name: Common CCDC PR Checks
-on: [pull_request]
+on: [pull_request]  # yamllint disable-line rule:truthy
 jobs:
   ccdc-commit-hooks-on-pull-request-check:
     runs-on: ubuntu-latest
