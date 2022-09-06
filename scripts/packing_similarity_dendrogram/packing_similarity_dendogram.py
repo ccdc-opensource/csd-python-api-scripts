@@ -98,7 +98,7 @@ def merge_clusters(c1, c2, level):
     return new_cluster
 
 
-def plot_dendrogram(cluster_list, n_ps_mols, filename):
+def plot_dendrogram(cluster_list, n_ps_mols, filename, pad_length):
     """
     Function for producing a dendrogram from an input cluster hierarchy
     """
@@ -187,22 +187,26 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename):
 
     # Setup tree plotting by getting each terminal's height
     heights, count = assign_y_positions(cluster_list[0], 0, {})
-
+    print("got heights and counts from assigning y positions: ",heights,count)
     # Set start of the tree - middle of the plot and 1,1
     xpositions = [1, 1]
     ypositions = [1, get_midpoint(cluster_list[0], heights)]
-
+    print("calling plot_tree for the first time with the following settings", cluster_list[0])
+    print("\nxpositions:", xpositions)
+    print("\nypositions (midpoint)", ypositions)
+    print("\nheights", heights)
     # Plot tree
     plot_tree(cluster_list[0], xpositions, ypositions, heights)
 
     # Plot formatting
-    ax = plt.axes()
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    ax.spines['right'].set_visible(False)
+#    ax = plt.axes() #IJS 06/09/22 turning this off, and every line with ax., because 2 axes are plotted using the current version of matplotlib
+#    ax.set_frame_on(False) #plot covered up if left True 
+#    ax.axes.get_yaxis().set_visible(False)
+#    ax.axes.get_xaxis().set_visible(False) # if left on, the graph is much less messy, only one axis printed, but ticks are slightly offset
+#    ax.spines['top'].set_visible(False)
+#    ax.spines['bottom'].set_visible(False)
+#    ax.spines['left'].set_visible(False)
+#    ax.spines['right'].set_visible(False) # this, and the previous 5, stop the y axis being printed twice and overlaying
 
     levels = range(n_ps_mols, -1, -1)
     highlighted_levels = range(n_ps_mols, -1, -1)
@@ -212,10 +216,12 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename):
         plt.plot([level, level], [0, count], "--", linewidth=0.5, color="Gray", zorder=1)
 
     # Pad the plot to have enough space for structure indices
-    plt.xlim(-1, n_ps_mols + 5)
+    print("pad length is ",pad_length)
+    plt.xlim(-1, n_ps_mols + pad_length)
     plt.ylim(0, count + 1)
-    ax.set_xticks(levels)
-    ax.tick_params(axis='x', bottom='off', top='off')
+    plt.xticks(np.arange(1,n_ps_mols+2,2)) #IJS 06/09/22 addition to replace ax.set_xticks(levels)
+#    ax.set_xticks(levels)
+#    ax.tick_params(axis='x', bottom='off', top='off')
     plt.xlabel('Packing Similarity / ' + str(n_ps_mols) + ' Molecules', fontsize='large')
     # Save output
     plt.savefig(filename + "_packing_similarity_tree.png", dpi=1000, bbox_inches='tight')
@@ -223,7 +229,7 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename):
 
 
 def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, ps_angles, ps_distances, strip,
-         n_struct, allow_mol_diff, cluster_mode):
+         n_struct, allow_mol_diff, cluster_mode, pad_length):
     # Initialise Packing Similarity
     ps = PackingSimilarity()
     ps.settings.ignore_hydrogen_positions = True
@@ -244,10 +250,9 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     ps.settings.packing_shell_size = n_ps_mols
     ps.settings.angle_tolerance = ps_angles
     ps.settings.distance_tolerance = ps_distances
-
     refcodes = []
 
-    input_name = input_file.rsplit(".")[0]
+    input_name = input_file.rsplit("\\")[-1].rsplit(".")[0]
     print("--------------------------------------------------------")
 
     if not matrix_file:
@@ -282,7 +287,7 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
                 os.makedirs(overlay_folder)
 
         for i in range(0, structure_size):
-            refcodes.append(str(structure_reader[i].identifier))
+            refcodes.append(str(structure_reader[i].identifier))#IJS 06/09/22 why are refcodes read in twice?
 
         for i in range(0, structure_size):
             entry_i = structure_reader[i]
@@ -399,6 +404,8 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     plt.yticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
     cb = plt.colorbar(plot, ticks=range(1, 16))
 
+
+
     plt.xlim(0, structure_size)
     plt.ylim(0, structure_size)
     ax = plt.gca()
@@ -407,10 +414,12 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     cb.set_label('Packing Similarity  /' + str(n_ps_mols) + ' Molecules', fontsize='x-large')
     plt.savefig(input_name + "_heat_map.png", dpi=300)
     print("Packing similarity heat map saved to " + input_name + "_heat_map.png")
+    ax.clear()
     plt.close()
 
+
     # Plot a dendrogram
-    plot_dendrogram(cluster_list, n_ps_mols, input_name)
+    plot_dendrogram(cluster_list, n_ps_mols, input_name, pad_length)
 
     print("--------------------------------------------------------")
 
@@ -445,6 +454,8 @@ if __name__ == '__main__':
                         help="Tolerance for angles (in degrees) used by packing similarity.")
     parser.add_argument('-dt', '--dist_tol', type=float, default=0.25, metavar="0.25",
                         help="Fractional tolerance for distances (0.0 - 1.0) used by packing similarity.")
+    parser.add_argument('-pd', '--pad_length', type=float, default=5.0, metavar="0.25",
+                        help="padding on right of the plot for listing identifiers")#IJS 06/09/22 addition, as I hve an example with many refcodes that overspills the plot
     args = parser.parse_args()
     if not os.path.isfile(args.input_file):
         parser.error('%s not found.' % args.input_file)
@@ -454,4 +465,4 @@ if __name__ == '__main__':
 
     main(args.input_file, args.matrix, args.n_molecules, args.o, args.conf_tol, args.angle_tol,
          args.dist_tol, args.strip, args.n_structures, args.allow_molecular_differences,
-         args.clustering_type)
+         args.clustering_type,args.pad_length)
