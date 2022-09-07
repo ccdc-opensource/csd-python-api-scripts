@@ -72,6 +72,8 @@ similarity.
 -dt 0.25, --dist_tol 0.
 Fractional tolerance for distances (0.0 - 1.0) used by
 packing similarity.
+-pd 5, --pad_length 5
+pad right hand side of plot to make room for structure names
 ```
 
 ## Basic usage (in a command prompt):
