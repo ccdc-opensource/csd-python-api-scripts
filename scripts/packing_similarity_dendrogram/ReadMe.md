@@ -137,6 +137,9 @@ clusters at the worst or lowest level connecting them. Figure 2 shows the same d
 which gives more definite clustering but will also hide some similarities due to the hierarchical nature of the
 clustering.
 
+If there are dangling nodes without an associated identifier, it is likely that there multiple structures given the same name 
+in the supplied file (searched through multiple databases say)
+
 ![Figure 1](dendogram_figure_1.png)
 **Figure 1** : Example dendrogram based on a database of carbamazepine solid forms using the default single-linkage
 clustering.

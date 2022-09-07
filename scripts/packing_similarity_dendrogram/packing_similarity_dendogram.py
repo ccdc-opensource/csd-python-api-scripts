@@ -187,14 +187,14 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename, pad_length):
 
     # Setup tree plotting by getting each terminal's height
     heights, count = assign_y_positions(cluster_list[0], 0, {})
-    print("got heights and counts from assigning y positions: ",heights,count)
+#    print("got heights and counts from assigning y positions: ",heights,count)
     # Set start of the tree - middle of the plot and 1,1
     xpositions = [1, 1]
     ypositions = [1, get_midpoint(cluster_list[0], heights)]
-    print("calling plot_tree for the first time with the following settings", cluster_list[0])
-    print("\nxpositions:", xpositions)
-    print("\nypositions (midpoint)", ypositions)
-    print("\nheights", heights)
+#    print("calling plot_tree for the first time with the following settings", cluster_list[0])
+#    print("\nxpositions:", xpositions)
+#    print("\nypositions (midpoint)", ypositions)
+#    print("\nheights", heights)
     # Plot tree
     plot_tree(cluster_list[0], xpositions, ypositions, heights)
 
@@ -216,7 +216,7 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename, pad_length):
         plt.plot([level, level], [0, count], "--", linewidth=0.5, color="Gray", zorder=1)
 
     # Pad the plot to have enough space for structure indices
-    print("pad length is ",pad_length)
+#    print("pad length is ",pad_length)
     plt.xlim(-1, n_ps_mols + pad_length)
     plt.ylim(0, count + 1)
     plt.xticks(np.arange(1,n_ps_mols+2,2)) #IJS 06/09/22 addition to replace ax.set_xticks(levels)
