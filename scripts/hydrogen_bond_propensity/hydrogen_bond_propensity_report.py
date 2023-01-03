@@ -66,6 +66,26 @@ def make_diagram(mol, directory):
     return fname
 
 
+def generate_component_pics(input_mol, molecule_diagram_generator, directory, docx_template):
+    non_ch_molecule_no = 0
+    component_diagrams = []
+    donor_acceptor_check = []
+
+    for m in input_mol.components:  # generates an image for every molecule in the asymmetric unit
+        atoms = m.atoms
+        donor_acceptor_check = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
+
+        if donor_acceptor_check:
+            img = molecule_diagram_generator.image(m, highlight_atoms=None, label_atoms=donor_acceptor_check)
+            non_ch_molecule_no += 1
+            fname = str(os.path.join(directory, '%s_component_%s.png' % (input_mol.identifier, non_ch_molecule_no)))
+            if img:
+                img.save(fname)
+            non_ch_img = add_picture_subdoc(fname, docx_template)
+            component_diagrams.append(non_ch_img)
+    return component_diagrams
+
+
 def make_diagram_components(crystal, molecule, directory, docx_template):
     # Generates a diagram for each component in a given structure, with D/A atoms labelled if component has a donor/acceptor
     molecule_diagram_generator = DiagramGenerator()
@@ -75,43 +95,18 @@ def make_diagram_components(crystal, molecule, directory, docx_template):
     molecule_diagram_generator.settings.shrink_symbols = False
 
     asymmetric_molecule = crystal.asymmetric_unit_molecule
-    non_ch_molecule_no = 0
-    component_diagrams = []
-    donor_acceptor_check = []
 
     # If no Z and Z' information (e.g. mol2), 'None' is returned for crystal.z_prime
     z_prime_flag = False
     if crystal.z_prime:
         z_prime_flag = True
 
+    # Generates an image for every molecule
     if z_prime_flag and crystal.z_prime < 1:
-        for m in molecule.components:  # generates an image for every molecule
-            atoms = m.atoms
-            donor_acceptor_check = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
-
-            if donor_acceptor_check:
-                lbl_da_atoms = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
-                img = molecule_diagram_generator.image(m, highlight_atoms=None, label_atoms=lbl_da_atoms)
-                non_ch_molecule_no += 1
-                fname = str(os.path.join(directory, '%s_component_%s.png' % (molecule.identifier, non_ch_molecule_no)))
-                if img:
-                    img.save(fname)
-                non_ch_img = add_picture_subdoc(fname, docx_template)
-                component_diagrams.append(non_ch_img)
+        component_diagrams = generate_component_pics(molecule, molecule_diagram_generator, directory, docx_template)
+    # Generates an image for every molecule in the asymmetric unit
     else:
-        for m in asymmetric_molecule.components:  # generates an image for every molecule in the asymmetric unit
-            atoms = m.atoms
-            donor_acceptor_check = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
-
-            if donor_acceptor_check:
-                lbl_da_atoms = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
-                img = molecule_diagram_generator.image(m, highlight_atoms=None, label_atoms=lbl_da_atoms)
-                non_ch_molecule_no += 1
-                fname = str(os.path.join(directory, '%s_component_%s.png' % (molecule.identifier, non_ch_molecule_no)))
-                if img:
-                    img.save(fname)
-                non_ch_img = add_picture_subdoc(fname, docx_template)
-                component_diagrams.append(non_ch_img)
+        component_diagrams = generate_component_pics(asymmetric_molecule, molecule_diagram_generator, directory, docx_template)
 
     return component_diagrams
 
@@ -195,7 +190,7 @@ def propensity_calc(crystal, directory, min_donor_coordination, min_acceptor_coo
     # Use default coordination cutoffs unless user overrides
     groups = hbp.generate_hbond_groupings(min_donor_prob=min_donor_coordination, min_acceptor_prob=min_acceptor_coordination)
 
-    observed_group = hbp.target_hbond_grouping()E
+    observed_group = hbp.target_hbond_grouping()
 
     return hbp.functional_groups, hbp.fitting_data, hbp.donors, hbp.acceptors, model, propensities, \
           intra_flag, groups, observed_group, min_donor_coordination, min_acceptor_coordination, intra_count, intra_obs
