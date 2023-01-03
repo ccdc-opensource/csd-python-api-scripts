@@ -8,6 +8,7 @@
 #
 # 2017-08-10: Created by Andy Maloney, the Cambridge Crystallographic Data Centre
 # 2020-08-21: made available by the Cambridge Crystallographic Data Centre
+# 2022-12-21: Updated by Joanna S. Stevens, the Cambridge Crystallographic Data Centre
 #
 
 """
@@ -20,6 +21,7 @@ import os
 import sys
 import subprocess
 import csv
+import string
 import matplotlib
 
 matplotlib.use('Agg')
@@ -64,6 +66,56 @@ def make_diagram(mol, directory):
     return fname
 
 
+def make_diagram_components(crystal, molecule, directory, docx_template):
+    # Generates a diagram for each component in a given structure, with D/A atoms labelled if component has a donor/acceptor
+    molecule_diagram_generator = DiagramGenerator()
+    molecule_diagram_generator.settings.line_width = 1.6
+    molecule_diagram_generator.settings.font_size = 10
+    molecule_diagram_generator.settings.image_height = 300
+    molecule_diagram_generator.settings.shrink_symbols = False
+
+    asymmetric_molecule = crystal.asymmetric_unit_molecule
+    non_ch_molecule_no = 0
+    component_diagrams = []
+    donor_acceptor_check = []
+
+    # If no Z and Z' information (e.g. mol2), 'None' is returned for crystal.z_prime
+    z_prime_flag = False
+    if crystal.z_prime:
+        z_prime_flag = True
+
+    if z_prime_flag and crystal.z_prime < 1:
+        for m in molecule.components:  # generates an image for every molecule
+            atoms = m.atoms
+            donor_acceptor_check = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
+
+            if donor_acceptor_check:
+                lbl_da_atoms = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
+                img = molecule_diagram_generator.image(m, highlight_atoms=None, label_atoms=lbl_da_atoms)
+                non_ch_molecule_no += 1
+                fname = str(os.path.join(directory, '%s_component_%s.png' % (molecule.identifier, non_ch_molecule_no)))
+                if img:
+                    img.save(fname)
+                non_ch_img = add_picture_subdoc(fname, docx_template)
+                component_diagrams.append(non_ch_img)
+    else:
+        for m in asymmetric_molecule.components:  # generates an image for every molecule in the asymmetric unit
+            atoms = m.atoms
+            donor_acceptor_check = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
+
+            if donor_acceptor_check:
+                lbl_da_atoms = [atom for atom in atoms if atom.is_donor or atom.is_acceptor]
+                img = molecule_diagram_generator.image(m, highlight_atoms=None, label_atoms=lbl_da_atoms)
+                non_ch_molecule_no += 1
+                fname = str(os.path.join(directory, '%s_component_%s.png' % (molecule.identifier, non_ch_molecule_no)))
+                if img:
+                    img.save(fname)
+                non_ch_img = add_picture_subdoc(fname, docx_template)
+                component_diagrams.append(non_ch_img)
+
+    return component_diagrams
+
+
 def fg_diagram(mol, directory, con):
     # Create highlighted functional group diagrams
     diagram_generator = DiagramGenerator()
@@ -96,7 +148,7 @@ def launch_word_processor(output_file):
         subprocess.Popen(['open', output_file])
 
 
-def propensity_calc(crystal, directory):
+def propensity_calc(crystal, directory, min_donor_coordination, min_acceptor_coordination, fg_count):
     # Perform a Hydrogen Bond Propensity calculation
 
     # Provide settings for the calculation
@@ -114,8 +166,7 @@ def propensity_calc(crystal, directory):
     print(hbp.functional_groups)
 
     # Generate Training Dataset
-
-    hbp.match_fitting_data(count=500)  # set to >300, preferably 500 for better representation of functional groups
+    hbp.match_fitting_data(count=fg_count)  # set to >300, preferably 500 for better representation of functional groups
 
     hbp.analyse_fitting_data()
 
@@ -131,15 +182,23 @@ def propensity_calc(crystal, directory):
     print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
 
     propensities = hbp.calculate_propensities()
+
+    intra_flag = False
+    intra_obs = False
+    intra_count = 0
     if len(hbp.intra_propensities) > 0:
         intra_flag = True
-    else:
-        intra_flag = False
-    groups = hbp.generate_hbond_groupings()
-    observed_group = hbp.target_hbond_grouping()
+        intra_count = len([p for p in propensities if not p.is_intermolecular and p.is_observed])
+    if intra_count > 0:
+        intra_obs = True
 
-    return hbp.functional_groups, hbp.fitting_data, hbp.donors, hbp.acceptors, model, \
-           propensities, intra_flag, groups, observed_group
+    # Use default coordination cutoffs unless user overrides
+    groups = hbp.generate_hbond_groupings(min_donor_prob=min_donor_coordination, min_acceptor_prob=min_acceptor_coordination)
+
+    observed_group = hbp.target_hbond_grouping()E
+
+    return hbp.functional_groups, hbp.fitting_data, hbp.donors, hbp.acceptors, model, propensities, \
+          intra_flag, groups, observed_group, min_donor_coordination, min_acceptor_coordination, intra_count, intra_obs
 
 
 def coordination_scores_calc(crystal, directory):
@@ -183,8 +242,95 @@ def chart_output(groups, work_directory, structure):
                  '; '.join(['%s - %s' % (g.donor.label, g.acceptor.label) for g in group.hbonds])]
             )
 
+def hbp_landscape(groups, observed_groups, crystal, directory, work_directory, docx_template):
+    # Generate the HBP chart
 
-def main(structure, directory, csdrefcode, noopen=False):
+    # 11 colours for alternative networks
+    chart_colours = {'#00AEEF': 'lightblue', '#D63868': 'violetred', '#6E3776': 'plum', '#B5B800': 'pear',
+                     '#1C5797': 'darkblue', '#FF9A0F': 'orange', '#128A00': 'green', '#D2A106': 'yellow',
+                     '#062D56': 'navy', '#00A5A8': 'turquoise', '#EB050C': 'red'}
+    hbp_colours = list(chart_colours.keys())
+
+    # If 10 pairs or less in network with highest number of pairs start colour at 0 - static legend
+    # otherwise use colours relative to observed (orange, 6th colour, index5) - dynamic legend
+    # For half-transparent white edges for triangles, use (1, 1, 1, 0.5) or matplotlib.colors.colorConverter.to_rgba('white', alpha=.5)
+    colour_pairs = []
+    count_pairs = []
+    mpair_flag = False
+    obs_pairs = len(observed_groups.hbonds)
+
+    # Check highest number of pairs for alternative networks
+    # If no alternative network generated, use number of pairs in observed structure
+    try:
+        num_alt_pairs = [len(group.hbonds) for group in groups]
+        max_alt_pairs = max(num_alt_pairs)
+        highest_pairs = max(max_alt_pairs, obs_pairs)
+    except:
+        highest_pairs = obs_pairs
+
+    # Static legend
+    if highest_pairs <= 10:
+        for i, colour in enumerate(hbp_colours):
+            figure_i = plt.scatter([group.hbond_score for group in groups if len(group.hbonds) == i],
+                               [abs(group.coordination_score) for group in groups if len(group.hbonds) == i],
+                               c=hbp_colours[i], marker='v', s=75, edgecolors=(1, 1, 1, 0.5), linewidth=0.3, clip_on=False)
+            colour_pairs.append(i)
+            count_pairs.append(len([group for group in groups if len(group.hbonds) == i]))
+    # Dynamic legend
+    else:
+        relative_range = range(5, -6, -1)
+        for i, (value, colour) in enumerate(zip(relative_range, hbp_colours)):
+            r = obs_pairs - value
+            if i == 0:
+                figure_i = plt.scatter([group.hbond_score for group in groups if len(group.hbonds) <= r],
+                    [abs(group.coordination_score) for group in groups if len(group.hbonds) <= r],
+                    c=hbp_colours[i], marker='v', s=75, edgecolors=(1, 1, 1, 0.5), linewidth=0.3, clip_on=False)
+                count_pairs.append(len([group for group in groups if len(group.hbonds) <= r]))
+                mpair_flag = True
+            elif i in range(1, 10):
+                figure_i = plt.scatter([group.hbond_score for group in groups if len(group.hbonds) == r],
+                                   [abs(group.coordination_score) for group in groups if len(group.hbonds) == r],
+                                   c=hbp_colours[i], marker='v', s=75, edgecolors=(1, 1, 1, 0.5), linewidth=0.3, clip_on=False)
+                count_pairs.append(len([group for group in groups if len(group.hbonds) == r]))
+            elif i == 10:
+                figure_i = plt.scatter([group.hbond_score for group in groups if len(group.hbonds) >= r],
+                    [abs(group.coordination_score) for group in groups if len(group.hbonds) >= r],
+                    c=hbp_colours[i], marker='v', s=75, edgecolors=(1, 1, 1, 0.5), linewidth=0.3, clip_on=False)
+                count_pairs.append(len([group for group in groups if len(group.hbonds) >= r]))
+                mpair_flag = True
+            colour_pairs.append(r)
+
+    # Observed network (plotted after other networks so point on top)
+    ax2 = plt.scatter(observed_groups.hbond_score,
+                      abs(observed_groups.coordination_score),
+                      c='white', marker='o', s=75, edgecolors='black', linewidth=1.6, clip_on=False)
+
+    plt.origin = 'upper'
+    plt.xlim(0, 1.0)
+    plt.ylim(1.0, 0)
+    ax = plt.gca()
+    ax.xaxis.tick_top()
+    ax.yaxis.tick_left()
+    ax.set_xlabel('Mean H-Bond Propensity')
+    ax.set_ylabel('Mean H-Bond Co-ordination')
+    ax.xaxis.set_label_position('top')
+    figure_location = os.path.join(directory, '%s_standard_chart.png' % crystal.identifier)
+    plt.savefig(figure_location, bbox_inches='tight', pad_inches=0.0)
+
+    chart = add_picture_subdoc(figure_location, docx_template, cm=12.8)
+
+    diagram_file = make_diagram(crystal.molecule, directory)
+    diagram = add_picture_subdoc(diagram_file, docx_template)
+
+    con_files = [f[:-4] for f in os.listdir(work_directory) if f.endswith(".con")]
+    fg_pics = [fg_diagram(crystal.molecule, work_directory, con) for con in con_files]
+    fg_diagrams = {con: add_picture_subdoc(os.path.join(work_directory, '%s.png' % con), docx_template)
+                   for con in con_files}
+
+    return chart, diagram, fg_diagrams, colour_pairs, obs_pairs, count_pairs, mpair_flag
+
+
+def main(structure, directory, csdrefcode, min_donor_coordination, min_acceptor_coordination, fg_count, noopen=False):
     # This looks for the .docx template that is used to generate the report from
     if os.path.isfile(TEMPLATE_FILE):
         docx_template = docxtpl.DocxTemplate(TEMPLATE_FILE)
@@ -217,10 +363,11 @@ def main(structure, directory, csdrefcode, noopen=False):
 
     # Get all the necessary data from a HBP calculation
     functional_groups, fitting_data, donors, acceptors, model, propensities, intra_flag, \
-    groups, observed_groups = propensity_calc(crystal, work_directory)
+    groups, observed_groups, min_donor_coordination, min_acceptor_coordination, intra_count, intra_obs = propensity_calc(crystal, work_directory, min_donor_coordination, min_acceptor_coordination, fg_count)
 
     # Calculate the coordination scores separately
     coordination_scores = coordination_scores_calc(crystal, work_directory)
+    mean_coordination = abs(observed_groups.coordination_score) ## abs() not built into in jinja2 (docx) template
 
     # Create the HBP chart output as a separate file
     chart_output(groups, work_directory, structure)
@@ -252,39 +399,19 @@ def main(structure, directory, csdrefcode, noopen=False):
         else:
             acoord_bg[a.label][coord_value] = 'FF0000'
 
+    # Store letters to use as component identifier by using component number as index
+    abc = list(string.ascii_uppercase)
+
     # Generate more information for the report
     coefficients = model.coefficients
     don = list(set(list("%s_d" % p.donor_label.split(" ")[0] for p in propensities)))
     acc = list(set(list("%s_a" % p.acceptor_label.split(" ")[0] for p in propensities)))
 
-    # Generate the HBP chart
-    figure = plt.scatter([group.hbond_score for group in groups],
-                         [group.coordination_score for group in groups],
-                         s=50)
-    ax2 = plt.scatter(observed_groups.hbond_score,
-                      observed_groups.coordination_score,
-                      c='red', marker='*', s=250)
-    plt.origin = 'upper'
-    plt.xlim(0, 1.0)
-    plt.ylim(-1.0, 0)
-    ax = plt.gca()
-    ax.xaxis.tick_top()
-    ax.yaxis.tick_left()
-    ax.set_xlabel('Mean H-Bond Propensity')
-    ax.set_ylabel('Mean H-Bond Coordination')
-    ax.xaxis.set_label_position('top')
-    figure_location = os.path.join(directory, '%s_standard_chart.png' % crystal.identifier)
-    plt.savefig(figure_location)
+    # Generate HBP landscape chart
+    chart, diagram, fg_diagrams, colour_pairs, obs_pairs, count_pairs, mpair_flag = hbp_landscape(groups, observed_groups, crystal, directory, work_directory, docx_template)
 
-    chart = add_picture_subdoc(figure_location, docx_template, cm=16)
-
-    diagram_file = make_diagram(crystal.molecule, directory)
-    diagram = add_picture_subdoc(diagram_file, docx_template)
-
-    con_files = [f[:-4] for f in os.listdir(work_directory) if f.endswith(".con")]
-    fg_pics = [fg_diagram(crystal.molecule, work_directory, con) for con in con_files]
-    fg_diagrams = {con: add_picture_subdoc(os.path.join(work_directory, '%s.png' % con), docx_template)
-                   for con in con_files}
+    # Save 2D diagrams of each chemical component in the asu with non-CH labelled for the SI hbp figure
+    component_diagrams = make_diagram_components(crystal, molecule, directory, docx_template)
 
     # The context is the information that is given to the template to allow it to be populated
     context = {
@@ -309,6 +436,18 @@ def main(structure, directory, csdrefcode, noopen=False):
         'len_data': len(fitting_data),
         'coefficients': coefficients,
         'model': model,
+        'abc': abc,
+        'colour_pairs': colour_pairs,
+        'obs_pairs': obs_pairs,
+        'count_pairs': count_pairs,
+        'min_donor_coordination': min_donor_coordination,
+        'min_acceptor_coordination': min_acceptor_coordination,
+        'mpair_flag': mpair_flag,
+        'component_diagrams': component_diagrams,
+        'observed_groups': observed_groups,
+        'mean_coordination': mean_coordination,
+        'intra_count': intra_count,
+        'intra_obs': intra_obs
     }
 
     # Send all the information to the template file then open up the final report
@@ -328,8 +467,14 @@ if __name__ == '__main__':
         description=__doc__)
     parser.add_argument('input_structure', type=str,
                         help='Refcode or mol2 file of the component to be screened')
-    parser.add_argument('-d', '--directory', default=os.getcwd(),
+    parser.add_argument('-o', '--output_directory', default=os.getcwd(),
                         help='the working directory for the calculation')
+    parser.add_argument('-d', '--min_donor_coordination', default=0.1, type=float,
+                        help='Cut-off donor coordination likelihood for HBP chart')
+    parser.add_argument('-a', '--min_acceptor_coordination', default=0.1, type=float,
+                        help='Cut-off acceptor coordination likelihood for HBP chart')
+    parser.add_argument('-c', '--fg_count', default=500, type=int,
+                        help='Target functional group count for HBP hits')
     parser.add_argument('-n', '--noopen', action='store_true',
                         help='Do not automatically open the generated output file.')
 
@@ -344,7 +489,7 @@ if __name__ == '__main__':
             parser.error('%s - file not found.' % args.input_structure)
     if not refcode:
         args.directory = os.path.dirname(os.path.abspath(args.input_structure))
-    elif not os.path.isdir(args.directory):
-        os.makedirs(args.directory)
+    elif not os.path.isdir(args.output_directory):
+        os.makedirs(args.output_directory)
 
-    main(args.input_structure, args.directory, refcode, args.noopen)
+    main(args.input_structure, args.output_directory, refcode, args.min_donor_coordination, args.min_acceptor_coordination, args.fg_count, args.noopen)
