@@ -7,7 +7,7 @@
 #
 # 2016-03-22: created by Anthony Reilly, The Cambridge Crystallographic Data Centre
 # 2016-12-06: updated by Anthony Reilly, The Cambridge Crystallographic Data Centre
-#
+#19/01/2023: edited by Jonas Nyman for instances with large clusters
 
 """Packing_Similarity_Dendrogram.py - Construct a dendrogram for an input set of structures based on packing-similarity
 analysis
@@ -212,8 +212,8 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename, pad_length):
     highlighted_levels = range(n_ps_mols, -1, -1)
     #    highlighted_levels.append(0)
 
-    for level in highlighted_levels:
-        plt.plot([level, level], [0, count], "--", linewidth=0.5, color="Gray", zorder=1)
+#    for level in highlighted_levels:
+#        plt.plot([level, level], [0, count], "--", linewidth=0.5, color="Gray", zorder=1)
 
     # Pad the plot to have enough space for structure indices
 #    print("pad length is ",pad_length)
@@ -287,12 +287,14 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
                 os.makedirs(overlay_folder)
 
         for i in range(0, structure_size):
-            refcodes.append(str(structure_reader[i].identifier))#IJS 06/09/22 why are refcodes read in twice?
+            refcodes.append(str(i+1))
+#            refcodes.append(str(structure_reader[i].identifier))#IJS 06/09/22 why are refcodes read in twice?
 
         for i in range(0, structure_size):
             entry_i = structure_reader[i]
             crystal_i = entry_i.crystal
-            refcodes.append(str(structure_reader[i].identifier))
+            refcodes.append(str(i+1))
+#            refcodes.append(str(structure_reader[i].identifier))
 
             for j in range(i, structure_size):
                 if i == j:
@@ -371,6 +373,7 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     # Generate a cluster hierarchy - populate it initially with every structure
     cluster_list = []
     for i in range(0, structure_size):
+#        cluster_list.append({'level': n_ps_mols, 'identifiers': [i+1], 'children': []})
         cluster_list.append({'level': n_ps_mols, 'identifiers': [refcodes[i]], 'children': []})
 
     # Merge the structures - getting best match for each structure
@@ -400,9 +403,14 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     y = np.arange(0, structure_size + 1, 1)
 
     plot = plt.pcolor(x, y, matrix, cmap=plt.get_cmap('rainbow', (n_ps_mols - 1)), vmin=1, vmax=n_ps_mols)
-    plt.xticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
-    plt.yticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
-    cb = plt.colorbar(plot, ticks=range(1, 16))
+    if structure_size < 10:
+        plt.xticks([x -0.5 for x in list(range(1, structure_size+1))], list(range(1, structure_size+1)))
+        plt.yticks([x -0.5 for x in list(range(1, structure_size+1))], list(range(1, structure_size+1)))
+    else:
+        plt.xticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
+        plt.yticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
+    #cb = plt.colorbar(plot, ticks=range(1, 16))
+    cb = plt.colorbar(plot, ticks=range(1, n_ps_mols+1))
 
 
 
