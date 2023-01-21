@@ -1,0 +1,33 @@
+---
+name: Lint Markdown
+on:  # yamllint disable-line rule:truthy
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*.md'
+  pull_request:
+    paths:
+      - '**/*.md'
+
+jobs:
+  markdownlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check GitHub event type to determine reporter type
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+              echo "REVIEWDOG_REPORTER=github-pr-review" >> $GITHUB_ENV
+          else
+              echo "REVIEWDOG_REPORTER=github-check" >> $GITHUB_ENV
+          fi
+
+      - name: Run markdownlint
+        uses: reviewdog/action-markdownlint@v0
+        with:
+          fail_on_error: false
+          filter_mode: diff_context
+          level: info
+          reporter: ${{ env.REVIEWDOG_REPORTER }}
