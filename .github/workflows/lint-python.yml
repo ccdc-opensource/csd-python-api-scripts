@@ -27,6 +27,12 @@ jobs:
               echo "REVIEWDOG_REPORTER=github-check" >> $GITHUB_ENV
           fi
 
+      - name: Get changed files
+        id: file_changes
+        uses: trilom/file-changes-action@v1.2.3
+        with:
+          output: ' '
+
       - name: Set up Python environment
         uses: actions/setup-python@v2
         with:
@@ -37,5 +43,6 @@ jobs:
         with:
           fail_on_error: false
           filter_mode: diff_context
-          level: info
+          level: warning
+          flake8_args: ${{ steps.file_changes.outputs.files }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
