@@ -24,10 +24,17 @@ jobs:
               echo "REVIEWDOG_REPORTER=github-check" >> $GITHUB_ENV
           fi
 
+      - name: Get changed files
+        id: file_changes
+        uses: trilom/file-changes-action@v1.2.3
+        with:
+          output: ' '
+
       - name: Run markdownlint
         uses: reviewdog/action-markdownlint@v0
         with:
           fail_on_error: false
           filter_mode: diff_context
-          level: info
+          level: warning
+          markdownlint_flags: {{ steps.file_changes.outputs.files }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
