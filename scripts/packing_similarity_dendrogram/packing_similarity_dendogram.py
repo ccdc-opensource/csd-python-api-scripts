@@ -187,26 +187,14 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename, pad_length):
 
     # Setup tree plotting by getting each terminal's height
     heights, count = assign_y_positions(cluster_list[0], 0, {})
-#    print("got heights and counts from assigning y positions: ",heights,count)
     # Set start of the tree - middle of the plot and 1,1
     xpositions = [1, 1]
     ypositions = [1, get_midpoint(cluster_list[0], heights)]
-#    print("calling plot_tree for the first time with the following settings", cluster_list[0])
-#    print("\nxpositions:", xpositions)
-#    print("\nypositions (midpoint)", ypositions)
-#    print("\nheights", heights)
     # Plot tree
     plot_tree(cluster_list[0], xpositions, ypositions, heights)
 
     # Plot formatting
-#    ax = plt.axes() #IJS 06/09/22 turning this off, and every line with ax., because 2 axes are plotted using the current version of matplotlib
-#    ax.set_frame_on(False) #plot covered up if left True 
-#    ax.axes.get_yaxis().set_visible(False)
-#    ax.axes.get_xaxis().set_visible(False) # if left on, the graph is much less messy, only one axis printed, but ticks are slightly offset
-#    ax.spines['top'].set_visible(False)
-#    ax.spines['bottom'].set_visible(False)
-#    ax.spines['left'].set_visible(False)
-#    ax.spines['right'].set_visible(False) # this, and the previous 5, stop the y axis being printed twice and overlaying
+
 
     levels = range(n_ps_mols, -1, -1)
     highlighted_levels = range(n_ps_mols, -1, -1)
@@ -252,7 +240,7 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     ps.settings.distance_tolerance = ps_distances
     refcodes = []
 
-    input_name = input_file.rsplit("\\")[-1].rsplit(".")[0]
+    input_name = os.path.basename(input_file).split(".")[0]
     print("--------------------------------------------------------")
 
     if not matrix_file:
@@ -287,14 +275,10 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
                 os.makedirs(overlay_folder)
 
         for i in range(0, structure_size):
-            refcodes.append(str(i+1))
-#            refcodes.append(str(structure_reader[i].identifier))#IJS 06/09/22 why are refcodes read in twice?
-
-        for i in range(0, structure_size):
             entry_i = structure_reader[i]
             crystal_i = entry_i.crystal
             refcodes.append(str(i+1))
-#            refcodes.append(str(structure_reader[i].identifier))
+
 
             for j in range(i, structure_size):
                 if i == j:
@@ -373,7 +357,6 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     # Generate a cluster hierarchy - populate it initially with every structure
     cluster_list = []
     for i in range(0, structure_size):
-#        cluster_list.append({'level': n_ps_mols, 'identifiers': [i+1], 'children': []})
         cluster_list.append({'level': n_ps_mols, 'identifiers': [refcodes[i]], 'children': []})
 
     # Merge the structures - getting best match for each structure
@@ -404,12 +387,11 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
 
     plot = plt.pcolor(x, y, matrix, cmap=plt.get_cmap('rainbow', (n_ps_mols - 1)), vmin=1, vmax=n_ps_mols)
     if structure_size < 10:
-        plt.xticks([x -0.5 for x in list(range(1, structure_size+1))], list(range(1, structure_size+1)))
-        plt.yticks([x -0.5 for x in list(range(1, structure_size+1))], list(range(1, structure_size+1)))
+        plt.xticks(np.arange(0, structure_size + 1) - 0.5, np.arange(0, structure_size + 1))
+        plt.yticks(np.arange(0, structure_size + 1) - 0.5, np.arange(0, structure_size + 1))
     else:
         plt.xticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
         plt.yticks(np.arange(0, structure_size + 1, 5) - 0.5, np.arange(0, structure_size + 1, 5))
-    #cb = plt.colorbar(plot, ticks=range(1, 16))
     cb = plt.colorbar(plot, ticks=range(1, n_ps_mols+1))
 
 
