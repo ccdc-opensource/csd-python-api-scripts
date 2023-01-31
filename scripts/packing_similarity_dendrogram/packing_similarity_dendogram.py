@@ -193,23 +193,11 @@ def plot_dendrogram(cluster_list, n_ps_mols, filename, pad_length):
     # Plot tree
     plot_tree(cluster_list[0], xpositions, ypositions, heights)
 
-    # Plot formatting
-
-
-    levels = range(n_ps_mols, -1, -1)
-    highlighted_levels = range(n_ps_mols, -1, -1)
-    #    highlighted_levels.append(0)
-
-#    for level in highlighted_levels:
-#        plt.plot([level, level], [0, count], "--", linewidth=0.5, color="Gray", zorder=1)
-
     # Pad the plot to have enough space for structure indices
-#    print("pad length is ",pad_length)
     plt.xlim(-1, n_ps_mols + pad_length)
     plt.ylim(0, count + 1)
-    plt.xticks(np.arange(1,n_ps_mols+2,2)) #IJS 06/09/22 addition to replace ax.set_xticks(levels)
-#    ax.set_xticks(levels)
-#    ax.tick_params(axis='x', bottom='off', top='off')
+    plt.xticks(np.arange(1,n_ps_mols+2,2)) #  IJS 06/09/22 addition to replace ax.set_xticks(levels)
+
     plt.xlabel('Packing Similarity / ' + str(n_ps_mols) + ' Molecules', fontsize='large')
     # Save output
     plt.savefig(filename + "_packing_similarity_tree.png", dpi=1000, bbox_inches='tight')
@@ -407,10 +395,8 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
     ax.clear()
     plt.close()
 
-
     # Plot a dendrogram
     plot_dendrogram(cluster_list, n_ps_mols, input_name, pad_length)
-
     print("--------------------------------------------------------")
 
     sys.exit()
@@ -445,7 +431,7 @@ if __name__ == '__main__':
     parser.add_argument('-dt', '--dist_tol', type=float, default=0.25, metavar="0.25",
                         help="Fractional tolerance for distances (0.0 - 1.0) used by packing similarity.")
     parser.add_argument('-pd', '--pad_length', type=float, default=5.0, metavar="0.25",
-                        help="padding on right of the plot for listing identifiers")#IJS 06/09/22 addition, as I hve an example with many refcodes that overspills the plot
+                        help="padding on right of the plot for listing identifiers") #  IJS 06/09/22 addition, as I hve an example with many refcodes that overspills the plot
     args = parser.parse_args()
     if not os.path.isfile(args.input_file):
         parser.error('%s not found.' % args.input_file)
@@ -455,4 +441,4 @@ if __name__ == '__main__':
 
     main(args.input_file, args.matrix, args.n_molecules, args.o, args.conf_tol, args.angle_tol,
          args.dist_tol, args.strip, args.n_structures, args.allow_molecular_differences,
-         args.clustering_type,args.pad_length)
+         args.clustering_type, args.pad_length)
