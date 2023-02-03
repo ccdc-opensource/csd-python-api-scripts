@@ -14,9 +14,18 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   yamllint:
     runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.file-changes.outputs.changed-files }}
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Modified files
+        id: file-changes
+        run: |
+          echo "changed-files=$(git diff --name-only -r HEAD^1 HEAD | grep -E "\.(yml|yaml)" | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Check GitHub event type to determine reporter type
         run: |
@@ -26,17 +35,11 @@ jobs:
               echo "REVIEWDOG_REPORTER=github-check" >> $GITHUB_ENV
           fi
 
-      - name: Get changed files
-        id: file_changes
-        uses: trilom/file-changes-action@v1.2.3
-        with:
-          output: ' '
-
       - name: Run yamllint
         uses: reviewdog/action-yamllint@v1
         with:
           fail_on_error: false
           filter_mode: diff_context
           level: warning
-          yamllint_flags: ${{ steps.file_changes.outputs.files }}
+          yamllint_flags: ${{ steps.file-changes.outputs.changed-files }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
