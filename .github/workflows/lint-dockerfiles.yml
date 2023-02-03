@@ -12,9 +12,18 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   hadolint:
     runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.file-changes.outputs.changed-files }}
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Modified files
+        id: file-changes
+        run: |
+          echo "changed-files=$(git diff --name-only -r HEAD^1 HEAD | grep 'Dockerfile' | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Check GitHub event type to determine reporter type
         run: |
@@ -29,5 +38,6 @@ jobs:
         with:
           fail_on_error: false
           filter_mode: diff_context
-          level: info
+          hadolint_flags: ${{ steps.file-changes.outputs.changed-files }}
+          level: warning
           reporter: ${{ env.REVIEWDOG_REPORTER }}
