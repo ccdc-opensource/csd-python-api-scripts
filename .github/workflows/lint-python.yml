@@ -12,12 +12,21 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   flake8:
     runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.file-changes.outputs.changed-files }}
     strategy:
       matrix:
         python_version: ["3.7", "3.9"]
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Modified files
+        id: file-changes
+        run: |
+          echo "changed-files=$(git diff --name-only -r HEAD^1 HEAD | grep '\.py' | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Check GitHub event type to determine reporter type
         run: |
@@ -26,12 +35,6 @@ jobs:
           else
               echo "REVIEWDOG_REPORTER=github-check" >> $GITHUB_ENV
           fi
-
-      - name: Get changed files
-        id: file_changes
-        uses: trilom/file-changes-action@v1.2.3
-        with:
-          output: ' '
 
       - name: Set up Python environment
         uses: actions/setup-python@v2
@@ -44,5 +47,5 @@ jobs:
           fail_on_error: false
           filter_mode: diff_context
           level: warning
-          flake8_args: ${{ steps.file_changes.outputs.files }}
+          flake8_args: ${{ steps.file-changes.outputs.changed-files }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
