@@ -1,11 +1,6 @@
 ---
 name: Lint YAML
 on:  # yamllint disable-line rule:truthy
-  workflow_dispatch:
-  push:
-    paths:
-      - '**/*.yml'
-      - '**/*.yaml'
   pull_request:
     paths:
       - '**/*.yml'
