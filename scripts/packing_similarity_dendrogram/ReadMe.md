@@ -72,9 +72,11 @@ similarity.
 -dt 0.25, --dist_tol 0.
 Fractional tolerance for distances (0.0 - 1.0) used by
 packing similarity.
+-pd 5, --pad_length 5
+pad right hand side of plot to make room for structure names
 ```
 
-## Basic usage (in a command prompt):
+## Basic usage (in a command prompt)
 
 ```cmd
 python Packing_Similarity_Dendrogram.py input_file
@@ -136,6 +138,9 @@ join two clusters at the level where all the structures in the two clusters matc
 clusters at the worst or lowest level connecting them. Figure 2 shows the same database as Figure 1 using this approach,
 which gives more definite clustering but will also hide some similarities due to the hierarchical nature of the
 clustering.
+
+If there are dangling nodes without an associated identifier, it is likely that there multiple structures given the same name
+in the supplied file (searched through multiple databases say)
 
 ![Figure 1](dendogram_figure_1.png)
 **Figure 1** : Example dendrogram based on a database of carbamazepine solid forms using the default single-linkage
