@@ -1,0 +1,16 @@
+# -*- mode: yaml -*-
+# vim:ts=2:sw=2:ai:si:syntax=yaml
+#
+# yamllint configuration directives
+# Project Homepage: https://github.com/adrienverge/yamllint
+#
+# Overriding rules in files:
+# http://yamllint.readthedocs.io/en/latest/disable_with_comments.html
+---
+extends: default
+
+# Rules documentation: http://yamllint.readthedocs.io/en/latest/rules.html
+rules:
+  document-start: disable
+  line-length:
+    max: 200
