@@ -15,12 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Modified files
         id: file-changes
         run: |
-          echo "changed-files=$(git diff --name-only -r HEAD^1 HEAD | grep -E "\.(yml|yaml)" | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo "changed-files=$(git diff --name-only -r origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -E "\.(yml|yaml)" | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Check GitHub event type to determine reporter type
         run: |
@@ -35,6 +35,6 @@ jobs:
         with:
           fail_on_error: false
           filter_mode: diff_context
-          level: warning
+          level: error
           yamllint_flags: ${{ steps.file-changes.outputs.changed-files }}
           reporter: ${{ env.REVIEWDOG_REPORTER }}
