@@ -293,8 +293,8 @@ def main(input_file, matrix_file, n_ps_mols, output_ps_results, conf_threshold, 
                                 " molecules \n")
 
                         overlay_writer = MoleculeWriter(os.path.join(overlay_folder,
-                                                                     "overlay_{0}_{1}.mol2".format(refcodes[i],
-                                                                                                   refcodes[j])))
+                                                                     "overlay_{0}_{1}.mol2".format(entry_i.identifier,
+                                                                                                   entry_j.identifier)))
                         mols = result.overlay_molecules()
                         for mol in mols:
                             overlay_writer.write(mol)
