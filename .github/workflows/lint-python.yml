@@ -1,0 +1,47 @@
+---
+name: Lint Python
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    paths:
+      - '**/*.py'
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.file-changes.outputs.changed-files }}
+    strategy:
+      matrix:
+        python_version: ["3.7", "3.9"]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Modified files
+        id: file-changes
+        run: |
+          echo "changed-files=$(git diff --name-only -r origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep '\.py' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Check GitHub event type to determine reporter type
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+              echo "REVIEWDOG_REPORTER=github-pr-review" >> $GITHUB_ENV
+          else
+              echo "REVIEWDOG_REPORTER=github-check" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version }}
+
+      - name: Lint Python
+        uses: reviewdog/action-flake8@v3
+        with:
+          fail_on_error: false
+          filter_mode: diff_context
+          level: error
+          flake8_args: ${{ steps.file-changes.outputs.changed-files }}
+          reporter: ${{ env.REVIEWDOG_REPORTER }}

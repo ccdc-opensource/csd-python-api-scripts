@@ -1,0 +1,73 @@
+# Dependabot version updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuring-dependabot-version-updates
+
+version: 2
+registries:
+  nuget-artifactory:
+    type: nuget-feed
+    url: https://artifactory.ccdc.cam.ac.uk/artifactory/api/npm/v3/ccdc-nuget
+    username: ${{ secrets.ARTIFACTORY_GH_NUGET_READ_ONLY_USER }} 
+    password: ${{ secrets.ARTIFACTORY_GH_NUGET_READ_ONLY_API }} 
+  nuget-azure-devops:
+    type: nuget-feed
+    url: https://pkgs.dev.azure.com/ccdc/_packaging/ccdc/npm/v3/index.json
+    username: ${{ secrets.AZURE_NUGET_ARTIFACTS_READ_ONLY_USER }}
+    password: ${{ secrets.AZURE_NUGET_ARTIFACTS_READ_ONLY_TOKEN }}   
+  nuget-public:
+    type: nuget-feed
+    url: https://api.npm.org/v3/index.json
+
+  npm-artifactory:
+    type: nuget-feed
+    url: https://artifactory.ccdc.cam.ac.uk/artifactory/api/npm/ccdc-npm-mix/
+    username: ${{ secrets.ARTIFACTORY_GH_NPM_READ_ONLY_USER }} 
+    password: ${{ secrets.ARTIFACTORY_GH_NPM_READ_ONLY_API }} 
+  npm-azure-devops:
+    type: nuget-feed
+    url: https://pkgs.dev.azure.com/ccdc/_packaging/ccdc/npm/registry/ 
+    username: ${{ secrets.AZURE_NPM_ARTIFACTS_READ_ONLY_USER }}
+    password: ${{ secrets.AZURE_NPM_ARTIFACTS_READ_ONLY_TOKEN }}   
+  npm-public:
+    type: nuget-feed
+    url: https://registry.npmjs.org
+
+updates:
+  # Enable version updates for NuGet
+  - package-ecosystem: "nuget"
+    registries: "*"
+    # Look for `*.csproj` or `*.sln` files in the `root` directory
+    directory: "/"
+    # Check the NuGet registry for updates every day (weekdays)
+    schedule:
+      interval: "daily"
+      time: "15:30"
+      timezone: "Europe/London"
+    commit-message:
+      # Prefix all commit messages with "NO_JIRA"
+      prefix: "NO_JIRA"
+
+# Enable version updates for NPM
+  - package-ecosystem: "npm"
+    registries: "*"
+    # Look for `package.json` or `package.lock` files in the `root` directory
+    directory: "/"
+    # Check the NPM registry for updates every day (weekdays)
+    schedule:
+      interval: "daily"
+      time: "15:30"
+      timezone: "Europe/London"
+    commit-message:
+      # Prefix all commit messages with "NO_JIRA"
+      prefix: "NO_JIRA"
+
+# Enable version update for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    # Check GitHub Actions for updates every day (weekdays)
+    schedule:
+      interval: "daily"
+      time: "15:30"
+      timezone: "Europe/London"
+    commit-message:
+      # Prefix all commit messages with "NO_JIRA"
+      prefix: "NO_JIRA"
