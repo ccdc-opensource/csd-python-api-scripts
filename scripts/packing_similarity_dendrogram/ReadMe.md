@@ -1,6 +1,6 @@
 # Packing Similarity Dendrogram
 
-## Summary:
+## Summary
 
 This command-line script is designed to compare the packing of a set of input structures of a molecule (polymorphs,
 co-crystals, solvates, and hydrates). An all-to-all comparison of the structures is performed, considering _only the
@@ -8,7 +8,7 @@ heaviest components_ in each structure, and a packing-similarity dendrogram or t
 clustering. This dendrogram shows the similarity between groups of structures and how these groups relate to one
 another.
 
-## Requirements:
+## Requirements
 
 CSD Python API (v. 1.0 or later), `matplotlib` and standard python packages.
 
@@ -18,7 +18,7 @@ CSD Python API (v. 1.0 or later), `matplotlib` and standard python packages.
 
 - CSD-Materials or CSD-Enterprise
 
-## Usage and Output:
+## Usage and Output
 
 `python Packing_Similarity_Dendrogram.py -h` will show the help text:
 
@@ -110,7 +110,7 @@ than an RMSD tolerance). The `-ct` option can therefore be used to specific an R
 conformations are matched and in, turn, whether two clusters that have only one molecule in common should be merged at
 that level.
 
-## Understanding the Dendrogram:
+## Understanding the Dendrogram
 
 An example dendrogram (produced using CBZdataset.ind and related files; see supporting material
 of [Cryst. Growth Des., 2009, 9, 1869 _–_ 1888](https://pubs.acs.org/doi/10.1021/cg801056c) ) is shown below in Figure 1. 
@@ -160,13 +160,14 @@ that could also be implemented.
 **Figure 3** : Example dendrogram based on a database of carbamazepine solid forms linking clusters based on their
 average packing similarity.
 
-## Caveats:
+## Caveats
 
 The tool considers only the heaviest component in each crystal structure to enable comparison of multi-component forms
 with pure forms. Results for _Z_ ’ > 1 systems may not fully reflect differences between structures as the best match is
 retained by default in the packing-similarity analysis.
 
-## Authors: 
+## Authors
+
 _Anthony Reilly_(2016)
 
 > For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
