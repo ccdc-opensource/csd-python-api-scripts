@@ -142,11 +142,11 @@ clustering.
 If there are dangling nodes without an associated identifier, it is likely that there multiple structures given the same name
 in the supplied file (searched through multiple databases say)
 
-![Figure 1](dendogram_figure_1.png)
+![Figure 1](assets/dendogram_figure_1.png)
 **Figure 1** : Example dendrogram based on a database of carbamazepine solid forms using the default single-linkage
 clustering.
 
-![Figure 2](dendogram_figure_2.png)
+![Figure 2](assets/dendogram_figure_2.png)
 **Figure 2** : Example dendrogram based on a database of carbamazepine solid forms using complete- linkage clustering.
 
 The final option for clustering type is to merge clusters based on their average packing- similarity agreement. The
@@ -156,7 +156,7 @@ values and therefore the plot may become more complex visually.
 There are several alternative schemes for linking clusters ( _e.g._ weighting the average based on the cluster sizes)
 that could also be implemented.
 
-![Figure 3](dendogram_figure_3.png)
+![Figure 3](assets/dendogram_figure_3.png)
 **Figure 3** : Example dendrogram based on a database of carbamazepine solid forms linking clusters based on their
 average packing similarity.
 
