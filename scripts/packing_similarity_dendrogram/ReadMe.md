@@ -1,6 +1,6 @@
 # Packing Similarity Dendrogram
 
-## Summary:
+## Summary
 
 This command-line script is designed to compare the packing of a set of input structures of a molecule (polymorphs,
 co-crystals, solvates, and hydrates). An all-to-all comparison of the structures is performed, considering _only the
@@ -8,7 +8,7 @@ heaviest components_ in each structure, and a packing-similarity dendrogram or t
 clustering. This dendrogram shows the similarity between groups of structures and how these groups relate to one
 another.
 
-## Requirements:
+## Requirements
 
 CSD Python API (v. 1.0 or later), `matplotlib` and standard python packages.
 
@@ -18,7 +18,7 @@ CSD Python API (v. 1.0 or later), `matplotlib` and standard python packages.
 
 - CSD-Materials or CSD-Enterprise
 
-## Usage and Output:
+## Usage and Output
 
 `python Packing_Similarity_Dendrogram.py -h` will show the help text:
 
@@ -110,7 +110,7 @@ than an RMSD tolerance). The `-ct` option can therefore be used to specific an R
 conformations are matched and in, turn, whether two clusters that have only one molecule in common should be merged at
 that level.
 
-## Understanding the Dendrogram:
+## Understanding the Dendrogram
 
 An example dendrogram (produced using CBZdataset.ind and related files; see supporting material
 of [Cryst. Growth Des., 2009, 9, 1869 _–_ 1888](https://pubs.acs.org/doi/10.1021/cg801056c) ) is shown below in Figure 1. 
@@ -142,11 +142,11 @@ clustering.
 If there are dangling nodes without an associated identifier, it is likely that there multiple structures given the same name
 in the supplied file (searched through multiple databases say)
 
-![Figure 1](dendogram_figure_1.png)
+![Figure 1](assets/dendogram_figure_1.png)
 **Figure 1** : Example dendrogram based on a database of carbamazepine solid forms using the default single-linkage
 clustering.
 
-![Figure 2](dendogram_figure_2.png)
+![Figure 2](assets/dendogram_figure_2.png)
 **Figure 2** : Example dendrogram based on a database of carbamazepine solid forms using complete- linkage clustering.
 
 The final option for clustering type is to merge clusters based on their average packing- similarity agreement. The
@@ -156,17 +156,18 @@ values and therefore the plot may become more complex visually.
 There are several alternative schemes for linking clusters ( _e.g._ weighting the average based on the cluster sizes)
 that could also be implemented.
 
-![Figure 3](dendogram_figure_3.png)
+![Figure 3](assets/dendogram_figure_3.png)
 **Figure 3** : Example dendrogram based on a database of carbamazepine solid forms linking clusters based on their
 average packing similarity.
 
-## Caveats:
+## Caveats
 
 The tool considers only the heaviest component in each crystal structure to enable comparison of multi-component forms
 with pure forms. Results for _Z_ ’ > 1 systems may not fully reflect differences between structures as the best match is
 retained by default in the packing-similarity analysis.
 
-## Authors: 
+## Authors
+
 _Anthony Reilly_(2016)
 
 > For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
