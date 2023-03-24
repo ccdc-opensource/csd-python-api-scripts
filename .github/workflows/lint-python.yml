@@ -33,12 +33,12 @@ jobs:
           fi
 
       - name: Set up Python environment
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python_version }}
 
       - name: Lint Python
-        uses: reviewdog/action-flake8@v3
+        uses: reviewdog/action-flake8@v3.6.1
         with:
           fail_on_error: false
           filter_mode: diff_context
