@@ -30,7 +30,7 @@ jobs:
           fi
 
       - name: Run markdownlint
-        uses: reviewdog/action-markdownlint@v0.9.0
+        uses: reviewdog/action-markdownlint@v0.10.0
         with:
           fail_on_error: false
           filter_mode: diff_context
