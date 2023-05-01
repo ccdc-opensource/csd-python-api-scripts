@@ -44,7 +44,9 @@ optional arguments:
                         the directory of the desired coformer library
 ```
 
-The default coformer library is the one supplied with your Mercury install in ```<CSD Install Location>\Mercury\molecular_libraries\ccdc_coformers```
+The default coformer library is the one supplied with your Mercury install
+- for 2023.1 or later, in ```<CSD Install Location>\ccdc-software\mercury\molecular_libraries\ccdc_coformers```
+- for 2022.3 or earlier, in ```<CSD Install Location>\Mercury\molecular_libraries\ccdc_coformers```
 
 Ensure the input structure and coformers have the correct bond typing and any charges before running the script
 
