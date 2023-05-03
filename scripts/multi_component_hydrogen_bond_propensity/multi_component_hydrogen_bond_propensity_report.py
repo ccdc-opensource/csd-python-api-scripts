@@ -364,14 +364,13 @@ def main(structure, work_directory, library, csdrefcode):
 if __name__ == '__main__':
     # Set up the necessary arguments to run the script
     # For CSD 2023.1
-    if sys.platform == 'win32':
-        ccdc_coformers_dir = os.path.join(
-            io.csd_directory(),
-            os.pardir, os.pardir,
-            'ccdc-software',
-            'mercury',
-            'molecular_libraries',
-            'ccdc_coformers')
+    ccdc_coformers_dir = os.path.join(
+        io.csd_directory(),
+        os.pardir, os.pardir,
+        'ccdc-software',
+        'mercury',
+        'molecular_libraries',
+        'ccdc_coformers')
     # CSD 2022.3 or earlier
     if not os.path.exists(ccdc_coformers_dir):
         if sys.platform == 'win32':
