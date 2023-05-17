@@ -19,8 +19,8 @@ def create_logger(verbose=True):
     From inside a notebook, create a logger and log starting information
     """
     
-    logger=logging.getLogger(__name__)
-    handler=logging.StreamHandler()
+    logger = logging.getLogger(__name__)
+    handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter('[%(asctime)s %(levelname)-7s] %(message)s', datefmt='%y-%m-%d %H:%M:%S'))
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)

@@ -13,12 +13,13 @@ from pathlib import Path
 from platform import platform
 from subprocess import Popen
 
-"""
-From inside a notebook, run CCDC Hermes utility or fail if we cant find it. Assumes the
-software is installed alongside the data folder currently.
-"""
 def run_hermes(*filenames):
-
+    """
+    From inside a notebook, run CCDC Hermes utility or fail if we cant find it. Assumes the
+    software is installed alongside the data folder currently.
+    """
+    
+    
     try:
         hermes_dir = Path(csd_directory()) / '..' / '..' / 'ccdc-software' / 'hermes'
         hermes_exe = (hermes_dir / 'hermes.exe' if platform().startswith('Windows') else hermes_dir / 'hermes').as_posix()

@@ -7,5 +7,5 @@
 #
 # 2022-05-17: created by Jason Cole, The Cambridge Crystallographic Data Centre
 #
-from .run_hermes import run_hermes # noqa: F401
-from .create_logger import create_logger # noqa: F401
+from .run_hermes import run_hermes  # noqa: F401
+from .create_logger import create_logger  # noqa: F401
