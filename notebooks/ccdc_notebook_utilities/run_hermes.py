@@ -18,9 +18,10 @@ From inside a notebook, run CCDC Hermes utility or fail if we cant find it. Assu
 software is installed alongside the data folder currently.
 """
 def run_hermes(*filenames):
+
     try:
-        hermes_dir = Path( csd_directory() ) / '..' / '..' / 'ccdc-software' / 'hermes'
-        hermes_exe = (hermes_dir/ 'hermes.exe' if platform().startswith('Windows') else hermes_dir/ 'hermes').as_posix()     
+        hermes_dir = Path(csd_directory()) / '..' / '..' / 'ccdc-software' / 'hermes'
+        hermes_exe = (hermes_dir / 'hermes.exe' if platform().startswith('Windows') else hermes_dir / 'hermes').as_posix()
         _ = Popen([hermes_exe, *filenames], creationflags=0x00000008)
     except Exception as e:
         print( f"Couldnt run Hermes {e}")
