@@ -2,11 +2,8 @@
 # requires a CCDC license, and loading of the CSD-python miniconda environment if run from Linux command line
 
 # import ccdc modules
-import ccdc
 from ccdc.io import CrystalReader
-from ccdc import particle
 from ccdc.particle import Surface
-from ccdc import morphology
 from ccdc.morphology import BFDHMorphology
 
 def particle_rugosity(crystal):
