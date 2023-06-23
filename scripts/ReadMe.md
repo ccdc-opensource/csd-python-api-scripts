@@ -27,7 +27,7 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 - Create GAUSSIAN input file (`.gjf`) for a given CSD refcode or `.mol2` file.
 
 ### Particle Rugosity
-- Calculates the simulated (BFDH) particle rugosity weighted by facet area.
+- Calculates the simulated BFDH particle rugosity weighted by facet area.
 
 ## Tips 
 A section for top tips in using the repository and GitHub. 
