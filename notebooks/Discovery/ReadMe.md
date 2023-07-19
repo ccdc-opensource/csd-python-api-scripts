@@ -17,6 +17,8 @@ Directory                                                | Contents
 [08_Docking](08_Docking)                                 | Programmatic GOLD docking
 [09_Covalent_Docking](09_Covalent_Docking)               | Covalent docking with GOLD
 [10_Editing_molecules](10_Editing_molecules)             | Creating molecules from scratch
+[11_Working_With_Proteins](11_Working_With_Proteins)     | Basics of working with proteins
+[12_Ensemble_docking](12_Ensemble_docking)               | Ensemble docking with GOLD using functional waters
 
 ## Requirements
 
