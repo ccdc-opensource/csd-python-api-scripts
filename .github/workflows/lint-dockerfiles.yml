@@ -30,7 +30,7 @@ jobs:
           fi
 
       - name: Run hadolint
-        uses: reviewdog/action-hadolint@v1.34.1
+        uses: reviewdog/action-hadolint@v1.36.0
         with:
           fail_on_error: false
           filter_mode: diff_context
