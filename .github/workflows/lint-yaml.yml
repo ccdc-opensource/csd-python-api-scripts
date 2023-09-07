@@ -31,7 +31,7 @@ jobs:
           fi
 
       - name: Run yamllint
-        uses: reviewdog/action-yamllint@v1.6.1
+        uses: reviewdog/action-yamllint@v1.8.0
         with:
           fail_on_error: false
           filter_mode: diff_context
