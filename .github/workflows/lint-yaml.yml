@@ -3,8 +3,8 @@ name: Lint YAML
 on:  # yamllint disable-line rule:truthy
   pull_request:
     paths:
-      - '**/*.yml'
-      - '**/*.yaml'
+      - "**/*.yml"
+      - "**/*.yaml"
 
 jobs:
   yamllint:
@@ -13,7 +13,7 @@ jobs:
       changed-files: ${{ steps.file-changes.outputs.changed-files }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -31,7 +31,7 @@ jobs:
           fi
 
       - name: Run yamllint
-        uses: reviewdog/action-yamllint@v1.6.1
+        uses: reviewdog/action-yamllint@v1
         with:
           fail_on_error: false
           filter_mode: diff_context
