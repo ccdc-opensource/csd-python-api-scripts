@@ -24,7 +24,7 @@ Included in the report:
 
 ## Requirements 
 
-- ```matplotlib, docxtpl```
+- ```matplotlib, docxtpl, msgpack```
 
 - hydrogen_bond_propensity_report.docx
 ## Licensing Requirements 
