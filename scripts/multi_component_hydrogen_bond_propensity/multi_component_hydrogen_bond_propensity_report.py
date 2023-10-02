@@ -20,6 +20,7 @@ import glob
 import argparse
 import tempfile
 import subprocess
+import json
 
 import matplotlib
 
@@ -344,16 +345,24 @@ def main(structure, work_directory, library, csdrefcode):
         crystal = crystal_reader[0]
 
         directory = os.path.join(os.path.abspath(work_directory), crystal.identifier)
-
-        try:
-            propensities, donors, acceptors = propensity_calc(crystal, directory)
-            coordination_scores = coordination_scores_calc(crystal, directory)
-            pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
-            mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-
-        except RuntimeError:
-            print("Propensity calculation failure for %s!" % coformer_name)
-            mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
+        if os.path.exists(os.path.join(directory, "success.json")):
+            with open(os.path.join(directory, "success.json"), "r") as file:
+                tloaded = json.load(file)
+            mc_dictionary[coformer_name] = tloaded
+        else:
+            try:
+                propensities, donors, acceptors = propensity_calc(crystal, directory)
+                coordination_scores = coordination_scores_calc(crystal, directory)
+                pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
+                with open(os.path.join(directory, "success.json"), "w") as file:
+                    tdata = get_mc_scores(propensities, crystal.identifier)
+                    json.dump(tdata, file)
+                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
+                print(get_mc_scores(propensities, crystal.identifier))
+            except RuntimeError:
+                print("Propensity calculation failure for %s!" % coformer_name)
+                mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
+                failures.append(coformer_name)
 
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
