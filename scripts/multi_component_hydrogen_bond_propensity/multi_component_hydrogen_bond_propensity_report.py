@@ -334,6 +334,7 @@ def main(structure, work_directory, library, csdrefcode):
     coformer_files = glob.glob(os.path.join(library, '*.mol2'))
     tempdir = tempfile.mkdtemp()
     mc_dictionary = {}
+    failures = []
 
     # for each coformer in the library, make a pair file for the api/coformer and run a HBP calculation
     for i, f in enumerate(coformer_files):
@@ -359,6 +360,11 @@ def main(structure, work_directory, library, csdrefcode):
     diagram_file = make_diagram(api_molecule, work_directory)
     chart_file = make_mc_chart(mc_hbp_screen, directory, api_molecule)
     make_mc_report(structure, mc_hbp_screen, work_directory, diagram_file, chart_file)
+    with open("failures.txt", 'w') as file:
+        # Iterate through the array
+        for element in failures:
+            # Write each element to the file followed by a newline character
+            file.write(element + '\n')
 
 
 if __name__ == '__main__':
