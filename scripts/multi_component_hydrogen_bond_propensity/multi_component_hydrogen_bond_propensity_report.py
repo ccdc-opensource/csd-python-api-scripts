@@ -314,7 +314,7 @@ def make_mc_report(identifier, results, directory, diagram_file, chart_file):
     launch_word_processor(output_file)
 
 
-def main(structure, work_directory, library, csdrefcode):
+def main(structure, work_directory, failure_directory, library, csdrefcode):
     # This loads up the CSD if a refcode is requested, otherwise loads the structural file supplied
     if csdrefcode:
         try:
@@ -369,11 +369,9 @@ def main(structure, work_directory, library, csdrefcode):
     diagram_file = make_diagram(api_molecule, work_directory)
     chart_file = make_mc_chart(mc_hbp_screen, directory, api_molecule)
     make_mc_report(structure, mc_hbp_screen, work_directory, diagram_file, chart_file)
-    with open("failures.txt", 'w') as file:
-        # Iterate through the array
-        for element in failures:
-            # Write each element to the file followed by a newline character
-            file.write(element + '\n')
+    if failure_directory is not None:
+        with open(os.path.join(failure_directory, 'failures.txt'), 'w', encoding='utf-8', newline='') as file:
+            file.write('\n'.join(map(str, failures)))
 
 
 if __name__ == '__main__':
@@ -411,9 +409,10 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--coformer_library', type=str,
                         help='the directory of the desired coformer library',
                         default=ccdc_coformers_dir)
+    parser.add_argument('-f', '--failure_directory', type=str,
+                        help='The location where the failures file should be generated')
 
     args = parser.parse_args()
-
     refcode = False
 
     if not os.path.isfile(args.input_structure):
@@ -428,4 +427,4 @@ if __name__ == '__main__':
     if not os.path.isdir(args.coformer_library):
         parser.error('%s - library not found.' % args.coformer_library)
 
-    main(args.input_structure, args.directory, args.coformer_library, refcode)
+    main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode)
