@@ -20,6 +20,7 @@ import glob
 import argparse
 import tempfile
 import subprocess
+import json
 
 import matplotlib
 
@@ -313,7 +314,7 @@ def make_mc_report(identifier, results, directory, diagram_file, chart_file):
     launch_word_processor(output_file)
 
 
-def main(structure, work_directory, library, csdrefcode):
+def main(structure, work_directory, failure_directory, library, csdrefcode):
     # This loads up the CSD if a refcode is requested, otherwise loads the structural file supplied
     if csdrefcode:
         try:
@@ -334,6 +335,7 @@ def main(structure, work_directory, library, csdrefcode):
     coformer_files = glob.glob(os.path.join(library, '*.mol2'))
     tempdir = tempfile.mkdtemp()
     mc_dictionary = {}
+    failures = []
 
     # for each coformer in the library, make a pair file for the api/coformer and run a HBP calculation
     for i, f in enumerate(coformer_files):
@@ -343,22 +345,33 @@ def main(structure, work_directory, library, csdrefcode):
         crystal = crystal_reader[0]
 
         directory = os.path.join(os.path.abspath(work_directory), crystal.identifier)
-
-        try:
-            propensities, donors, acceptors = propensity_calc(crystal, directory)
-            coordination_scores = coordination_scores_calc(crystal, directory)
-            pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
-            mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-
-        except RuntimeError:
-            print("Propensity calculation failure for %s!" % coformer_name)
-            mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
+        if os.path.exists(os.path.join(directory, "success.json")):
+            with open(os.path.join(directory, "success.json"), "r") as file:
+                tloaded = json.load(file)
+            mc_dictionary[coformer_name] = tloaded
+        else:
+            try:
+                propensities, donors, acceptors = propensity_calc(crystal, directory)
+                coordination_scores = coordination_scores_calc(crystal, directory)
+                pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
+                with open(os.path.join(directory, "success.json"), "w") as file:
+                    tdata = get_mc_scores(propensities, crystal.identifier)
+                    json.dump(tdata, file)
+                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
+                print(get_mc_scores(propensities, crystal.identifier))
+            except RuntimeError:
+                print("Propensity calculation failure for %s!" % coformer_name)
+                mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
+                failures.append(coformer_name)
 
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
     diagram_file = make_diagram(api_molecule, work_directory)
     chart_file = make_mc_chart(mc_hbp_screen, directory, api_molecule)
     make_mc_report(structure, mc_hbp_screen, work_directory, diagram_file, chart_file)
+    if failure_directory is not None:
+        with open(os.path.join(failure_directory, 'failures.txt'), 'w', encoding='utf-8', newline='') as file:
+            file.write('\n'.join(map(str, failures)))
 
 
 if __name__ == '__main__':
@@ -396,9 +409,10 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--coformer_library', type=str,
                         help='the directory of the desired coformer library',
                         default=ccdc_coformers_dir)
+    parser.add_argument('-f', '--failure_directory', type=str,
+                        help='The location where the failures file should be generated')
 
     args = parser.parse_args()
-
     refcode = False
 
     if not os.path.isfile(args.input_structure):
@@ -413,4 +427,4 @@ if __name__ == '__main__':
     if not os.path.isdir(args.coformer_library):
         parser.error('%s - library not found.' % args.coformer_library)
 
-    main(args.input_structure, args.directory, args.coformer_library, refcode)
+    main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode)
