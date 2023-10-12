@@ -358,7 +358,6 @@ def main(structure, work_directory, failure_directory, library, csdrefcode):
                     tdata = get_mc_scores(propensities, crystal.identifier)
                     json.dump(tdata, file)
                 mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-                print(get_mc_scores(propensities, crystal.identifier))
             except RuntimeError:
                 print("Propensity calculation failure for %s!" % coformer_name)
                 mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
@@ -367,7 +366,7 @@ def main(structure, work_directory, failure_directory, library, csdrefcode):
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
     diagram_file = make_diagram(api_molecule, work_directory)
-    chart_file = make_mc_chart(mc_hbp_screen, directory, api_molecule)
+    chart_file = make_mc_chart(mc_hbp_screen, work_directory, api_molecule)
     make_mc_report(structure, mc_hbp_screen, work_directory, diagram_file, chart_file)
     if failure_directory is not None:
         with open(os.path.join(failure_directory, 'failures.txt'), 'w', encoding='utf-8', newline='') as file:
