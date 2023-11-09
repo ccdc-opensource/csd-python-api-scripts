@@ -42,6 +42,8 @@ optional arguments:
                         the working directory for the calculation
   -c COFORMER_LIBRARY, --coformer_library COFORMER_LIBRARY
                         the directory of the desired coformer library
+  -f FAILURE_DIRECTORY, --failure_directory FAILURE_DIRECTORY
+                        The location where the failures file should be generated
 ```
 
 The default coformer library is the one supplied with your Mercury install
