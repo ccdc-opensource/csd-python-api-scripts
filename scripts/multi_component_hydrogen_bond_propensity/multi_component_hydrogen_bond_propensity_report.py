@@ -413,14 +413,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     refcode = False
-
+    args.directory = os.path.abspath(args.directory)
     if not os.path.isfile(args.input_structure):
         if len(str(args.input_structure).split('.')) == 1:
             refcode = True
         else:
             parser.error('%s - file not found.' % args.input_structure)
-    if not refcode:
-        args.directory = os.path.dirname(os.path.abspath(args.input_structure))
     elif not os.path.isdir(args.directory):
         os.makedirs(args.directory)
     if not os.path.isdir(args.coformer_library):
