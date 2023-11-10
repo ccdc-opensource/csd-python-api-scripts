@@ -419,7 +419,7 @@ if __name__ == '__main__':
             refcode = True
         else:
             parser.error('%s - file not found.' % args.input_structure)
-    elif not os.path.isdir(args.directory):
+    if not os.path.isdir(args.directory):
         os.makedirs(args.directory)
     if not os.path.isdir(args.coformer_library):
         parser.error('%s - library not found.' % args.coformer_library)
