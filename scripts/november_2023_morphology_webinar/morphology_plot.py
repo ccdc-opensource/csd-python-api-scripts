@@ -45,3 +45,13 @@ def generate_morphology_plot(morphology, labels=None):
                    s=10,
                    color='black')
     plt.show()
+
+
+if __name__ == "__main__":
+    from ccdc.io import EntryReader
+    from ccdc.morphology import BFDHMorphology
+
+    csd = EntryReader('CSD')
+    ibuprofen = csd.crystal("IBPRAC18")
+    bfdh_morphology = BFDHMorphology(ibuprofen)
+    generate_morphology_plot(bfdh_morphology)
