@@ -20,7 +20,11 @@ jobs:
       - name: Modified files
         id: file-changes
         run: |
-          echo "changed-files=$(git diff --name-only -r origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -E "\.(yml|yaml)" | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo \
+            "changed-files=$(git diff --name-only -r origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} \
+             | grep -E "\.(yml|yaml)" \
+             | tr '\n' ' ')" \
+          >> $GITHUB_OUTPUT
 
       - name: Check GitHub event type to determine reporter type
         run: |
