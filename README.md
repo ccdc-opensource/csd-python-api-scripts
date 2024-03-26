@@ -50,13 +50,14 @@ You will be asked to in your file explorer where you wish to save the file. Plea
 <img src="assets/single_download.gif" width="500px">
 
 ## Running scripts through the CSD Python API Miniconda installed 
-This requires you to already have the CSD Python API installed. 
+This requires you to already have the CSD Python API installed. Activate the environment as described in
+[this FAQ on activating the CSD Python API](https://www.ccdc.cam.ac.uk/support-and-resources/support/case/?caseid=6c3ec918-aede-ed11-96a2-00505695c114) then run
 
-Windows: 
 ```cmd
-"<CCDC_INSTALL_LOCATION>\CCDC\Python_API_2022\miniconda\Scripts\activate.bat"
 python script_example.py
 ```
+
+in the same command prompt / terminal window.
 
 ## Submitting or Modifying Scripts
 
