@@ -5,7 +5,6 @@ The structure loading and morphology calculations can be replaced with customise
 The main shape classification is carried out in `shape_classification.py` whilst the visualisation is handled
 in `visualiser.py`
 
-
 ## Dependencies
 - plotly 
 ```conda install -c conda-forge plotly```

@@ -15,7 +15,7 @@
 
     This has been adapted from the example program provided in the CSD Python API to allow for
     use of other data sources.
-    
+
     Original program written by Richard Sykes
     Modified for use with Chembl by Jason C. Cole and Alex Moldovan
 """
@@ -75,7 +75,7 @@ class ChemblHit:
             raise ChemblParseError(smiles, identifier, f"{e}")
 
         if conformers is None or len(conformers) == 0:
-            raise ChemblParseError(smiles, identifier, f"No conformers generated ")
+            raise ChemblParseError(smiles, identifier, "No conformers generated ")
 
         self.molecule = conformers[0].molecule.copy()
         self.molecule.identifier = identifier

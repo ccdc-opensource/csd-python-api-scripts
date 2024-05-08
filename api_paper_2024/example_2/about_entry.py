@@ -17,7 +17,7 @@ To run this you will need to install habanero - see https://pypi.org/project/hab
 # through mercury.
 import warnings
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)  # noqa
 import os
 import time
 

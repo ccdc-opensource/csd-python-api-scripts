@@ -12,6 +12,7 @@
 """
 Credit - this code was written by Jason C. Cole, Natalie Johnson and Alex Moldovan
 """
+import argparse
 
 from ccdc.io import EntryReader
 from ccdc.search import SubstructureSearch, SMARTSSubstructure
@@ -106,12 +107,12 @@ class TrihydroxyIsoflavoneHitfinder(SubstructureSearch.HitProcessor):
 if __name__ == "__main__":
 
     sub = "$([#1]),$([OH1]),$([OX1H0]),$(O[CH3]),$(Oc1ccccc1)"
-    query_string = f"c(!@[{sub}:1])1c(!@[{sub}:2])c(!@[{sub}:3])c(!@[{sub}:4])c(OC(!@[{sub}:5])=C(c2c(!@[{sub}:6])c(!@[{sub}:7])c(!@[{sub}:8])c(!@[{sub}:9])c(!@[{sub}:10])2)C(=O)c1)" # noqa
+    query_string = (f"c(!@[{sub}:1])1c(!@[{sub}:2])c(!@[{sub}:3])c(!@[{sub}:4])c(OC(!@[{sub}:5])"
+                    f"=C(c2c(!@[{sub}:6])c(!@[{sub}:7])c(!@[{sub}:8])c(!@[{sub}:9])c(!@[{sub}:10])2)C(=O)c1)")  # noqa
 
-
-    import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d','--database', default='CSD',help='Path to the file to search or "CSD" to use the CSD')
+    parser.add_argument('-d', '--database', default='CSD',
+                        help='Path to the file to search or "CSD" to use the CSD')
     args = parser.parse_args()
 
     database = 'tiny.sdf'

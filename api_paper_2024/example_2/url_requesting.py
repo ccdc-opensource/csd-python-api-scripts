@@ -55,7 +55,7 @@ class URLRequest:
 
         try:
             return request.json()
-        except requests.exceptions.JSONDecodeError as exc:
+        except requests.exceptions.JSONDecodeError:
             if self._logger is not None:
                 self._logger.warning(f"Decode of request failed {request} {url}")
             raise URLRequestError(f"Decode of request failed {request} {url}", -9999)

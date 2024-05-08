@@ -28,7 +28,7 @@ url  ="http://dx.doi.org/10.1039/D0CE00045K",
 # For now, to prevent deprecation warnings tripping things up
 import warnings
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)  # noqa
 
 from wordcloud import WordCloud
 
@@ -37,6 +37,7 @@ import nltk.collocations
 from nltk.stem.wordnet import WordNetLemmatizer
 
 import pandas as pd
+from csv import writer
 
 
 class FrequencyCalculator:
@@ -83,7 +84,7 @@ class FrequencyCalculator:
         n_elements, rowdata = self.most_common_words(how_many)
 
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            w = writer(csvfile)  ## Writer is not assigned - missing import?
+            w = writer(csvfile)
             w.writerow(['word', 'count', 'frequency'])
             for row in rowdata:
                 towrite = [row[0], row[1], row[1] * 100.0 / n_elements]
