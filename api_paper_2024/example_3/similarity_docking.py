@@ -292,10 +292,14 @@ class SimilarityDocking(argparse.ArgumentParser):
         :return:
         """
 
-        molecule = new_client.molecule
+        # Flake  thinks new_client and some of the exceptions are undefined, but if
+        # we get here we will already have called import_chembl_dependencies() successfully, so
+        # ignore Flake
+        
+        molecule = new_client.molecule # noqa
         try:
             m1 = molecule.filter(chembl_id=f'{chemblid}').only(['molecule_chembl_id', 'molecule_structures'])
-        except (HttpApplicationError, ConnectionError, RequestException, RuntimeError, IOError) as e:
+        except (HttpApplicationError, ConnectionError, RequestException, RuntimeError, IOError) as e:  # noqa
             raise ChemblSearchError(chemblid, "identifier", e)
 
         smiles = m1[0]['molecule_structures']['canonical_smiles']
