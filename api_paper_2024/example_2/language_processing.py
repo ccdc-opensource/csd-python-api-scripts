@@ -41,6 +41,7 @@ from nltk.stem.wordnet import WordNetLemmatizer # noqa
 import pandas as pd # noqa
 from csv import writer # noqa
 
+
 class FrequencyCalculator:
     """
     A class to calculate the frequency of words in a text corpus that build on nltk
