@@ -295,7 +295,7 @@ class SimilarityDocking(argparse.ArgumentParser):
         # Flake  thinks new_client and some of the exceptions are undefined, but if
         # we get here we will already have called import_chembl_dependencies() successfully, so
         # ignore Flake
-        
+
         molecule = new_client.molecule # noqa
         try:
             m1 = molecule.filter(chembl_id=f'{chemblid}').only(['molecule_chembl_id', 'molecule_structures'])
