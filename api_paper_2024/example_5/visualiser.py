@@ -17,7 +17,6 @@ MorphologyBase = TypeVar('MorphologyBase')
 
 try:
     from plotly import graph_objects as go
-    from plotly.subplots import make_subplots
 
 except ModuleNotFoundError:
     warnings.warn("Plotly could not be found, please install plotly using `conda install plotly`")
