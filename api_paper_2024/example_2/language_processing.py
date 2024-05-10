@@ -30,15 +30,16 @@ import warnings
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)  # noqa
 
-from wordcloud import WordCloud
+# Flake doesnt like imports after the line above, but we have to have the line above to
+# prevent deprecation warnings from these third party packages sending spurious output
+# which we dont want, as it is 'seen' as an error when using this code through Mercury.
 
-import nltk
-import nltk.collocations
-from nltk.stem.wordnet import WordNetLemmatizer
-
-import pandas as pd
-from csv import writer
-
+from wordcloud import WordCloud # noqa
+import nltk # noqa
+import nltk.collocations # noqa
+from nltk.stem.wordnet import WordNetLemmatizer # noqa
+import pandas as pd # noqa
+from csv import writer # noqa
 
 class FrequencyCalculator:
     """
