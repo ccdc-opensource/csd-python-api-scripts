@@ -23,4 +23,4 @@ new_settings.update({
 })
 
 if __name__ == "__main__":
-    voronoi.run_crystal_voronoi(settings = new_settings)
+    voronoi.run_crystal_voronoi(settings=new_settings)
