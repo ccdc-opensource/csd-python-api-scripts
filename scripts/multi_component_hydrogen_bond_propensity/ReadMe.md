@@ -24,7 +24,7 @@ Summary report includes:
   
 ## Licensing Requirements 
 
-- CSD-Core
+- CSD-Materials
 
 ## Instructions on running
 
