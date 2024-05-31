@@ -264,7 +264,7 @@ def hbp_landscape(groups, observed_groups, crystal, directory, work_directory, d
         highest_pairs = obs_pairs
 
     # Static legend
-    if highest_pairs <= 10:
+    if highest_pairs <= 10 or obs_pairs < 6:
         for i, colour in enumerate(hbp_colours):
             figure_i = plt.scatter([group.hbond_score for group in groups if len(group.hbonds) == i],
                                [abs(group.coordination_score) for group in groups if len(group.hbonds) == i],
