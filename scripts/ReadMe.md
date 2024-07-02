@@ -1,6 +1,8 @@
 
 # Contents
 
+This folder contains scripts submitted by users or CCDC scientists for anyone to use freely.
+
 ## Concat Mol2
 
 - Concatenates mol2 files present in working directory to a single `.mol2` file.
