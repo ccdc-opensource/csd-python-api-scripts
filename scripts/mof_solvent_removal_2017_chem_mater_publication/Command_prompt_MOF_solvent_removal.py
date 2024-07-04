@@ -45,7 +45,10 @@ arg_handler.add_argument(
 
 args = arg_handler.parse_args()
 if not args.output_directory:
-    args.output_directory = os.path.dirname(args.input_file)
+    args.output_directory = os.path.abspath(os.path.dirname(args.input_file))
+
+if not os.path.exists(args.output_directory):
+    os.makedirs(args.output_directory)
 
 # Define the solvent smiles patterns
 if not args.solvent_file:
