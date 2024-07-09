@@ -358,10 +358,12 @@ def main(structure, work_directory, failure_directory, library, csdrefcode):
                     tdata = get_mc_scores(propensities, crystal.identifier)
                     json.dump(tdata, file)
                 mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-            except RuntimeError:
+            except RuntimeError as error_message:
                 print("Propensity calculation failure for %s!" % coformer_name)
+                error_string = f"{coformer_name}: {error_message}"
+                warnings.warn(error_string)
                 mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
-                failures.append(coformer_name)
+                failures.append(error_string)
 
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
