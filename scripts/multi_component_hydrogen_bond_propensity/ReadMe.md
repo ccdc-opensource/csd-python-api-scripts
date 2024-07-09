@@ -1,28 +1,31 @@
-# Multi-Component Hydrogen Bond Propensity 
+# Multi-Component Hydrogen Bond Propensity
 
 ## Summary
 
 Performs a multi-component Hydrogen bond propensity calculation for a given library of co-formers
-## Example 
 
-Individual reports are generated for each coformer stored in indvidual folders. A summary multicomponent report with rankings is also generated. 
+## Example
 
-Individual reports include: 
+Individual reports are generated for each coformer stored in indvidual folders. A summary multicomponent report with rankings is also generated.
 
-- Predicted intermolecular hydrogen bond propensities 
+Individual reports include:
+
+- Predicted intermolecular hydrogen bond propensities
 - Hydrogen bond coordination likelihood
 
-Summary report includes: 
+Summary report includes:
+
 - Chemical Diagram
-- Table of ranked components 
+- Table of ranked components
 - Multi-component hydrogen-bond propensity chart
 
-## Requirements 
+## Requirements
+
 - docxtpl
 - multi_component_hydrogen_bond_propensity_report.docx
 - multi_component_pair_hbp_report.docx
   
-## Licensing Requirements 
+## Licensing Requirements
 
 - CSD-Materials
 
@@ -49,6 +52,7 @@ optional arguments:
 ```
 
 The default coformer library is the one supplied with your Mercury install
+
 - for 2023.1 or later, in ```<CSD Install Location>\ccdc-software\mercury\molecular_libraries\ccdc_coformers```
 - for 2022.3 or earlier, in ```<CSD Install Location>\Mercury\molecular_libraries\ccdc_coformers```
 
@@ -57,6 +61,7 @@ Ensure the input structure and coformers have the correct bond typing and any ch
 If the calculation fails for any API-coformer combinations, they will be recorded with N/A in the summary report table
 
 ## Author
+
 _Andrew Maloney_ (CCDC) 2017
 
 > For feedback or to report any issues please contact [support@ccdc.cam.ac.uk](mailto:support@ccdc.cam.ac.uk)
