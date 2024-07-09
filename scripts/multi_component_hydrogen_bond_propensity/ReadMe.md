@@ -44,6 +44,8 @@ optional arguments:
                         the directory of the desired coformer library
   -f FAILURE_DIRECTORY, --failure_directory FAILURE_DIRECTORY
                         The location where the failures file should be generated
+  --force_run_disordered
+                        Forces running the script on disordered entries. (NOT RECOMMENDED)
 ```
 
 The default coformer library is the one supplied with your Mercury install
