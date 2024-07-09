@@ -21,6 +21,7 @@ import argparse
 import tempfile
 import subprocess
 import json
+import warnings
 
 import matplotlib
 
@@ -32,8 +33,6 @@ from ccdc.diagram import DiagramGenerator
 from ccdc.descriptors import CrystalDescriptors
 
 try:
-    import warnings
-
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=DeprecationWarning)
         import docxtpl
@@ -344,6 +343,11 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
     # for each coformer in the library, make a pair file for the api/coformer and run a HBP calculation
     for i, f in enumerate(coformer_files):
         molecule_file, coformer_name = make_pair_file(api_molecule, tempdir, f, i + 1)
+        if not io.CrystalReader(f)[0].molecule.is_3d:
+            failure_warning = f"Could not run for {coformer_name} no 3d coordinates present."
+            failures.append(failure_warning)
+            warnings.warn(failure_warning)
+            continue
         print(coformer_name)
         crystal_reader = io.CrystalReader(molecule_file)
         crystal = crystal_reader[0]
@@ -366,7 +370,7 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
                 print("Propensity calculation failure for %s!" % coformer_name)
                 print(error_message)
                 mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
-                failures.append(f"coformer_name: {error_message}")
+                failures.append(f"{coformer_name}: {error_message}")
 
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
