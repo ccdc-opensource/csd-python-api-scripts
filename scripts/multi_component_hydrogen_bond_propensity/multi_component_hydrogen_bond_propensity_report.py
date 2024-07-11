@@ -314,7 +314,7 @@ def make_mc_report(identifier, results, directory, diagram_file, chart_file):
     launch_word_processor(output_file)
 
 
-def main(structure, work_directory, failure_directory, library, csdrefcode):
+def main(structure, work_directory, failure_directory, library, csdrefcode, force_run):
     # This loads up the CSD if a refcode is requested, otherwise loads the structural file supplied
     if csdrefcode:
         try:
@@ -322,6 +322,10 @@ def main(structure, work_directory, failure_directory, library, csdrefcode):
         except RuntimeError:
             print('Error! %s is not in the database!' % structure)
             quit()
+        if io.CrystalReader('CSD').entry(structure).has_disorder and not force_run:
+            raise RuntimeError("Disorder can cause undefined behaviour. It is not advisable to run this "
+                               "script on disordered entries.\n To force this script to run on disordered entries"
+                               " use the flag --force_run_disordered.")
     else:
         crystal = io.CrystalReader(structure)[0]
 
@@ -358,10 +362,12 @@ def main(structure, work_directory, failure_directory, library, csdrefcode):
                     tdata = get_mc_scores(propensities, crystal.identifier)
                     json.dump(tdata, file)
                 mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-            except RuntimeError:
+            except RuntimeError as error_message:
                 print("Propensity calculation failure for %s!" % coformer_name)
+                error_string = f"{coformer_name}: {error_message}"
+                warnings.warn(error_string)
                 mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
-                failures.append(coformer_name)
+                failures.append(error_string)
 
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
@@ -411,6 +417,9 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--failure_directory', type=str,
                         help='The location where the failures file should be generated')
 
+    parser.add_argument('--force_run_disordered', action="store_true",
+                        help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
+
     args = parser.parse_args()
     refcode = False
     args.directory = os.path.abspath(args.directory)
@@ -424,4 +433,5 @@ if __name__ == '__main__':
     if not os.path.isdir(args.coformer_library):
         parser.error('%s - library not found.' % args.coformer_library)
 
-    main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode)
+    main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode,
+         args.force_run_disordered)
