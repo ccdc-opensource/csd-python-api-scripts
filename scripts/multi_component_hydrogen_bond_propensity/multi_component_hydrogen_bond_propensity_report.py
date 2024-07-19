@@ -362,7 +362,7 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
                     tdata = get_mc_scores(propensities, crystal.identifier)
                     json.dump(tdata, file)
                 mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-            except RuntimeError as error_message:
+            except Exception as error_message:
                 print("Propensity calculation failure for %s!" % coformer_name)
                 error_string = f"{coformer_name}: {error_message}"
                 warnings.warn(error_string)
