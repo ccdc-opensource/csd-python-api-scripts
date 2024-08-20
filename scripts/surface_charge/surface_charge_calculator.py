@@ -117,7 +117,7 @@ class SurfaceChargeController:
                     <th>hkl</th>
                     <th>Offset</th>
                     <th>Projected Area</th>
-                    <th>Surface Charge</th>
+                    <th>Surface Charge*</th>
                     <th>Surface Charge per Projected Area</th>
                 </tr>
         """
@@ -138,6 +138,7 @@ class SurfaceChargeController:
         # HTML Table Footer
         html += """
             </table>
+            <p><i> *-Surface charge is based on gasteiger partial charges <a href="https://www.sciencedirect.com/science/article/pii/S0040403901949779?via%3Dihub">10.1016/S0040-4039(01)94977-9</a></i> </p>
         </body>
         </html>
         """
