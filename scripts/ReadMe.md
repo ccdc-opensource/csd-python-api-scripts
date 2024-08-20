@@ -44,6 +44,11 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - Calculates the simulated BFDH particle rugosity weighted by facet area.
 
+## Surface Charge
+
+- Calculates the surface charge for a given structure and surface terminations. Runs both from CMD and Mercury.
+
+
 ## Tips
 
 A section for top tips in using the repository and GitHub.
