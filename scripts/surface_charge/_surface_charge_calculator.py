@@ -73,7 +73,7 @@ class SurfaceChargeController:
         elif ".mol2" in self.structure:
             self.crystal = CrystalReader(self.structure)[0]
         else:
-            raise IOError(" \n ERROR : Please supply ref code mol2")
+            raise IOError(" \n ERROR : Please supply refcode or  mol2")
 
     @property
     def surfaces(self):
