@@ -16,7 +16,7 @@ from tkinter import ttk, messagebox, filedialog
 
 from ccdc.utilities import ApplicationInterface
 
-from _surface_charge_calculator import SurfaceChargeController
+from surface_charge_calculator import SurfaceChargeController
 
 
 class SurfaceChargeGUI:
