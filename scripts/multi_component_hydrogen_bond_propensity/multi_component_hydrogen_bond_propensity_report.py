@@ -215,21 +215,21 @@ def get_mc_scores(propensities, identifier):
             identifier]
 
 
-def make_pair_file(api_molecule, tempdir, f, i):
+def make_pair_file(api_molecule, tempdir, f):
     # Creates a file for the api/coformer pair
     with io.MoleculeReader(f) as reader:
         coformer_molecule = reader[0]
         coformer_name = coformer_molecule.identifier
-        molecule_pair = make_molecule_pair(api_molecule, coformer_molecule, i)
+        molecule_pair = make_molecule_pair(api_molecule, coformer_molecule)
         molecule_file = os.path.join(tempdir, '%s.mol2' % molecule_pair.identifier)
         with io.MoleculeWriter(molecule_file) as writer:
             writer.write(molecule_pair)
     return molecule_file, coformer_name
 
 
-def make_molecule_pair(api_molecule, coformer_molecule, i):
+def make_molecule_pair(api_molecule, coformer_molecule):
     # Creates the multi-component system for each api/coformer pair
-    new_file_name = '%s_%d' % (api_molecule.identifier, i)
+    new_file_name = '%s--%s' % (api_molecule.identifier, coformer_molecule.identifier)
     molecule_pair = molecule.Molecule(new_file_name)
     molecule_pair.add_molecule(api_molecule)
     molecule_pair.add_molecule(coformer_molecule)
@@ -342,8 +342,8 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
     failures = []
 
     # for each coformer in the library, make a pair file for the api/coformer and run a HBP calculation
-    for i, f in enumerate(coformer_files):
-        molecule_file, coformer_name = make_pair_file(api_molecule, tempdir, f, i + 1)
+    for f in coformer_files:
+        molecule_file, coformer_name = make_pair_file(api_molecule, tempdir, f)
         print(coformer_name)
         crystal_reader = io.CrystalReader(molecule_file)
         crystal = crystal_reader[0]
