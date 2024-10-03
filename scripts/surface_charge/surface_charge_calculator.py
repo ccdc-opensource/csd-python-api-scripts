@@ -31,28 +31,28 @@ class SurfaceCharge:
         self.surface_atom_charge = np.nan
         self.node_projected_charge = np.nan
         self.node_representative_charge = np.nan
+        self.triangles_properties = dict()
 
     @staticmethod
     def sum_atom_charge(atoms: List[object]) -> float:
         return np.round(np.sum([atom.partial_charge for atom in atoms]), 3)
 
-    def get_average_node_charge(self):
+    def get_node_charge(self):
         self.node_charge_dictionary = {}
         node_list = list(self.surface.topology.nodes)
         for node, atoms in self.surface.surface_node_atom_contacts.items():
             node_index = node_list.index(node)
-            average_node_charge = 0
+            total_node_charge = 0
             if len(atoms) > 0:
-                average_node_charge = self.sum_atom_charge(atoms)
-            self.node_charge_dictionary[node_index] = average_node_charge
+                total_node_charge = self.sum_atom_charge(atoms)
+            self.node_charge_dictionary[node_index] = total_node_charge
 
     def calculate_triangles_properties(self,
-                                       tri_index: List[Tuple[int, int, int]]) -> Dict[
-        Tuple[int, int, int], Dict[str, float]]:
+                                       tri_index: List[Tuple[int, int, int]]) -> None:
         surface_area = self.surface.descriptors.surface_area
         self.triangles_properties = {}
         triangle_areas = self.calculate_area_of_triangles(list(self.surface.topology.triangles))
-        total_triangle_area = sum(triangle_areas)
+
         for node_index, triangle_area in zip(tri_index, triangle_areas):
             average_triangle_charge = np.mean([self.node_charge_dictionary[i] for i in node_index])
             triangle_representation = triangle_area / surface_area
@@ -68,7 +68,7 @@ class SurfaceCharge:
     def calculate_node_charges(self):
         tri_index = self.calculated_node_index_values(list(self.surface.topology.nodes),
                                                       list(self.surface.topology.triangles))
-        self.get_average_node_charge()
+        self.get_node_charge()
         self.calculate_triangles_properties(tri_index)
         self.representative_charge = np.sum(
             [triangle['Node Representative Charge'] for triangle in self.triangles_properties.values()])
@@ -83,22 +83,14 @@ class SurfaceCharge:
         return np.linalg.norm(target - origin)
 
     @staticmethod
-    def compute_triangle_area(a: float, b: float, c: float) -> float:
-        """Calculates area of triangle using Heron's formula"""
-        s = (a + b + c) / 2
-        return np.sqrt(s * (s - a) * (s - b) * (s - c))
+    def compute_simplex_area(simplex: np.ndarray) -> float:
+        vec_1 = simplex[1] - simplex[0]
+        vec_2 = simplex[2] - simplex[0]
+        return np.linalg.norm(np.cross(vec_1, vec_2)) / 2
 
     def calculate_area_of_triangles(self, triangles: List) -> List:
         """ Calculates area of individual triangles from node positions using Heron's formula"""
-        triangle_areas = []
-        for triangle in triangles:
-            pos_0, pos_1, pos_2 = np.array(triangle[0]), np.array(triangle[1]), np.array(triangle[2]),
-            a_dist = self.calculate_length(pos_0, pos_1)
-            b_dist = self.calculate_length(pos_0, pos_2)
-            c_dist = self.calculate_length(pos_1, pos_2)
-            triangle_areas.append(self.compute_triangle_area(a_dist, b_dist, c_dist))
-
-        return triangle_areas
+        return [self.compute_simplex_area(np.array(triangle)) for triangle in triangles]
 
     @staticmethod
     def calculated_node_index_values(nodes: List, triangles: List) -> List:
@@ -222,6 +214,7 @@ class SurfaceChargeController:
         html += """
             </table>
             <p><i> *-Surface charge is based on gasteiger partial charges <a href="https://www.sciencedirect.com/science/article/pii/S0040403901949779?via%3Dihub">10.1016/S0040-4039(01)94977-9</a></i> </p>
+            <p> Topological surface charge is defined as the average triangle charge on the surface multiplied by the % area contribution towards the total surface. </p> 
         </body>
         </html>
         """
