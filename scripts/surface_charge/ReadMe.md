@@ -11,7 +11,7 @@ Charges are currently calculated using the Gasteiger charge model. Further devel
 
 Example Output:
 
-![Example Output](assets/example_output.png)
+![Example Output](assets/example_output_hxacan28.png)
 
 > **Note** - When comparing charges for non-CSD structures and structures from mol2 files the values might be different as the bonding might not be the same. When importing a mol2 file the bonding and charges may have to be calculated on the fly, whereas this information is assigned for CSD entries.
 
