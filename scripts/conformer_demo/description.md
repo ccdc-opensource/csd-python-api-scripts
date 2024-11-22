@@ -25,5 +25,4 @@ There is an accompanying mol2 file with this script, but users may use any small
 
 Author: Chris Ringrose - 22/11/24
 
-
     For feedback or to report any issues please contact support@ccdc.cam.ac.uk
