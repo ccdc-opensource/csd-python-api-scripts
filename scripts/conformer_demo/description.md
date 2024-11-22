@@ -1,10 +1,10 @@
-## Conformer Demo
+# Conformer Demo
 
 This is a short script to generate conformers with some rudimentary analysis for a single molecule.
 There are also options to overlay the results to view in Hermes.
 
-
 ### Example output showing what the user can expect to see:
+
 ```
 Reading file: AZD9291.mol2 ... done.
 Generating conformers, maximum of 20 ... done, generated 20 conformers.
@@ -19,9 +19,7 @@ Writing file superimposed ... done.
 
 CCDC Python API Licence required, minimum version: 3.0.15
 
-
 There is an accompanying mol2 file with this script, but users may use any small molecule provided in a file format readable by our API (e.g. mol, mol2, sdf, etc)
-
 
 Author: Chris Ringrose - 22/11/24
 
