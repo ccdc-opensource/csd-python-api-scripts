@@ -66,7 +66,7 @@ def analyse(conformers: conformer.ConformerHitList) -> molecule:
     print(f'Most probable conformer RMSD wrt input: {round(most_probable_conformer.rmsd(), 3)}; '
           f'wrt minimised: {round(most_probable_conformer.rmsd(wrt="minimised"), 3)}.')
 
-    print(f'Scores of top 10 conformers: ', end='')
+    print('Scores of top 10 conformers: ', end='')
 
     top_ten = conformers[:10]
     for i in range(len(top_ten)):
@@ -85,7 +85,7 @@ def overlay(conformers, query: str, output_filename: str) -> None:
     :param query: SMARTS pattern which the conformers will overlay on top of.
         Should be consistent across all conformers, e.g. benzene ring.
     """
-    print(f'Overlaying conformers ... ', end='')
+    print('Overlaying conformers ... ', end='')
     conformers_mols = [c.molecule for c in conformers]
     ss_search = SubstructureSearch()
     substructure = SMARTSSubstructure(query)
@@ -113,8 +113,8 @@ def write_conformers_to_file(conformers: conformer.ConformerHitList, filename: s
     """
 
     with io.MoleculeWriter(filename) as writer:
-        for conformer in conformers:
-            writer.write(conformer.molecule)
+        for conf in conformers:
+            writer.write(conf.molecule)
 
 
 if __name__ == '__main__':
@@ -124,12 +124,12 @@ if __name__ == '__main__':
     mol = read(input_filename)
 
     # Generate conformers
-    conformers = generate_conformers(mol, 20)
+    confs = generate_conformers(mol, 20)
 
     # Provide summary of analysis
-    analyse(conformers)
+    analyse(confs)
 
     # Overlay structures based on common substructure
     query = 'c1cncnc1'
     output_filename = f'superimposed_{input_filename}'
-    overlay(conformers, query, output_filename)
+    overlay(confs, query, output_filename)
