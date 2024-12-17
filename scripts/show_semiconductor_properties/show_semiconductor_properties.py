@@ -18,14 +18,13 @@ from io import BytesIO
 import base64
 import json
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 README_LINK = f"""{Path(os.path.dirname(__file__)) / "ReadMe.md"}"""
 README_LINK = "https://downloads.ccdc.cam.ac.uk/documentation/API/descriptive_docs/predicted_properties.html"
 
 default_settings = {}
-
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
 
 
 def plot_hist(descs_data, astype="fig"):
@@ -92,19 +91,15 @@ def write_descs_report(settings=default_settings):
     entry = semiconductor_entry_reader.entry(interface.identifier)
     entry = interface.current_entry
     properties = entry.predicted_properties
-    print(properties)
-#    output.write(entry.identifier)
-    if (properties.semiconductor_properties == None):
-#    if "semiconductor_properties" not in dir(properties):
+    output = open("output.txt", "a")
+    if (properties.semiconductor_properties is None):
         interface.write_report(title="Data not found")
         output = open("output.txt", "a")
-        output.write("%s, %s, %s, No data here \n" % (str(properties),entry.identifier, str(properties.semiconductor_properties)))
- #       output.write("")
+        output.write("%s, %s, %s, No data here \n" % (str(properties), entry.identifier, str(properties.semiconductor_properties)))
         return None
 
     descs_data = properties.semiconductor_properties
-    output = open("output.txt", "a")
-    output.write("%s, %s, %s, data here \n" % (str(properties),entry.identifier, str(properties.semiconductor_properties)))
+    output.write("%s, %s, %s, data here \n" % (str(properties), entry.identifier, str(properties.semiconductor_properties)))
     with open(interface.output_html_file, "w") as report:
 
         tl = Template(
@@ -115,7 +110,7 @@ def write_descs_report(settings=default_settings):
         )
         report.write(
             tl.render(
-                ident=interface.identifier, data=descs_data, readme_link=README_LINK, image = plot_hist(descs_data, "buf")
+                ident=interface.identifier, data=descs_data, readme_link=README_LINK, image=plot_hist(descs_data, "buf")
             )
         )
 
