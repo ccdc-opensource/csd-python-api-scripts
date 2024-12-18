@@ -21,7 +21,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
-README_LINK = f"""{Path(os.path.dirname(__file__)) / "ReadMe.md"}"""
 README_LINK = "https://downloads.ccdc.cam.ac.uk/documentation/API/descriptive_docs/predicted_properties.html"
 
 default_settings = {}
@@ -40,8 +39,6 @@ def plot_hist(descs_data, astype="fig"):
         "hole_reorganization_energy": descs_data.hole_reorganization_energy,
         "dynamic_disorder": descs_data.dynamic_disorder,
     }
-#    output1 = open("output1.txt", "a")
-#    output1.write("%s" % (str(data_hlt{"singlet_state_1_energy"})))
     hist_data = json.load(open(Path(__file__).parent / "hist_data.json", "r"))
     fig, axs = plt.subplots(nrows=2, ncols=5, figsize=(15, 15))
 
@@ -89,8 +86,6 @@ def plot_hist(descs_data, astype="fig"):
 def write_descs_report(settings=default_settings):
     interface = ApplicationInterface(parse_commandline=False)
     interface.parse_commandline()
-    semiconductor_entry_reader = ccdc.io.EntryReader("CSD")
-    entry = semiconductor_entry_reader.entry(interface.identifier)
     entry = interface.current_entry
     if (entry.predicted_properties is None):
         interface.write_report(title="Data not found", content="No Predicted Property Data Found For " + entry.identifier)
