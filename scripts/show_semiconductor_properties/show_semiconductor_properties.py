@@ -55,6 +55,8 @@ def plot_hist(descs_data, astype="fig"):
         ax.title.set_text(data_red["axis_label"])
 
         arrow_place = data_hlt.get(data_red["name"], np.nan)
+        if arrow_place is None:
+            arrow_place = np.nan
         try:
             arrow_anchor = (0, [x for x in ys if (x < arrow_place)][-1])
             height = ys[1] - ys[0]
@@ -90,16 +92,16 @@ def write_descs_report(settings=default_settings):
     semiconductor_entry_reader = ccdc.io.EntryReader("CSD")
     entry = semiconductor_entry_reader.entry(interface.identifier)
     entry = interface.current_entry
-    properties = entry.predicted_properties
-    output = open("output.txt", "a")
+    if (entry.predicted_properties is None):
+        interface.write_report(title="Data not found", content="No Predicted Property Data Found For " + entry.identifier)
+        return None
+    else:
+        properties = entry.predicted_properties
     if (properties.semiconductor_properties is None):
-        interface.write_report(title="Data not found")
-        output = open("output.txt", "a")
-        output.write("%s, %s, %s, No data here \n" % (str(properties), entry.identifier, str(properties.semiconductor_properties)))
+        interface.write_report(title="Data not found", content="No Semiconductor Data Found For " + entry.identifier)
         return None
 
     descs_data = properties.semiconductor_properties
-    output.write("%s, %s, %s, data here \n" % (str(properties), entry.identifier, str(properties.semiconductor_properties)))
     with open(interface.output_html_file, "w") as report:
 
         tl = Template(

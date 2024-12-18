@@ -276,17 +276,17 @@
                     </tr>
                     <tr>
                         <td>homo_lumo_gap: </td>
-                        <td>{{'%0.2f' % data.homo_lumo_gap|float}} </td>
+                        <td>{{'%0.2f' % data.homo_lumo_gap|float if data.homo_lumo_gap}} </td>
                         <td>kJ&middot;mol<sup>-1</sup></td>
                     </tr>
                     <tr>
                         <td>hole_reorganization_energy: </td>
-                        <td>{{'%0.2f' % data.hole_reorganization_energy|float}} </td>
+                        <td>{{'%0.2f' % data.hole_reorganization_energy|float if data.hole_reorganization_energy}} </td>
                         <td>kJ&middot;mol<sup>-1</sup></td>
                     </tr>
                     <tr>
                         <td>dynamic_disorder: </td>
-                        <td>{{'%0.2f' % data.dynamic_disorder|float}} </td>
+                        <td>{{'%0.2f' % data.dynamic_disorder|float if data.dynamic_disorder}} </td>
                         <td>kJ&middot;mol<sup>-1</sup></td>
                     </tr>
                 </table>
