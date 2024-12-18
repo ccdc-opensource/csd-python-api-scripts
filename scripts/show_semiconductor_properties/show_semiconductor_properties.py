@@ -10,10 +10,8 @@
 #
 #
 from ccdc.utilities import ApplicationInterface
-import ccdc.io
 from jinja2 import Template
 from pathlib import Path
-import os
 from io import BytesIO
 import base64
 import json
