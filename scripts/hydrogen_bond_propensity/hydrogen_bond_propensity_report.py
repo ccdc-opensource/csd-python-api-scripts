@@ -9,6 +9,7 @@
 # 2017-08-10: Created by Andy Maloney, the Cambridge Crystallographic Data Centre
 # 2020-08-21: made available by the Cambridge Crystallographic Data Centre
 # 2022-12-21: Updated by Joanna S. Stevens, the Cambridge Crystallographic Data Centre
+# 2025-01-08: Updated by Pablo Martinez-Bulit, the Cambridge Crystallographic Data Centre
 #
 
 """
@@ -53,6 +54,75 @@ TEMPLATE_FILE = os.path.join(SCRIPT_DIR, TEMPLATE_FILENAME)
 
 
 ###############################################################################
+class PropensityCalc:
+    "HBP Calculator"
+    def __init__(self, crystal, work_directory, min_donor_coordination, min_acceptor_coordination, fg_count):
+        self.crystal = crystal
+        self.directory = work_directory
+        self.min_donor_coordination = min_donor_coordination
+        self.min_acceptor_coordination = min_acceptor_coordination
+        self.fg_count = fg_count
+        self.settings = self._hbp_settings()
+        self.hbp = CrystalDescriptors.HBondPropensities()
+
+    def _hbp_settings(self):
+        settings = CrystalDescriptors.HBondPropensities.Settings()
+        settings.hbond_criterion.require_hydrogens = True
+        settings.hbond_criterion.path_length_range = (3, 999)
+        settings.working_directory = self.directory
+
+        return settings
+
+    def calculate(self):
+        self.hbp.settings = self.settings
+
+        # Set up the target structure for the calculation
+        self.hbp.set_target(self.crystal)
+        print(self.hbp.functional_groups)
+
+        # Generate Training Dataset
+        self.hbp.match_fitting_data(count=self.fg_count)  # set to >300, preferably 500 for better representation of functional groups
+
+        self.hbp.analyse_fitting_data()
+
+        for d in self.hbp.donors:
+            print(d.identifier, d.npositive, d.nnegative)
+        for a in self.hbp.acceptors:
+            print(a.identifier, a.npositive, a.nnegative)
+
+        # Perform regression
+        model = self.hbp.perform_regression()
+
+        print(model.equation)
+        print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
+
+        propensities = self.hbp.calculate_propensities()
+
+        intra_flag = True if len(self.hbp.intra_propensities) > 0 else False
+        intra_count = len([p for p in propensities if not p.is_intermolecular and p.is_observed])
+        intra_obs = True if intra_count > 0 else False
+
+        # Use default coordination cutoffs unless user overrides
+        groups = self.hbp.generate_hbond_groupings(min_donor_prob=self.min_donor_coordination,
+                                              min_acceptor_prob=self.min_acceptor_coordination)
+
+        observed_group = self.hbp.target_hbond_grouping()
+
+        return (self.hbp.functional_groups,
+                self.hbp.fitting_data,
+                self.hbp.donors,
+                self.hbp.acceptors,
+                model,
+                propensities,
+                intra_flag,
+                groups,
+                observed_group,
+                self.min_donor_coordination,
+                self.min_acceptor_coordination,
+                intra_count,
+                intra_obs)
+
+
 def make_diagram(mol, directory):
     # Generates a diagram from a given structure
     molecule_diagram_generator = DiagramGenerator()
@@ -143,59 +213,6 @@ def launch_word_processor(output_file):
         subprocess.Popen(['open', output_file])
 
 
-def propensity_calc(crystal, directory, min_donor_coordination, min_acceptor_coordination, fg_count):
-    # Perform a Hydrogen Bond Propensity calculation
-
-    # Provide settings for the calculation
-    settings = CrystalDescriptors.HBondPropensities.Settings()
-    settings.working_directory = directory
-    settings.hbond_criterion.require_hydrogens = True
-    settings.hbond_criterion.path_length_range = (3, 999)
-
-    # Set up the HBP calculator
-    hbp = CrystalDescriptors.HBondPropensities(settings)
-
-    # Set up the target structure for the calculation
-    hbp.set_target(crystal)
-
-    print(hbp.functional_groups)
-
-    # Generate Training Dataset
-    hbp.match_fitting_data(count=fg_count)  # set to >300, preferably 500 for better representation of functional groups
-
-    hbp.analyse_fitting_data()
-
-    for d in hbp.donors:
-        print(d.identifier, d.npositive, d.nnegative)
-    for a in hbp.acceptors:
-        print(a.identifier, a.npositive, a.nnegative)
-
-    # Perform regression
-    model = hbp.perform_regression()
-
-    print(model.equation)
-    print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
-
-    propensities = hbp.calculate_propensities()
-
-    intra_flag = False
-    intra_obs = False
-    intra_count = 0
-    if len(hbp.intra_propensities) > 0:
-        intra_flag = True
-        intra_count = len([p for p in propensities if not p.is_intermolecular and p.is_observed])
-    if intra_count > 0:
-        intra_obs = True
-
-    # Use default coordination cutoffs unless user overrides
-    groups = hbp.generate_hbond_groupings(min_donor_prob=min_donor_coordination, min_acceptor_prob=min_acceptor_coordination)
-
-    observed_group = hbp.target_hbond_grouping()
-
-    return hbp.functional_groups, hbp.fitting_data, hbp.donors, hbp.acceptors, model, propensities, \
-          intra_flag, groups, observed_group, min_donor_coordination, min_acceptor_coordination, intra_count, intra_obs
-
-
 def coordination_scores_calc(crystal, directory):
     # Calculate coordination scores for the target structure
 
@@ -220,6 +237,8 @@ def format_scores(scores, das, d_type):
 
 def normalize_molecule(molecule):
     # Normalise bond types for the input structure (important for cifs)
+    if any(bond.bond_type == 'Unknown' for bond in molecule.bonds):
+        print('Unknown type bonds in molecule will be auto assigned')
     molecule.assign_bond_types(which='unknown')
     molecule.standardise_aromatic_bonds()
     molecule.standardise_delocalised_bonds()
@@ -356,9 +375,12 @@ def main(structure, directory, csdrefcode, min_donor_coordination, min_acceptor_
     # Set up a work directory for the HBP files
     work_directory = os.path.join(directory, str(structure).split('.')[0])
 
+    hbp_calculator = PropensityCalc(crystal, work_directory, min_donor_coordination,
+                                    min_acceptor_coordination, fg_count)
+
     # Get all the necessary data from a HBP calculation
-    functional_groups, fitting_data, donors, acceptors, model, propensities, intra_flag, \
-    groups, observed_groups, min_donor_coordination, min_acceptor_coordination, intra_count, intra_obs = propensity_calc(crystal, work_directory, min_donor_coordination, min_acceptor_coordination, fg_count)
+    (functional_groups, fitting_data, donors, acceptors, model, propensities, intra_flag, groups, observed_groups,
+     min_donor_coordination, min_acceptor_coordination, intra_count, intra_obs) = hbp_calculator.calculate()
 
     # Calculate the coordination scores separately
     coordination_scores = coordination_scores_calc(crystal, work_directory)
