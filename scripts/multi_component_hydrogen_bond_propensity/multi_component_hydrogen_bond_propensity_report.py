@@ -8,6 +8,7 @@
 #
 # 2017-08-10: Created by Andy Maloney, the Cambridge Crystallographic Data Centre
 # 2020-08-21: made available by the Cambridge Crystallographic Data Centre
+# 2025-01-08: Updated by Pablo Martinez-Bulit, the Cambridge Crystallographic Data Centre
 #
 """
 multi_component_hydrogen_bond_propensity_report.py
@@ -54,6 +55,52 @@ PAIR_TEMPLATE_FILE = os.path.join(SCRIPT_DIR, PAIR_TEMPLATE_FILENAME)
 
 
 ###############################################################################
+class PropensityCalc:
+    "HBP Calculator"
+    def __init__(self):
+        self.crystal = None
+        self.directory = None
+        self.fg_count = None
+        self.settings = self._hbp_settings()
+        self.hbp = CrystalDescriptors.HBondPropensities()
+
+    @staticmethod
+    def _hbp_settings():
+        settings = CrystalDescriptors.HBondPropensities.Settings()
+        settings.hbond_criterion.require_hydrogens = True
+        settings.hbond_criterion.path_length_range = (3, 999)
+
+        return settings
+
+    def calculate(self):
+        self.hbp.settings = self.settings
+        self.settings.working_directory = self.directory
+
+        # Set up the target structure for the calculation
+        self.hbp.set_target(self.crystal)
+        print(self.hbp.functional_groups)
+
+        # Generate Training Dataset
+        self.hbp.match_fitting_data(count=500)  # set to 500 for better representation of functional groups
+
+        self.hbp.analyse_fitting_data()
+
+        for d in self.hbp.donors:
+            print(d.identifier, d.npositive, d.nnegative)
+        for a in self.hbp.acceptors:
+            print(a.identifier, a.npositive, a.nnegative)
+
+        # Perform regression
+        model = self.hbp.perform_regression()
+
+        print(model.equation)
+        print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
+
+        propensities = self.hbp.calculate_propensities()
+
+        return propensities, self.hbp.donors, self.hbp.acceptors
+
+
 def cm2inch(*tupl):
     inch = 2.54
     if isinstance(tupl[0], tuple):
@@ -117,44 +164,6 @@ def add_picture_subdoc(picture_location, docx_template, wd=7):
     # This function adds a picture to the .docx file
     return docxtpl.InlineImage(
         docx_template, image_descriptor=picture_location, width=Cm(wd))
-
-
-def propensity_calc(crystal, directory):
-    # Perform a Hydrogen Bond Propensity calculation
-
-    # Provide settings for the calculation
-    settings = CrystalDescriptors.HBondPropensities.Settings()
-    settings.working_directory = directory
-    settings.hbond_criterion.require_hydrogens = True
-    settings.hbond_criterion.path_length_range = (3, 999)
-
-    # Set up the HBP calculator
-    hbp = CrystalDescriptors.HBondPropensities(settings)
-
-    # Set up the target structure for the calculation
-    hbp.set_target(crystal)
-
-    print(hbp.functional_groups)
-
-    # Generate Training Dataset
-
-    hbp.match_fitting_data(count=500)  # set to >300, preferably 500 for better representation of functional groups
-
-    hbp.analyse_fitting_data()
-
-    for d in hbp.donors:
-        print(d.identifier, d.npositive, d.nnegative)
-    for a in hbp.acceptors:
-        print(a.identifier, a.npositive, a.nnegative)
-
-    # Perform regression
-    model = hbp.perform_regression()
-    print(model.equation)
-    print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
-    hbp.calculate_propensities()
-    propensities = hbp.inter_propensities
-
-    return propensities, hbp.donors, hbp.acceptors
 
 
 def coordination_scores_calc(crystal, directory):
@@ -341,6 +350,8 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
     mc_dictionary = {}
     failures = []
 
+    hbp_calculator = PropensityCalc()
+
     # for each coformer in the library, make a pair file for the api/coformer and run a HBP calculation
     for f in coformer_files:
         molecule_file, coformer_name = make_pair_file(api_molecule, tempdir, f)
@@ -355,7 +366,9 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
             mc_dictionary[coformer_name] = tloaded
         else:
             try:
-                propensities, donors, acceptors = propensity_calc(crystal, directory)
+                hbp_calculator.crystal = crystal
+                hbp_calculator.directory = directory
+                propensities, donors, acceptors = hbp_calculator.calculate()
                 coordination_scores = coordination_scores_calc(crystal, directory)
                 pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
                 with open(os.path.join(directory, "success.json"), "w") as file:
