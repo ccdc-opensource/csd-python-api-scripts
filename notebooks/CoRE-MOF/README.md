@@ -1,4 +1,4 @@
-# CoRE-MOF 
+# CoRE-MOF
 
 This package contains shared functionality that is used to export entries used by CoRE-MOF
 
