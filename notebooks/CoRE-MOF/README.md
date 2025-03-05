@@ -10,8 +10,7 @@ structures: an successful case by using the script.
 
 ## Requirements
 
-[CoRe-MOF tools](https://coremof-tools.readthedocs.io/en/latest/index.html)
-CSD Python API
+[CoRe-MOF tools](https://coremof-tools.readthedocs.io/en/latest/index.html), CSD Python API
 
 ## Licensing Requirements
 
@@ -19,4 +18,4 @@ CSD-Core or better
 
 ## Authors
 
-[CoRE-MOF](https://coremof-tools.readthedocs.io/en/latest/index.html).
+[CoRE-MOF](https://coremof-tools.readthedocs.io/en/latest/index.html)
