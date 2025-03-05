@@ -10,7 +10,7 @@ structures: an successful case by using the script.
 
 ## Requirements
 
-[CoRe-MOF tools](https://coremof-tools.readthedocs.io/en/latest/index.html), [PACMAN Charge](https://pubs.acs.org/doi/10.1021/acs.jctc.4c00434), CSD Python API
+[CoRE-MOF tools](https://coremof-tools.readthedocs.io/en/latest/index.html), [PACMAN Charge](https://pubs.acs.org/doi/10.1021/acs.jctc.4c00434), CSD Python API
 
 ## Licensing Requirements
 
