@@ -18,13 +18,10 @@ multi_component_hydrogen_bond_propensity_report.py
 import os
 import sys
 import csv
-import time
 import glob
 import json
-import random
 import argparse
 import tempfile
-import subprocess
 
 import matplotlib
 
@@ -49,12 +46,6 @@ except ImportError:
     to try to fix the issue.\nYou may need administrator's rights to do this.
     """.format(sys.executable)
     raise ImportError(error_message)
-
-SCRIPT_DIR = os.path.dirname(__file__)
-TEMPLATE_FILENAME = 'multi_component_hydrogen_bond_propensity_report.docx'
-TEMPLATE_FILE = os.path.join(SCRIPT_DIR, TEMPLATE_FILENAME)
-PAIR_TEMPLATE_FILENAME = 'multi_component_pair_hbp_report.docx'
-PAIR_TEMPLATE_FILE = os.path.join(SCRIPT_DIR, PAIR_TEMPLATE_FILENAME)
 
 
 ###############################################################################
@@ -100,7 +91,7 @@ class PropensityCalc:
         print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
 
         propensities = self.hbp.calculate_propensities()
-        groups = self.hbp.generate_hbond_grouping(min_donor_prob=0.1, min_acceptor_prob=0.1)
+        groups = self.hbp.generate_hbond_groupings(min_donor_prob=0.1, min_acceptor_prob=0.1)
 
         return propensities, groups, self.hbp.donors, self.hbp.acceptors
 
@@ -210,73 +201,7 @@ def make_molecule_pair(api_molecule, coformer_molecule):
     return molecule_pair
 
 
-# def pair_output(identifier, propensities, donors, acceptors, coordination_scores, directory):
-#     # Writes out the output from a single HBP calculation for the multi-component pair
-
-#     # This looks for the .docx template that is used to generate the report from
-#     if os.path.isfile(PAIR_TEMPLATE_FILE):
-#         docx_template = docxtpl.DocxTemplate(PAIR_TEMPLATE_FILE)
-#     else:
-#         print('Error! {} not found!'.format(PAIR_TEMPLATE_FILENAME))
-#         quit()
-
-#     dscores = {}
-#     ascores = {}
-
-#     for d in donors:
-#         coord_cols = [i for i in range(len(coordination_scores.predictions_for_label(d.label, 'd')[1]))]
-#         dscores[d.label] = [round((coordination_scores.predictions_for_label(d.label, 'd')[1])[j], 3)
-#                             for j in coord_cols]
-
-#     for a in acceptors:
-#         ascores[a.label] = [round((coordination_scores.predictions_for_label(a.label, 'a')[1])[k], 3)
-#                             for k in coord_cols]
-
-#     context = {
-#         'identifier': identifier,
-#         'propensities': propensities,
-#         'coord_cols': coord_cols,
-#         'donors': donors,
-#         'dscores': dscores,
-#         'acceptors': acceptors,
-#         'ascores': ascores
-#     }
-#     docx_template.render(context)
-#     output_file = os.path.join(directory, '%s_pair_output.docx' % identifier)
-#     docx_template.save(output_file)
-
-
-# def make_mc_report(identifier, results, directory, diagram_file, chart_file):
-#     # Write the MC-HBP report from the results
-
-#     # This looks for the .docx template that is used to generate the report from
-#     if os.path.isfile(TEMPLATE_FILE):
-#         docx_template = docxtpl.DocxTemplate(TEMPLATE_FILE)
-#     else:
-#         print('Error! {} not found!'.format(TEMPLATE_FILENAME))
-#         quit()
-
-#     # Generate content for the report
-#     diagram = add_picture_subdoc(diagram_file, docx_template)
-#     chart = add_picture_subdoc(chart_file, docx_template, wd=18)
-
-#     # The context is the information that is given to the template to allow it to be populated
-#     context = {
-#         'identifier': str(identifier).split('.')[0],
-#         'diagram': diagram,
-#         'chart': chart,
-#         'results': results
-#     }
-
-#     # Send all the information to the template file then open up the final report
-#     docx_template.render(context)
-#     output_file = os.path.join(directory, '%s_MC_HBP_report.docx' % str(identifier).split('.')[0])
-#     docx_template.save(output_file)
-
-#     launch_word_processor(output_file)
-
-
-def main(structure, work_directory, failure_directory, library, csdrefcode, force_run):
+def main(structure, work_directory, library, csdrefcode):
     # This loads up the CSD if a refcode is requested, otherwise loads the structural file supplied
     if csdrefcode:
         try:
@@ -284,10 +209,7 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
         except RuntimeError:
             print('Error! %s is not in the database!' % structure)
             quit()
-        if io.CrystalReader('CSD').entry(structure).has_disorder and not force_run:
-            raise RuntimeError("Disorder can cause undefined behaviour. It is not advisable to run this "
-                               "script on disordered entries.\n To force this script to run on disordered entries"
-                               " use the flag --force_run_disordered.")
+
     else:
         crystal = io.CrystalReader(structure)[0]
 
@@ -300,7 +222,6 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
     # find the coformers and set up the calculations
     coformer_files = glob.glob(os.path.join(library, '*.mol2'))
     tempdir = tempfile.mkdtemp()
-
 
     hbp_calculator = PropensityCalc()
 
@@ -315,7 +236,7 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
         if os.path.exists(os.path.join(directory, "success.json")):
             with open(os.path.join(directory, "success.json"), "r") as file:
                 tloaded = json.load(file)
-            mc_dictionary[coformer_name] = tloaded
+
         else:
             try:
                 hbp_calculator.crystal = crystal
@@ -328,15 +249,6 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
             except (RuntimeError, TypeError):
                 print("Propensity calculation failure for %s!" % coformer_name)
 
-
-    # Make sense of the outputs of all the calculations
-    mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
-    diagram_file = make_diagram(api_molecule, work_directory)
-    chart_file = make_mc_chart(mc_hbp_screen, work_directory, api_molecule)
-    make_mc_report(structure, mc_hbp_screen, work_directory, diagram_file, chart_file)
-    if failure_directory is not None:
-        with open(os.path.join(failure_directory, 'failures.txt'), 'w', encoding='utf-8', newline='') as file:
-            file.write('\n'.join(map(str, failures)))
 
 
 if __name__ == '__main__':
