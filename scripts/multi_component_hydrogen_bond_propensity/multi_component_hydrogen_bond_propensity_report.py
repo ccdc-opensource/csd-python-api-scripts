@@ -105,71 +105,6 @@ class PropensityCalc:
         return propensities, groups, self.hbp.donors, self.hbp.acceptors
 
 
-def cm2inch(*tupl):
-    inch = 2.54
-    if isinstance(tupl[0], tuple):
-        return tuple(i / inch for i in tupl[0])
-    else:
-        return tuple(i / inch for i in tupl)
-
-
-def launch_word_processor(output_file):
-    '''This function launches the platform specific word processor
-    when not running under continuous integration'''
-    if 'TEAMCITY_VERSION' in os.environ:
-        return
-    if sys.platform == 'win32':
-        os.startfile(output_file)
-    elif sys.platform.startswith('linux'):
-        subprocess.Popen(['xdg-open', output_file])
-    else:
-        subprocess.Popen(['open', output_file])
-
-
-def make_diagram(mol, directory):
-    # Generates a diagram from a given structure
-    molecule_diagram_generator = DiagramGenerator()
-    molecule_diagram_generator.settings.line_width = 1.6
-    molecule_diagram_generator.settings.font_size = 12
-    molecule_diagram_generator.settings.image_height = 300
-    img = molecule_diagram_generator.image(mol)
-    fname = str(os.path.join(directory, '%s_diagram.png' % mol.identifier))
-    if img:
-        img.save(fname)
-    return fname
-
-
-def make_mc_chart(dictionary, directory, mol):
-    results = [value[0] for key, value in dictionary if isinstance(value[0], float)]
-    ymin = min(results)
-    ymax = max(results)
-    indices = range(1, len(results) + 1)
-
-    fig = plt.figure(figsize=cm2inch(22, 18))
-    ax = fig.add_subplot(1, 1, 1)
-    color = 'cornflowerblue'
-    color1 = 'royalblue'
-    ls = ''
-    plt.plot(indices, results, marker='D', markersize=10, color=color, ls=ls, markeredgecolor=color1, alpha=0.7)
-    plt.axhline(y=0, color='gray')
-    plt.xlabel('Co-Former Rank', fontweight='bold', fontsize='12')
-    plt.ylabel('Multi-Component Score', fontweight='bold', fontsize='12')
-    plt.title('MCHBP screening results', fontweight='bold', fontsize='12')
-    ax.axhspan(0.025, ymax + 0.1, facecolor='lightgreen', alpha=0.5)
-    ax.axhspan(-0.025, ymin - 0.1, facecolor='lightpink', alpha=0.5)
-    ax.axhspan(0.025, -0.025, facecolor='grey', alpha=0.5)
-    plt.ylim(ymin - 0.025, ymax + 0.025)
-    fname = str(os.path.join(directory, '%s_MC_HBP_plot.png' % mol.identifier))
-    plt.savefig(fname, format='png', dpi=600)
-    return fname
-
-
-def add_picture_subdoc(picture_location, docx_template, wd=7):
-    # This function adds a picture to the .docx file
-    return docxtpl.InlineImage(
-        docx_template, image_descriptor=picture_location, width=Cm(wd))
-
-
 def coordination_scores_calc(crystal, directory):
     # Calculate coordination scores for the target structure
 
@@ -275,70 +210,70 @@ def make_molecule_pair(api_molecule, coformer_molecule):
     return molecule_pair
 
 
-def pair_output(identifier, propensities, donors, acceptors, coordination_scores, directory):
-    # Writes out the output from a single HBP calculation for the multi-component pair
+# def pair_output(identifier, propensities, donors, acceptors, coordination_scores, directory):
+#     # Writes out the output from a single HBP calculation for the multi-component pair
 
-    # This looks for the .docx template that is used to generate the report from
-    if os.path.isfile(PAIR_TEMPLATE_FILE):
-        docx_template = docxtpl.DocxTemplate(PAIR_TEMPLATE_FILE)
-    else:
-        print('Error! {} not found!'.format(PAIR_TEMPLATE_FILENAME))
-        quit()
+#     # This looks for the .docx template that is used to generate the report from
+#     if os.path.isfile(PAIR_TEMPLATE_FILE):
+#         docx_template = docxtpl.DocxTemplate(PAIR_TEMPLATE_FILE)
+#     else:
+#         print('Error! {} not found!'.format(PAIR_TEMPLATE_FILENAME))
+#         quit()
 
-    dscores = {}
-    ascores = {}
+#     dscores = {}
+#     ascores = {}
 
-    for d in donors:
-        coord_cols = [i for i in range(len(coordination_scores.predictions_for_label(d.label, 'd')[1]))]
-        dscores[d.label] = [round((coordination_scores.predictions_for_label(d.label, 'd')[1])[j], 3)
-                            for j in coord_cols]
+#     for d in donors:
+#         coord_cols = [i for i in range(len(coordination_scores.predictions_for_label(d.label, 'd')[1]))]
+#         dscores[d.label] = [round((coordination_scores.predictions_for_label(d.label, 'd')[1])[j], 3)
+#                             for j in coord_cols]
 
-    for a in acceptors:
-        ascores[a.label] = [round((coordination_scores.predictions_for_label(a.label, 'a')[1])[k], 3)
-                            for k in coord_cols]
+#     for a in acceptors:
+#         ascores[a.label] = [round((coordination_scores.predictions_for_label(a.label, 'a')[1])[k], 3)
+#                             for k in coord_cols]
 
-    context = {
-        'identifier': identifier,
-        'propensities': propensities,
-        'coord_cols': coord_cols,
-        'donors': donors,
-        'dscores': dscores,
-        'acceptors': acceptors,
-        'ascores': ascores
-    }
-    docx_template.render(context)
-    output_file = os.path.join(directory, '%s_pair_output.docx' % identifier)
-    docx_template.save(output_file)
+#     context = {
+#         'identifier': identifier,
+#         'propensities': propensities,
+#         'coord_cols': coord_cols,
+#         'donors': donors,
+#         'dscores': dscores,
+#         'acceptors': acceptors,
+#         'ascores': ascores
+#     }
+#     docx_template.render(context)
+#     output_file = os.path.join(directory, '%s_pair_output.docx' % identifier)
+#     docx_template.save(output_file)
 
 
-def make_mc_report(identifier, results, directory, diagram_file, chart_file):
-    # Write the MC-HBP report from the results
+# def make_mc_report(identifier, results, directory, diagram_file, chart_file):
+#     # Write the MC-HBP report from the results
 
-    # This looks for the .docx template that is used to generate the report from
-    if os.path.isfile(TEMPLATE_FILE):
-        docx_template = docxtpl.DocxTemplate(TEMPLATE_FILE)
-    else:
-        print('Error! {} not found!'.format(TEMPLATE_FILENAME))
-        quit()
+#     # This looks for the .docx template that is used to generate the report from
+#     if os.path.isfile(TEMPLATE_FILE):
+#         docx_template = docxtpl.DocxTemplate(TEMPLATE_FILE)
+#     else:
+#         print('Error! {} not found!'.format(TEMPLATE_FILENAME))
+#         quit()
 
-    # Generate content for the report
-    diagram = add_picture_subdoc(diagram_file, docx_template)
-    chart = add_picture_subdoc(chart_file, docx_template, wd=18)
+#     # Generate content for the report
+#     diagram = add_picture_subdoc(diagram_file, docx_template)
+#     chart = add_picture_subdoc(chart_file, docx_template, wd=18)
 
-    # The context is the information that is given to the template to allow it to be populated
-    context = {
-        'identifier': str(identifier).split('.')[0],
-        'diagram': diagram,
-        'chart': chart,
-        'results': results
-    }
+#     # The context is the information that is given to the template to allow it to be populated
+#     context = {
+#         'identifier': str(identifier).split('.')[0],
+#         'diagram': diagram,
+#         'chart': chart,
+#         'results': results
+#     }
 
-    # Send all the information to the template file then open up the final report
-    docx_template.render(context)
-    output_file = os.path.join(directory, '%s_MC_HBP_report.docx' % str(identifier).split('.')[0])
-    docx_template.save(output_file)
+#     # Send all the information to the template file then open up the final report
+#     docx_template.render(context)
+#     output_file = os.path.join(directory, '%s_MC_HBP_report.docx' % str(identifier).split('.')[0])
+#     docx_template.save(output_file)
 
-    launch_word_processor(output_file)
+#     launch_word_processor(output_file)
 
 
 def main(structure, work_directory, failure_directory, library, csdrefcode, force_run):
@@ -365,8 +300,7 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
     # find the coformers and set up the calculations
     coformer_files = glob.glob(os.path.join(library, '*.mol2'))
     tempdir = tempfile.mkdtemp()
-    mc_dictionary = {}
-    failures = []
+
 
     hbp_calculator = PropensityCalc()
 
@@ -387,19 +321,13 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
                 hbp_calculator.crystal = crystal
                 hbp_calculator.directory = directory
                 propensities, groups, donors, acceptors = hbp_calculator.calculate()
-                coordination_scores = coordination_scores_calc(crystal, directory)
+
                 chart_output(groups, directory, crystal)
-                pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
-                with open(os.path.join(directory, "success.json"), "w") as file:
-                    tdata = get_mc_scores(propensities, crystal.identifier)
-                    json.dump(tdata, file)
-                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
-            except Exception as error_message:
+
+                
+            except (RuntimeError, TypeError):
                 print("Propensity calculation failure for %s!" % coformer_name)
-                error_string = f"{coformer_name}: {error_message}"
-                warnings.warn(error_string)
-                mc_dictionary[coformer_name] = ["N/A", "N/A", "N/A", "N/A", "N/A", crystal.identifier]
-                failures.append(error_string)
+
 
     # Make sense of the outputs of all the calculations
     mc_hbp_screen = sorted(mc_dictionary.items(), key=lambda e: 0 if e[1][0] == 'N/A' else e[1][0], reverse=True)
@@ -446,14 +374,9 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--coformer_library', type=str,
                         help='the directory of the desired coformer library',
                         default=ccdc_coformers_dir)
-    parser.add_argument('-f', '--failure_directory', type=str, default=os.getcwd(),
-                        help='The location where the failures file should be generated')
-
-    parser.add_argument('--force_run_disordered', action="store_true",
-                        help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
 
     args = parser.parse_args()
-    refcode = False
+    csdrefcode = False
     args.directory = os.path.abspath(args.directory)
     if not os.path.isfile(args.input_structure):
         if len(str(args.input_structure).split('.')) == 1:
@@ -465,5 +388,4 @@ if __name__ == '__main__':
     if not os.path.isdir(args.coformer_library):
         parser.error('%s - library not found.' % args.coformer_library)
 
-    main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode,
-         args.force_run_disordered)
+    main(args.input_structure, args.directory, args.coformer_library, refcode)
