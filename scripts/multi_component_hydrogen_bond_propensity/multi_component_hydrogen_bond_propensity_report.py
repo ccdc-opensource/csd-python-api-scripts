@@ -292,7 +292,7 @@ if __name__ == '__main__':
     args.directory = os.path.abspath(args.directory)
     if not os.path.isfile(args.input_structure):
         if len(str(args.input_structure).split('.')) == 1:
-            refcode = True
+            csdefcode = True
         else:
             parser.error('%s - file not found.' % args.input_structure)
     if not os.path.isdir(args.directory):
@@ -300,4 +300,4 @@ if __name__ == '__main__':
     if not os.path.isdir(args.coformer_library):
         parser.error('%s - library not found.' % args.coformer_library)
 
-    main(args.input_structure, args.directory, args.coformer_library, refcode)
+    main(args.input_structure, args.directory, args.coformer_library, csdrefcode)
