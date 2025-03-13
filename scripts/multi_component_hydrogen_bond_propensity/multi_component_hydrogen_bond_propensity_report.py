@@ -15,13 +15,16 @@ multi_component_hydrogen_bond_propensity_report.py
  - Performs a multi-component HBP calculation for a given library of co-formers
 """
 
-import sys
 import os
+import sys
+import csv
+import time
 import glob
+import json
+import random
 import argparse
 import tempfile
 import subprocess
-import json
 
 import matplotlib
 
@@ -81,7 +84,7 @@ class PropensityCalc:
         print(self.hbp.functional_groups)
 
         # Generate Training Dataset
-        self.hbp.match_fitting_data(count=500)  # set to 500 for better representation of functional groups
+        self.hbp.match_fitting_data(count=None)  # set to 500 for better representation of functional groups
 
         self.hbp.analyse_fitting_data()
 
@@ -97,8 +100,9 @@ class PropensityCalc:
         print('Area under ROC curve: {} -- {}'.format(round(model.area_under_roc_curve, 3), model.advice_comment))
 
         propensities = self.hbp.calculate_propensities()
+        groups = self.hbp.generate_hbond_grouping(min_donor_prob=0.1, min_acceptor_prob=0.1)
 
-        return propensities, self.hbp.donors, self.hbp.acceptors
+        return propensities, groups, self.hbp.donors, self.hbp.acceptors
 
 
 def cm2inch(*tupl):
@@ -222,6 +226,20 @@ def get_mc_scores(propensities, identifier):
             round(max_list[0], 2),
             round(max_list[1], 2),
             identifier]
+
+
+def chart_output(groups, directory, mol):
+    # Write out the data points of the HBP chart to a file
+    with open(os.path.join(directory, f'{mol.identifier}_chart_data.csv'), 'w', newline='') as outfile:
+        csv_writer = csv.writer(outfile)
+        csv_writer.writerow(['Mean Propensity', 'Mean Coordination Score', 'Hydrogen Bonds'])
+        # Write the remaining putative networks
+        for group in groups:
+            csv_writer.writerow(
+                [group.hbond_score,
+                 group.coordination_score,
+                 '; '.join(['%s - %s' % (g.donor.label, g.acceptor.label) for g in group.hbonds])]
+            )
 
 
 def make_pair_file(api_molecule, tempdir, f):
@@ -368,8 +386,9 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
             try:
                 hbp_calculator.crystal = crystal
                 hbp_calculator.directory = directory
-                propensities, donors, acceptors = hbp_calculator.calculate()
+                propensities, groups, donors, acceptors = hbp_calculator.calculate()
                 coordination_scores = coordination_scores_calc(crystal, directory)
+                chart_output(groups, directory, crystal)
                 pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
                 with open(os.path.join(directory, "success.json"), "w") as file:
                     tdata = get_mc_scores(propensities, crystal.identifier)
@@ -427,7 +446,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--coformer_library', type=str,
                         help='the directory of the desired coformer library',
                         default=ccdc_coformers_dir)
-    parser.add_argument('-f', '--failure_directory', type=str,
+    parser.add_argument('-f', '--failure_directory', type=str, default=os.getcwd(),
                         help='The location where the failures file should be generated')
 
     parser.add_argument('--force_run_disordered', action="store_true",
