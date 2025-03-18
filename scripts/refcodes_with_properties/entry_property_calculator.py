@@ -12,7 +12,6 @@
 Utility classes for filtering CSD entries based on a property control file
 '''
 
-import ccdc.io
 
 _filter_classes = {}
 
