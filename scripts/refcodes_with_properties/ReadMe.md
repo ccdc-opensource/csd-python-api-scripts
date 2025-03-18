@@ -40,7 +40,7 @@ You can run the script with an Example file. Results are printed by default and 
 output file, e.g.
 
 ~~~
-$ python refcodes_with_properties.py -c example_control_file.txt -o mylist.gcd
+python refcodes_with_properties.py -c example_control_file.txt -o mylist.gcd
 ~~~
 
 This will generate a GCD file that can be used in other work.
