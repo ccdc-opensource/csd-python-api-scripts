@@ -88,7 +88,7 @@ class _RangeFilter(_Filter):
 
 class AllowedAtomicNumbersFilter(_Filter):
     def __init__(self, args):
-        self.allowed_atomic_numbers = [int(x) for x in args.strip().split()]
+        self.allowed_atomic_numbers = [int(atomic_number) for atomic_number in args.strip().split()]
 
     @staticmethod
     def name():
@@ -112,7 +112,7 @@ register(AllowedAtomicNumbersFilter)
 
 class MustContainAtomicNumbersFilter(_Filter):
     def __init__(self, args):
-        self.must_have_atomic_numbers = [int(x) for x in args.strip().split()]
+        self.must_have_atomic_numbers = [int(atomic_number) for atomic_number in args.strip().split()]
 
     @staticmethod
     def name():
