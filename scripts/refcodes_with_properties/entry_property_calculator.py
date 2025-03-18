@@ -64,7 +64,7 @@ class _ComparativeFilter(_Filter):
 
         self.expected_value = value
 
-    def value(self):
+    def value(self, theobject):
         raise NotImplementedError  # override this
 
     def __call__(self, theobject):
@@ -78,7 +78,7 @@ class _RangeFilter(_Filter):
         self.minimum = float(parts[0])
         self.maximum = float(parts[1])
 
-    def value(self):
+    def value(self, theobject):
         raise NotImplementedError  # override this
 
     def __call__(self, theobject):
