@@ -1,11 +1,13 @@
 # Refcode List Generator
 
 ## Summary
+
 A script that allows you to create refcode lists (or CSV files of properties for a refcode list) for simple properties. The advantage of the script is
 that the control is via an easy to read file so you can keep an interprettable record of how a test set was generated in research. You can also then
 reproduce the list, or indeed run it on a new database and update it with the same conditions.
 
 ### Relevance
+
 We want research to be FAIR (Findable, Attributable, Interoperable and Reproducible) - this script means we can create a simple decscription of the
 test set used that any researcher could then reproduce from the script and the description.
 
@@ -20,14 +22,18 @@ test set used that any researcher could then reproduce from the script and the d
 - CSD-Core
 
 ## Instructions on Running
+
 ### Linux command line
+
 - load the CSD Python API Miniconda environment
 - create a text control file with the various control lines specified
 - call Python to read the script and specify necessary arguments
+
 ~~~
-$ python refcodes_with_properties.py --help
+python refcodes_with_properties.py --help
 ~~~
-The above will print an extended help message that describes the registered 
+
+The above will print an extended help message that describes the registered
 
 You can run the script with an Example file. Results are printed by default and can be redirected to be saved in an output file, e.g.
 ~~~
