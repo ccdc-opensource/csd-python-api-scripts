@@ -1,7 +1,9 @@
 import unittest
+
 from ccdc.io import EntryReader
 
 from entry_property_calculator import parse_control_file
+
 
 class TestFiltering(unittest.TestCase):
 
