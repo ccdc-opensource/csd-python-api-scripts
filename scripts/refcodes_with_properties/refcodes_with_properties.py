@@ -15,6 +15,7 @@ Filter a refcode list to the subset that have the desired properties
 #########################################################################
 
 import argparse
+import csv
 import sys
 
 from ccdc import io
@@ -58,7 +59,6 @@ if __name__ == '__main__':
         reader = io.EntryReader('CSD')
 
     if args.get_values:
-        import csv
 
         csvwriter = None
         for entry in reader:
