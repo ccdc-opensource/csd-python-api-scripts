@@ -46,13 +46,12 @@ if __name__ == '__main__':
     filterer = EntryPropertyCalculator.parse_control_file(open(control_file,"r").readlines())
 
     reader = None
-    if refcode_file == None:
-        if database_file == None:
-            reader = io.EntryReader('CSD')
-        else:
-            reader = io.EntryReader(database_file)
-    else:
+    if refcode_file:
         reader = io.EntryReader(refcode_file, format='identifiers')
+    elif database_file:
+        reader = io.EntryReader(database_file)
+    else:
+        reader = io.EntryReader('CSD')
 
     if args.get_values:
         import csv
