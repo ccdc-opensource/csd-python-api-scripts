@@ -39,7 +39,7 @@ The above will print an extended help message that describes the registered
 You can run the script with an Example file. Results are printed by default and can be redirected to be saved in an
 output file, e.g.
 
-~~~bash
+~~~
 python refcodes_with_properties.py -c example_control_file.txt -o mylist.gcd
 ~~~
 
