@@ -98,7 +98,7 @@ must have atomic numbers : 1 6 7 8
 
     def test_rotatable_bond_count(self):
         test_file = """
-rotatable bond count : 0 3
+rotatable bond count : 0 4
 """
         lines = test_file.split('\n')
         evaluator = parse_control_file(lines)
@@ -150,4 +150,4 @@ rfactor range : 0.1 5
             if evaluator.evaluate(e):
                 hits.append(e.identifier)
 
-        self.assertEquals(['ABAQEB', 'ABELEY', 'ADAQOM', 'ADUWIG', 'AFEREK'], hits)
+        self.assertEqual(['ABAQEB', 'ABELEY', 'ADAQOM', 'ADUWIG', 'AFEREK'], hits)
