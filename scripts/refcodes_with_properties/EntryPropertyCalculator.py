@@ -15,17 +15,21 @@ Utility classes for filtering CSD entries based on a property control file
 import ccdc.io
 
 _filter_classes = {}
+
+
 def register(cls):
-    ''' Register a filter class to use in the script. 
-    :param cls: the class to register
+    ''' Register a filter class to use in the script.
+    :param cls: the class to register.
     '''
     if cls.name() in _filter_classes:
         raise ValueError(f"a class with the name {cls.name()} is already registered. Use a different name")
 
     _filter_classes[cls.name()] = cls
 
+
 def filter(name):
    return _filter_classes[name]
+
 
 def helptext():
     ''' Get help text
@@ -41,15 +45,16 @@ class _Filter(object):
 
     @staticmethod
     def name():
-        raise NotImplementedError # override this
+        raise NotImplementedError  # override this
 
     @staticmethod
     def helptext():
-        raise NotImplementedError # override this
+        raise NotImplementedError  # override this
 
     @staticmethod
     def argument_pair():
-        raise NotImplementedError # override this
+        raise NotImplementedError  # override this
+
 
 class _ComparativeFilter(_Filter):
     def __init__(self, args):
@@ -60,7 +65,7 @@ class _ComparativeFilter(_Filter):
         self.expected_value = value
 
     def value(self):
-        raise NotImplementedError # override this
+        raise NotImplementedError  # override this
 
     def __call__(self,theobject):
         value = self.value(theobject)
@@ -71,8 +76,8 @@ class _RangeFilter(_Filter):
     def __init__(self, args):
 
         parts = [ p.strip() for p in args.split() ]
-        self.minimum = eval(parts[0])
-        self.maximum = eval(parts[1])
+        self.minimum = float(parts[0])
+        self.maximum = float(parts[1])
 
     def value(self):
         raise NotImplementedError # override this
@@ -81,9 +86,10 @@ class _RangeFilter(_Filter):
         value = self.value(theobject)
         return value >= self.minimum and value <= self.maximum
 
+
 class AllowedAtomicNumbersFilter(_Filter):
     def __init__(self,args):
-        self.allowed_atomic_numbers = [eval(x) for x in args.strip().split()]
+        self.allowed_atomic_numbers = [int(x) for x in args.strip().split()]
 
     @staticmethod
     def name():
@@ -105,7 +111,7 @@ register(AllowedAtomicNumbersFilter)
 
 class MustContainAtomicNumbersFilter(_Filter):
     def __init__(self,args):
-        self.must_have_atomic_numbers = [eval(x) for x in args.strip().split()]
+        self.must_have_atomic_numbers = [int(x) for x in args.strip().split()]
 
     @staticmethod
     def name():
@@ -132,7 +138,9 @@ class MustContainAtomicNumbersFilter(_Filter):
         except:
             return False
 
+
 register(MustContainAtomicNumbersFilter)
+
 
 class OrganicFilter(_ComparativeFilter):
     def __init__(self, args):
@@ -149,7 +157,9 @@ class OrganicFilter(_ComparativeFilter):
     def value(self,entry):
         return entry.is_organic
 
+
 register(OrganicFilter)
+
 
 class PolymericFilter(_ComparativeFilter):
     def __init__(self, args):
@@ -166,7 +176,9 @@ class PolymericFilter(_ComparativeFilter):
     def value(self,entry):
         return entry.is_polymeric
 
+
 register(PolymericFilter)
+
 
 class AllHaveSitesFilter(_ComparativeFilter):
     def __init__(self, args):
@@ -186,7 +198,9 @@ class AllHaveSitesFilter(_ComparativeFilter):
         except:
             return False
 
+
 register(AllHaveSitesFilter)
+
 
 class DisorderedFilter(_ComparativeFilter):
     def __init__(self, args):
@@ -203,6 +217,7 @@ class DisorderedFilter(_ComparativeFilter):
 
     def value(self,entry):
         return entry.has_disorder
+
 
 register(DisorderedFilter)
 
@@ -226,7 +241,9 @@ class AtomicWeightFilter(_RangeFilter):
         except TypeError:
             return 0.0
 
+
 register(AtomicWeightFilter)
+
 
 class AtomCountFilter(_RangeFilter):
     def __init__(self,args):
@@ -247,7 +264,9 @@ class AtomCountFilter(_RangeFilter):
         except TypeError:
             return 0
 
+
 register(AtomCountFilter)
+
 
 class RotatableBondFilter(_RangeFilter):
     def __init__(self,args):
@@ -268,7 +287,9 @@ class RotatableBondFilter(_RangeFilter):
         except TypeError:
             return 0
 
+
 register(RotatableBondFilter)
+
 
 class DonorCountFilter(_RangeFilter):
     def __init__(self,args):
@@ -289,7 +310,9 @@ class DonorCountFilter(_RangeFilter):
         except TypeError:
             return 0
 
+
 register(DonorCountFilter)
+
 
 class AcceptorCountFilter(_RangeFilter):
     def __init__(self,args):
@@ -310,7 +333,9 @@ class AcceptorCountFilter(_RangeFilter):
         except TypeError:
             return 0
 
+
 register(AcceptorCountFilter)
+
 
 class ComponentCountFilter(_RangeFilter):
     def __init__(self,args):
@@ -330,6 +355,7 @@ class ComponentCountFilter(_RangeFilter):
         except TypeError:
             return 0
 
+
 register(ComponentCountFilter)
 
 
@@ -347,6 +373,7 @@ class ZPrimeFilter(_RangeFilter):
 
     def value(self,entry):
         return entry.crystal.z_prime
+
 
 register(ZPrimeFilter)
 
@@ -366,7 +393,9 @@ class RfactorFilter(_RangeFilter):
     def value(self,entry):
         return entry.r_factor
 
+
 register(RfactorFilter)
+
 
 class SpacegroupNumberFilter(_RangeFilter):
     def __init__(self,args):
@@ -383,7 +412,9 @@ class SpacegroupNumberFilter(_RangeFilter):
     def value(self,entry):
         return entry.crystal.spacegroup_number_and_setting[0]
 
+
 register(SpacegroupNumberFilter)
+
 
 class FilterEvaluation(object):
     def __init__(self):
@@ -412,6 +443,7 @@ class FilterEvaluation(object):
                     pass
         return values
 
+
 def parse_control_file(lines):
     evaluator = FilterEvaluation()
     for line in lines:
@@ -421,7 +453,6 @@ def parse_control_file(lines):
               cls = _filter_classes[parts[0].strip()]
               evaluator.add_filter( cls(parts[1]) )
     return evaluator
-
 
 
 import unittest
