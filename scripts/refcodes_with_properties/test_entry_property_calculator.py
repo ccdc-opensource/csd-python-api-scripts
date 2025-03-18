@@ -141,8 +141,6 @@ rfactor range : 0.1 5
 
         lines = test_file.split('\n')
         evaluator = parse_control_file(lines)
-
-        counter = 0
         hits = []
 
         test_entries = ['AABHTZ', 'ABAQEB', 'ABELEY', 'ADAQOM', 'ADARAA', 'ADARAZ', 'ADUWIG', 'AFEREK']
