@@ -17,7 +17,7 @@ Filter a refcode list to the subset that have the desired properties
 import sys
 import os
 import argparse
-import EntryPropertyCalculator
+import entry_property_calculator
 from ccdc import io
 
 if __name__ == '__main__':
@@ -28,9 +28,9 @@ if __name__ == '__main__':
 
     parser.add_argument( '-r','--refcode_file', help='input file containing the list of refcodes', default = None )
     parser.add_argument( '-d','--database_file', help='input file containing the list of refcodes', default = None )
-    parser.add_argument( '-c','--control_file', help='configuration file containing the desired properties\n\n %s' % (EntryPropertyCalculator.helptext()) )
-    parser.add_argument( '-v','--get_values', action="store_true", help='calculate and print descriptor values where possible rather than filter\n\n %s' % (EntryPropertyCalculator.helptext()) )
-    parser.add_argument( '-o','--output_file', default = None, help='output CSV file for results\n\n %s' % (EntryPropertyCalculator.helptext()) )
+    parser.add_argument( '-c','--control_file', help='configuration file containing the desired properties\n\n %s' % (entry_property_calculator.helptext()) )
+    parser.add_argument( '-v','--get_values', action="store_true", help='calculate and print descriptor values where possible rather than filter\n\n %s' % (entry_property_calculator.helptext()) )
+    parser.add_argument( '-o','--output_file', default = None, help='output CSV file for results\n\n %s' % (entry_property_calculator.helptext()) )
 
     args = parser.parse_args()
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     if args.output_file != None:
         outfile = open(args.output_file, 'wb')
 
-    filterer = EntryPropertyCalculator.parse_control_file(open(control_file,"r").readlines())
+    filterer = entry_property_calculator.parse_control_file(open(control_file,"r").readlines())
 
     reader = None
     if refcode_file:
