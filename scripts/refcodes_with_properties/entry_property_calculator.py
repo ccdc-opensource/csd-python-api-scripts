@@ -59,7 +59,7 @@ class _Filter(object):
 class _ComparativeFilter(_Filter):
     def __init__(self, args):
         value = False
-        if eval(args.strip()) == 1:
+        if args.strip() == '1' or args.strip().lower() == 'true':
             value = True
 
         self.expected_value = value
@@ -143,7 +143,7 @@ register(MustContainAtomicNumbersFilter)
 
 class OrganicFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -162,7 +162,7 @@ register(OrganicFilter)
 
 class PolymericFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -181,7 +181,7 @@ register(PolymericFilter)
 
 class AllHaveSitesFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -203,7 +203,7 @@ register(AllHaveSitesFilter)
 
 class DisorderedFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -222,7 +222,7 @@ register(DisorderedFilter)
 
 class AtomicWeightFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -245,7 +245,7 @@ register(AtomicWeightFilter)
 
 class AtomCountFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -268,7 +268,7 @@ register(AtomCountFilter)
 
 class RotatableBondFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -291,7 +291,7 @@ register(RotatableBondFilter)
 
 class DonorCountFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -314,7 +314,7 @@ register(DonorCountFilter)
 
 class AcceptorCountFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -337,7 +337,7 @@ register(AcceptorCountFilter)
 
 class ComponentCountFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -359,7 +359,7 @@ register(ComponentCountFilter)
 
 class ZPrimeFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -378,7 +378,7 @@ register(ZPrimeFilter)
 
 class RfactorFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
@@ -397,7 +397,7 @@ register(RfactorFilter)
 
 class SpacegroupNumberFilter(_RangeFilter):
     def __init__(self, args):
-        super(self.__class__, self).__init__(args)
+        super().__init__(args)
 
     @staticmethod
     def name():
