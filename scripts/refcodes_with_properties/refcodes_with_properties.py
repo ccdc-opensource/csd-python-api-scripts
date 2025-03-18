@@ -14,23 +14,27 @@ Filter a refcode list to the subset that have the desired properties
 
 #########################################################################
 
-import sys
-import os
 import argparse
-import entry_property_calculator
+import sys
+
 from ccdc import io
+
+import entry_property_calculator
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser( description=__doc__,
-                                      formatter_class=argparse.RawDescriptionHelpFormatter )
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
 
-
-    parser.add_argument( '-r','--refcode_file', help='input file containing the list of refcodes', default = None )
-    parser.add_argument( '-d','--database_file', help='input file containing the list of refcodes', default = None )
-    parser.add_argument( '-c','--control_file', help='configuration file containing the desired properties\n\n %s' % (entry_property_calculator.helptext()) )
-    parser.add_argument( '-v','--get_values', action="store_true", help='calculate and print descriptor values where possible rather than filter\n\n %s' % (entry_property_calculator.helptext()) )
-    parser.add_argument( '-o','--output_file', default = None, help='output CSV file for results\n\n %s' % (entry_property_calculator.helptext()) )
+    parser.add_argument('-r', '--refcode_file', help='input file containing the list of refcodes', default=None)
+    parser.add_argument('-d', '--database_file', help='input file containing the list of refcodes', default=None)
+    parser.add_argument('-c', '--control_file', help='configuration file containing the desired properties\n\n %s' % (
+        entry_property_calculator.helptext()))
+    parser.add_argument('-v', '--get_values', action="store_true",
+                        help='calculate and print descriptor values where possible rather than filter\n\n %s' % (
+                            entry_property_calculator.helptext()))
+    parser.add_argument('-o', '--output_file', default=None,
+                        help='output CSV file for results\n\n %s' % (entry_property_calculator.helptext()))
 
     args = parser.parse_args()
 
@@ -43,7 +47,7 @@ if __name__ == '__main__':
     if args.output_file != None:
         outfile = open(args.output_file, 'wb')
 
-    filterer = entry_property_calculator.parse_control_file(open(control_file,"r").readlines())
+    filterer = entry_property_calculator.parse_control_file(open(control_file, "r").readlines())
 
     reader = None
     if refcode_file:
@@ -55,11 +59,12 @@ if __name__ == '__main__':
 
     if args.get_values:
         import csv
-        csvwriter  = None
+
+        csvwriter = None
         for entry in reader:
             values = filterer.values(entry)
             if csvwriter == None:
-                fieldnames=["identifier"] + values.keys()
+                fieldnames = ["identifier"] + values.keys()
                 csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames)
                 csvwriter.writeheader()
             values["identifier"] = entry.identifier
