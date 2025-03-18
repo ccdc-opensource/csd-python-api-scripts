@@ -30,7 +30,7 @@ simple decscription of the test set used that any researcher could then reproduc
 - create a text control file with the various control lines specified
 - call Python to read the script and specify necessary arguments
 
-~~~
+~~~bash
 python refcodes_with_properties.py --help
 ~~~
 
@@ -39,8 +39,8 @@ The above will print an extended help message that describes the registered
 You can run the script with an Example file. Results are printed by default and can be redirected to be saved in an
 output file, e.g.
 
-~~~
-$ python refcodes_with_properties.py -c example_control_file.txt -o mylist.gcd
+~~~bash
+python refcodes_with_properties.py -c example_control_file.txt -o mylist.gcd
 ~~~
 
 This will generate a GCD file that can be used in other work.
@@ -51,7 +51,7 @@ This will generate a GCD file that can be used in other work.
 - Use the installed version of the CSD Python API, for example C:\Users\<YOUR WINDOWS USERNAME>
   \CCDC\ccdc-software\csd-python-api assuming the CCDC tools are installed in the ususal place do this
 
-~~~
+~~~bat
 C:\Users\<YOUR WINDOWS USERNAME>\CCDC\ccdc-software\csd-python-api\run_python_api.bat refcodes_with_properties.py --help
 ~~~
 
