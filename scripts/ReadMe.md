@@ -48,6 +48,10 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - Calculates the surface charge for a given structure and surface terminations. Runs both from CMD and Mercury.
 
+## Refcodes With Properties
+
+- A script for generating refcode lists with specific properties from an easy-to-read control file.
+
 ## Tips
 
 A section for top tips in using the repository and GitHub.
