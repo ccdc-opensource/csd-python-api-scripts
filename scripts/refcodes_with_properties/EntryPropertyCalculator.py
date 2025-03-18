@@ -28,7 +28,7 @@ def register(cls):
 
 
 def filter(name):
-   return _filter_classes[name]
+    return _filter_classes[name]
 
 
 def helptext():
@@ -36,8 +36,8 @@ def helptext():
     '''
     txt = ""
     for name in _filter_classes.keys():
-       cls = _filter_classes[name]
-       txt = txt + "    %s -> %s," % ( name, cls.helptext() )
+        cls = _filter_classes[name]
+        txt = txt + "    %s -> %s," % (name, cls.helptext())
     return txt[:-1]
 
 
@@ -60,35 +60,34 @@ class _ComparativeFilter(_Filter):
     def __init__(self, args):
         value = False
         if eval(args.strip()) == 1:
-           value = True
+            value = True
 
         self.expected_value = value
 
     def value(self):
         raise NotImplementedError  # override this
 
-    def __call__(self,theobject):
+    def __call__(self, theobject):
         value = self.value(theobject)
         return value == self.expected_value
 
 
 class _RangeFilter(_Filter):
     def __init__(self, args):
-
-        parts = [ p.strip() for p in args.split() ]
+        parts = [p.strip() for p in args.split()]
         self.minimum = float(parts[0])
         self.maximum = float(parts[1])
 
     def value(self):
-        raise NotImplementedError # override this
+        raise NotImplementedError  # override this
 
-    def __call__(self,theobject):
+    def __call__(self, theobject):
         value = self.value(theobject)
         return value >= self.minimum and value <= self.maximum
 
 
 class AllowedAtomicNumbersFilter(_Filter):
-    def __init__(self,args):
+    def __init__(self, args):
         self.allowed_atomic_numbers = [int(x) for x in args.strip().split()]
 
     @staticmethod
@@ -99,18 +98,20 @@ class AllowedAtomicNumbersFilter(_Filter):
     def helptext():
         return "specify a set of atomic numbers (space separated) that the structure can have (and no others)"
 
-    def __call__(self,entry):
+    def __call__(self, entry):
         try:
             molecule = entry.crystal.molecule
-            return len([x for x in molecule.atoms if x.atomic_number in self.allowed_atomic_numbers]) == len(molecule.atoms)
+            return len([x for x in molecule.atoms if x.atomic_number in self.allowed_atomic_numbers]) == len(
+                molecule.atoms)
         except TypeError:
             return False
+
 
 register(AllowedAtomicNumbersFilter)
 
 
 class MustContainAtomicNumbersFilter(_Filter):
-    def __init__(self,args):
+    def __init__(self, args):
         self.must_have_atomic_numbers = [int(x) for x in args.strip().split()]
 
     @staticmethod
@@ -121,18 +122,18 @@ class MustContainAtomicNumbersFilter(_Filter):
     def helptext():
         return "specify a set of atomic numbers (space separated) that the structure must have"
 
-    def __call__(self,entry):
+    def __call__(self, entry):
         try:
             molecule = entry.crystal.molecule
 
             contains = {}
             for x in molecule.atoms:
-               if not contains.has_key(x.atomic_number):
-                   contains[x.atomic_number] = 0
-               contains[x.atomic_number] = contains[x.atomic_number] + 1
+                if not contains.has_key(x.atomic_number):
+                    contains[x.atomic_number] = 0
+                contains[x.atomic_number] = contains[x.atomic_number] + 1
             for x in self.must_have_atomic_numbers:
                 if not contains.has_key(x):
-                   return False
+                    return False
 
             return True
         except:
@@ -144,7 +145,7 @@ register(MustContainAtomicNumbersFilter)
 
 class OrganicFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__,self).__init__(args)
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -154,7 +155,7 @@ class OrganicFilter(_ComparativeFilter):
     def helptext():
         return "organic entries or not"
 
-    def value(self,entry):
+    def value(self, entry):
         return entry.is_organic
 
 
@@ -163,7 +164,7 @@ register(OrganicFilter)
 
 class PolymericFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__,self).__init__(args)
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -173,7 +174,7 @@ class PolymericFilter(_ComparativeFilter):
     def helptext():
         return "polymeric entries or not"
 
-    def value(self,entry):
+    def value(self, entry):
         return entry.is_polymeric
 
 
@@ -182,7 +183,7 @@ register(PolymericFilter)
 
 class AllHaveSitesFilter(_ComparativeFilter):
     def __init__(self, args):
-        super(self.__class__,self).__init__(args)
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -192,7 +193,7 @@ class AllHaveSitesFilter(_ComparativeFilter):
     def helptext():
         return "whether all atoms have to have sites"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             return entry.crystal.molecule.all_atoms_have_sites
         except:
@@ -204,8 +205,7 @@ register(AllHaveSitesFilter)
 
 class DisorderedFilter(_ComparativeFilter):
     def __init__(self, args):
-
-        super(self.__class__,self).__init__(args)
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -215,7 +215,7 @@ class DisorderedFilter(_ComparativeFilter):
     def helptext():
         return "disordered entries or not"
 
-    def value(self,entry):
+    def value(self, entry):
         return entry.has_disorder
 
 
@@ -223,8 +223,8 @@ register(DisorderedFilter)
 
 
 class AtomicWeightFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -234,7 +234,7 @@ class AtomicWeightFilter(_RangeFilter):
     def helptext():
         return "specify a range of atomic weight (for the whole structure - not individual molecules)"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             molecule = entry.crystal.molecule
             return molecule.molecular_weight
@@ -246,8 +246,8 @@ register(AtomicWeightFilter)
 
 
 class AtomCountFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -257,7 +257,7 @@ class AtomCountFilter(_RangeFilter):
     def helptext():
         return "specify a range of atom counts (for the whole structure - not individual molecules)"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             molecule = entry.crystal.molecule
             return len(molecule.atoms)
@@ -269,8 +269,8 @@ register(AtomCountFilter)
 
 
 class RotatableBondFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -280,10 +280,10 @@ class RotatableBondFilter(_RangeFilter):
     def helptext():
         return "specify the number of rotatable bonds (for the whole structure - not individual molecules)"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             molecule = entry.crystal.molecule
-            return sum( x.is_rotatable for x in molecule.bonds )
+            return sum(x.is_rotatable for x in molecule.bonds)
         except TypeError:
             return 0
 
@@ -292,8 +292,8 @@ register(RotatableBondFilter)
 
 
 class DonorCountFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -303,7 +303,7 @@ class DonorCountFilter(_RangeFilter):
     def helptext():
         return "specify a donor atom count range (for the whole structure - not individual molecules)"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             molecule = entry.crystal.molecule
             return len([x for x in molecule.atoms if x.is_donor])
@@ -315,8 +315,8 @@ register(DonorCountFilter)
 
 
 class AcceptorCountFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -326,7 +326,7 @@ class AcceptorCountFilter(_RangeFilter):
     def helptext():
         return "specify an acceptor atom count range (for the whole structure - not individual molecules)"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             molecule = entry.crystal.molecule
             return len([x for x in molecule.atoms if x.is_acceptor])
@@ -338,8 +338,8 @@ register(AcceptorCountFilter)
 
 
 class ComponentCountFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -349,7 +349,7 @@ class ComponentCountFilter(_RangeFilter):
     def helptext():
         return "specify a component count range for the whole structure"
 
-    def value(self,entry):
+    def value(self, entry):
         try:
             return len(entry.crystal.molecule.components)
         except TypeError:
@@ -360,8 +360,8 @@ register(ComponentCountFilter)
 
 
 class ZPrimeFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -371,7 +371,7 @@ class ZPrimeFilter(_RangeFilter):
     def helptext():
         return "specify a z-prime range"
 
-    def value(self,entry):
+    def value(self, entry):
         return entry.crystal.z_prime
 
 
@@ -379,8 +379,8 @@ register(ZPrimeFilter)
 
 
 class RfactorFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -390,7 +390,7 @@ class RfactorFilter(_RangeFilter):
     def helptext():
         return "specify r-factor range (in %%)"
 
-    def value(self,entry):
+    def value(self, entry):
         return entry.r_factor
 
 
@@ -398,8 +398,8 @@ register(RfactorFilter)
 
 
 class SpacegroupNumberFilter(_RangeFilter):
-    def __init__(self,args):
-        super(self.__class__,self).__init__(args)
+    def __init__(self, args):
+        super(self.__class__, self).__init__(args)
 
     @staticmethod
     def name():
@@ -409,7 +409,7 @@ class SpacegroupNumberFilter(_RangeFilter):
     def helptext():
         return "specify spacegroup number range"
 
-    def value(self,entry):
+    def value(self, entry):
         return entry.crystal.spacegroup_number_and_setting[0]
 
 
@@ -420,23 +420,23 @@ class FilterEvaluation(object):
     def __init__(self):
         self._methods = []
 
-    def add_filter(self,method):
+    def add_filter(self, method):
         self._methods.append(method)
 
-    def evaluate(self,entry):
+    def evaluate(self, entry):
         for method in self._methods:
-           try:
-               if not method(entry):
-                   return False
-           except TypeError:
-               return False
+            try:
+                if not method(entry):
+                    return False
+            except TypeError:
+                return False
 
         return True
 
-    def values(self,entry):
+    def values(self, entry):
         values = {}
         for method in self._methods:
-            if hasattr(method,"value"):
+            if hasattr(method, "value"):
                 try:
                     values[method.name()] = method.value(entry)
                 except NotImplementedError:
@@ -447,118 +447,117 @@ class FilterEvaluation(object):
 def parse_control_file(lines):
     evaluator = FilterEvaluation()
     for line in lines:
-       if len(line) > 0 and line[0] != '#':
-           parts = line.split(":")
-           if len(parts) > 1:
-              cls = _filter_classes[parts[0].strip()]
-              evaluator.add_filter( cls(parts[1]) )
+        if len(line) > 0 and line[0] != '#':
+            parts = line.split(":")
+            if len(parts) > 1:
+                cls = _filter_classes[parts[0].strip()]
+                evaluator.add_filter(cls(parts[1]))
     return evaluator
 
 
 import unittest
 
+
 class TestFiltering(unittest.TestCase):
 
     def setUp(self):
 
-          self.reader     = ccdc.io.EntryReader('CSD')
-          self.aabhtz     = self.reader.entry("AABHTZ")
-          self.aacani_ten = self.reader.entry("AACANI10")
-          self.aadamc     = self.reader.entry("AADAMC")
-          self.aadrib     = self.reader.entry("AADRIB")
-          self.abadis     = self.reader.entry("ABADIS")
+        self.reader = ccdc.io.EntryReader('CSD')
+        self.aabhtz = self.reader.entry("AABHTZ")
+        self.aacani_ten = self.reader.entry("AACANI10")
+        self.aadamc = self.reader.entry("AADAMC")
+        self.aadrib = self.reader.entry("AADRIB")
+        self.abadis = self.reader.entry("ABADIS")
 
     def test_organic_filter(self):
 
-          test_file = """
+        test_file = """
 organic : 1
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
 
-          self.assertTrue(evaluator.evaluate(self.aabhtz))
+        self.assertTrue(evaluator.evaluate(self.aabhtz))
 
-          self.assertFalse(evaluator.evaluate(self.aacani_ten))
+        self.assertFalse(evaluator.evaluate(self.aacani_ten))
 
     def test_component_filter(self):
-          test_file = """
+        test_file = """
 component range : 0 1
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
 
-          self.assertTrue(evaluator.evaluate(self.aabhtz))
+        self.assertTrue(evaluator.evaluate(self.aabhtz))
 
-          self.assertFalse(evaluator.evaluate(self.aacani_ten))
+        self.assertFalse(evaluator.evaluate(self.aacani_ten))
 
     def test_donor_count_filter(self):
-          test_file = """
+        test_file = """
 donor count : 2 2
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
 
-          self.assertFalse(evaluator.evaluate(self.aabhtz))
+        self.assertFalse(evaluator.evaluate(self.aabhtz))
 
-          self.assertTrue(evaluator.evaluate(self.aadamc))
+        self.assertTrue(evaluator.evaluate(self.aadamc))
 
-          test_file = """
+        test_file = """
 donor count : 0 3
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
 
-          self.assertTrue(evaluator.evaluate(self.aabhtz))
-          self.assertTrue(evaluator.evaluate(self.aadamc))
+        self.assertTrue(evaluator.evaluate(self.aabhtz))
+        self.assertTrue(evaluator.evaluate(self.aadamc))
 
     def test_acceptor_count_filter(self):
-          test_file = """
+        test_file = """
 acceptor count : 7 7
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
 
-          # regards Cl as an acceptor ...
-          self.assertTrue(evaluator.evaluate(self.aabhtz))
+        # regards Cl as an acceptor ...
+        self.assertTrue(evaluator.evaluate(self.aabhtz))
 
-          self.assertTrue(evaluator.evaluate(self.aacani_ten))
-
+        self.assertTrue(evaluator.evaluate(self.aacani_ten))
 
     def test_zprime(self):
-          test_file = """
+        test_file = """
 zprime range : 0.99 1.01
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
-          self.assertTrue(evaluator.evaluate(self.aabhtz))
-          self.assertFalse(evaluator.evaluate(self.aadrib))
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
+        self.assertTrue(evaluator.evaluate(self.aabhtz))
+        self.assertFalse(evaluator.evaluate(self.aadrib))
 
     def test_atomic_numbers(self):
-          test_file = """
+        test_file = """
 allowed atomic numbers : 1 6 7 8
 must have atomic numbers : 1 6 7 8
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
-          self.assertFalse(evaluator.evaluate(self.aabhtz))
-          self.assertFalse(evaluator.evaluate(self.aadrib))
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
+        self.assertFalse(evaluator.evaluate(self.aabhtz))
+        self.assertFalse(evaluator.evaluate(self.aadrib))
 
-          test_file = """
+        test_file = """
 must have atomic numbers : 1 6 7 8
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
-          self.assertTrue(evaluator.evaluate(self.aabhtz))
-          self.assertFalse(evaluator.evaluate(self.aadrib))
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
+        self.assertTrue(evaluator.evaluate(self.aabhtz))
+        self.assertFalse(evaluator.evaluate(self.aadrib))
 
     def test_rotatable_bond_count(self):
-          test_file = """
+        test_file = """
 rotatable bond count : 0 3
 """
-          lines = test_file.split('\n')
-          evaluator = parse_control_file(lines)
-          self.assertTrue(evaluator.evaluate(self.abadis))
-
+        lines = test_file.split('\n')
+        evaluator = parse_control_file(lines)
+        self.assertTrue(evaluator.evaluate(self.abadis))
 
     def test_multiple(self):
         test_file = """
@@ -599,14 +598,14 @@ rfactor range : 0.1 5
         counter = 0
         hits = []
 
-        test_entries = ['AABHTZ','ABAQEB','ABELEY', 'ADAQOM','ADARAA','ADARAZ','ADUWIG','AFEREK']
+        test_entries = ['AABHTZ', 'ABAQEB', 'ABELEY', 'ADAQOM', 'ADARAA', 'ADARAZ', 'ADUWIG', 'AFEREK']
         for id in test_entries:
-             e = self.reader.entry(id)
+            e = self.reader.entry(id)
 
-             if evaluator.evaluate(e):
-                 hits.append(e.identifier)
+            if evaluator.evaluate(e):
+                hits.append(e.identifier)
 
-        self.assertEquals( ['ABAQEB','ABELEY','ADAQOM','ADUWIG','AFEREK'], hits )
+        self.assertEquals(['ABAQEB', 'ABELEY', 'ADAQOM', 'ADUWIG', 'AFEREK'], hits)
 
 
 if __name__ == "__main__":
