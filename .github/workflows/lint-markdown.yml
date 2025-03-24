@@ -36,7 +36,7 @@ jobs:
       - name: Run markdownlint
         uses: reviewdog/action-markdownlint@v0
         with:
-          fail_on_error: false
+          fail_level: none
           filter_mode: diff_context
           level: error
           markdownlint_flags: ${{ steps.file-changes.outputs.changed-files }}
