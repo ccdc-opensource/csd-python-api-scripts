@@ -36,7 +36,7 @@ jobs:
       - name: Run hadolint
         uses: reviewdog/action-hadolint@v1
         with:
-          fail_on_error: false
+          fail_level: none
           filter_mode: diff_context
           hadolint_flags: ${{ steps.file-changes.outputs.changed-files }}
           level: error
