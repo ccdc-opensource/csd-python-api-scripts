@@ -37,7 +37,7 @@ jobs:
       - name: Run yamllint
         uses: reviewdog/action-yamllint@v1
         with:
-          fail_on_error: false
+          fail_level: none
           filter_mode: diff_context
           level: error
           yamllint_flags: ${{ steps.file-changes.outputs.changed-files }}
