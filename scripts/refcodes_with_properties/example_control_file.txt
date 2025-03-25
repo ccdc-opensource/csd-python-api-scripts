@@ -1,0 +1,19 @@
+# An example control file - this will find all organic structures 
+# with up to 100 atoms, Z' = 1, only 1 component that isnt disordered and
+# has a low R-Factor 
+#
+# only include organic structures as output
+organic : 1
+# number of atoms to allow through
+atom count : 0 100
+# Ensure Z-prime is one
+zprime range : 0.99 1.01
+# Ensure only one component in the structure
+component range : 0 1
+# Dont include disordered structures
+disordered : 0
+# Specify an R-factor range
+rfactor range : 0.1 5
+
+
+

@@ -1,0 +1,29 @@
+# An example control file
+#
+#
+# only include organic structures as output
+organic : 1
+# specify a range of donors
+donor count     : 0 10
+# specify a range of acceptors
+acceptor count :    5 5
+# rotatable bond count range
+rotatable bond count : 3 7
+# number of atoms to allow through
+atom count : 0 100
+# only include structures containing Hydrogen, Carbon, Nitrogen or Oxygen and nothing else
+allowed atomic numbers : 1 6 7 8
+# only include structures containing all of these elements (i.e.) Hydrogen, Carbon, Nitrogen or Oxygen 
+must have atomic numbers : 1 6 7 8
+# Ensure Z-prime is one
+zprime range : 0.99 1.01
+# Ensure only one component in the structure
+component range : 0 1
+# Dont include disordered structures
+disordered : 0
+# Specify an R-factor range
+rfactor range : 0.1 5
+# atomic weight
+atomic weight : 0.0 1000.0
+
+
