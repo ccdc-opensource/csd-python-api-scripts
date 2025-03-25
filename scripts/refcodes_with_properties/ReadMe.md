@@ -10,7 +10,7 @@ update it with the same conditions.
 ### Relevance
 
 We want research to be FAIR (Findable, Attributable, Interoperable and Reproducible) - this script means we can create a
-simple decscription of the test set used that any researcher could then reproduce from the script and the description.
+simple description of the test set used that any researcher could then reproduce from the script and the description.
 
 ## Requirements
 
