@@ -81,7 +81,7 @@ class PropensityCalc:
         print(self.hbp.functional_groups)
 
         # Generate Training Dataset
-        self.hbp.match_fitting_data(count=500)  # set to 500 for better representation of functional groups
+        self.hbp.match_fitting_data(count=50)  # set to 500 for better representation of functional groups
 
         self.hbp.analyse_fitting_data()
 
@@ -190,12 +190,15 @@ def format_scores(scores, das, d_type):
     return formatted_scores
 
 
-def get_mc_scores(propensities, identifier):
+def get_mc_scores(propensities, identifier, ignore_intra:bool):
     # Calculates the multi-component scores from the individual HBP calculation
     AA_propensities = []
     BB_propensities = []
     AB_propensities = []
     BA_propensities = []
+
+    if ignore_intra is True:
+        propensities = [p for p in propensities if p.is_intermolecular]
 
     for p in propensities:
         t = "%s_d" % p.donor_label.split(" ")[0], "%s_a" % p.acceptor_label.split(" ")[0]
@@ -323,7 +326,7 @@ def make_mc_report(identifier, results, directory, diagram_file, chart_file):
     launch_word_processor(output_file)
 
 
-def main(structure, work_directory, failure_directory, library, csdrefcode, force_run):
+def main(structure, work_directory, failure_directory, library, csdrefcode, ignore_intra, force_run):
     # This loads up the CSD if a refcode is requested, otherwise loads the structural file supplied
     if csdrefcode:
         try:
@@ -371,10 +374,9 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
                 propensities, donors, acceptors = hbp_calculator.calculate()
                 coordination_scores = coordination_scores_calc(crystal, directory)
                 pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
+                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier, ignore_intra)
                 with open(os.path.join(directory, "success.json"), "w") as file:
-                    tdata = get_mc_scores(propensities, crystal.identifier)
-                    json.dump(tdata, file)
-                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
+                    json.dump(mc_dictionary[coformer_name], file)
             except Exception as error_message:
                 print("Propensity calculation failure for %s!" % coformer_name)
                 error_string = f"{coformer_name}: {error_message}"
@@ -429,7 +431,8 @@ if __name__ == '__main__':
                         default=ccdc_coformers_dir)
     parser.add_argument('-f', '--failure_directory', type=str,
                         help='The location where the failures file should be generated')
-
+    parser.add_argument('-i', '--ignore_intra', action='store_true', default='False',
+                        help='Ignore intramolecular hydrogen bonds when ranking pairs')
     parser.add_argument('--force_run_disordered', action="store_true",
                         help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
 
@@ -447,4 +450,4 @@ if __name__ == '__main__':
         parser.error('%s - library not found.' % args.coformer_library)
 
     main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode,
-         args.force_run_disordered)
+         args.ignore_intra, args.force_run_disordered)
