@@ -81,7 +81,7 @@ class PropensityCalc:
         print(self.hbp.functional_groups)
 
         # Generate Training Dataset
-        self.hbp.match_fitting_data(count=50)  # set to 500 for better representation of functional groups
+        self.hbp.match_fitting_data(count=500)  # set to 500 for better representation of functional groups
 
         self.hbp.analyse_fitting_data()
 
