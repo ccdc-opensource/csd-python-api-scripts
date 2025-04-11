@@ -196,16 +196,21 @@ def get_mc_scores(propensities, identifier, ignore_intra:bool):
     BB_propensities = []
     AB_propensities = []
     BA_propensities = []
-
-    if ignore_intra is True:
-        propensities = [p for p in propensities if p.is_intermolecular]
+    AA_intra_propensities = []
+    BB_intra_propensities = []
 
     for p in propensities:
+        if ignore_intra and not p.is_intermolecular:
+            continue
         t = "%s_d" % p.donor_label.split(" ")[0], "%s_a" % p.acceptor_label.split(" ")[0]
         if '_A_' in t[0] and '_A_' in t[1]:
             AA_propensities.append(p.propensity)
+            if not p.is_intermolecular:
+                AA_intra_propensities.append(p.propensity)
         elif '_B_' in t[0] and '_B_' in t[1]:
             BB_propensities.append(p.propensity)
+            if not p.is_intermolecular:
+                BB_intra_propensities.append(p.propensity)
         elif '_A_' in t[0] and '_B_' in t[1]:
             AB_propensities.append(p.propensity)
         elif '_B_' in t[0] and '_A_' in t[1]:
@@ -215,9 +220,12 @@ def get_mc_scores(propensities, identifier, ignore_intra:bool):
     max_AB = max(AB_propensities) if len(AB_propensities) > 0 else 0.0
     max_BA = max(BA_propensities) if len(BA_propensities) > 0 else 0.0
     max_list = [max_AA, max_BB, max_AB, max_BA]
-    max_keys = ['A:A', 'B:B', 'A:B', 'B:A']
     max_mc = max(max_list[2], max_list[3])
     max_sc = max(max_list[0], max_list[1])
+
+    max_keys = ['A:A*', 'B:B*', 'A:B', 'B:A'] if max_sc in AA_intra_propensities or max_sc in BB_intra_propensities \
+        else ['A:A', 'B:B', 'A:B', 'B:A']
+
 
     return [round((max_mc - max_sc), 2),
             max_keys[max_list.index(max(max_list))],
@@ -431,7 +439,7 @@ if __name__ == '__main__':
                         default=ccdc_coformers_dir)
     parser.add_argument('-f', '--failure_directory', type=str,
                         help='The location where the failures file should be generated')
-    parser.add_argument('-i', '--ignore_intra', action='store_true', default='False',
+    parser.add_argument('-i', '--ignore_intra', action='store_true', default=False,
                         help='Ignore intramolecular hydrogen bonds when ranking pairs')
     parser.add_argument('--force_run_disordered', action="store_true",
                         help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
