@@ -226,7 +226,6 @@ def get_mc_scores(propensities, identifier, ignore_intra:bool):
     max_keys = ['A:A*', 'B:B*', 'A:B', 'B:A'] if max_sc in AA_intra_propensities or max_sc in BB_intra_propensities \
         else ['A:A', 'B:B', 'A:B', 'B:A']
 
-
     return [round((max_mc - max_sc), 2),
             max_keys[max_list.index(max(max_list))],
             round(max_mc, 2),
@@ -439,7 +438,7 @@ if __name__ == '__main__':
                         default=ccdc_coformers_dir)
     parser.add_argument('-f', '--failure_directory', type=str,
                         help='The location where the failures file should be generated')
-    parser.add_argument('-i', '--ignore_intra', action='store_true', default=False,
+    parser.add_argument('-i', '--ignore_intra', type=bool, action='store_true', default=False,
                         help='Ignore intramolecular hydrogen bonds when ranking pairs')
     parser.add_argument('--force_run_disordered', action="store_true",
                         help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
