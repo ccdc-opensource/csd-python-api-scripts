@@ -438,7 +438,7 @@ if __name__ == '__main__':
                         default=ccdc_coformers_dir)
     parser.add_argument('-f', '--failure_directory', type=str,
                         help='The location where the failures file should be generated')
-    parser.add_argument('-i', '--ignore_intra', type=bool, action='store_true', default=False,
+    parser.add_argument('-i', '--ignore_intra', action='store_true', default=False,
                         help='Ignore intramolecular hydrogen bonds when ranking pairs')
     parser.add_argument('--force_run_disordered', action="store_true",
                         help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
