@@ -190,19 +190,27 @@ def format_scores(scores, das, d_type):
     return formatted_scores
 
 
-def get_mc_scores(propensities, identifier):
+def get_mc_scores(propensities, identifier, ignore_intra:bool):
     # Calculates the multi-component scores from the individual HBP calculation
     AA_propensities = []
     BB_propensities = []
     AB_propensities = []
     BA_propensities = []
+    AA_intra_propensities = []
+    BB_intra_propensities = []
 
     for p in propensities:
+        if ignore_intra and not p.is_intermolecular:
+            continue
         t = "%s_d" % p.donor_label.split(" ")[0], "%s_a" % p.acceptor_label.split(" ")[0]
         if '_A_' in t[0] and '_A_' in t[1]:
             AA_propensities.append(p.propensity)
+            if not p.is_intermolecular:
+                AA_intra_propensities.append(p.propensity)
         elif '_B_' in t[0] and '_B_' in t[1]:
             BB_propensities.append(p.propensity)
+            if not p.is_intermolecular:
+                BB_intra_propensities.append(p.propensity)
         elif '_A_' in t[0] and '_B_' in t[1]:
             AB_propensities.append(p.propensity)
         elif '_B_' in t[0] and '_A_' in t[1]:
@@ -212,9 +220,11 @@ def get_mc_scores(propensities, identifier):
     max_AB = max(AB_propensities) if len(AB_propensities) > 0 else 0.0
     max_BA = max(BA_propensities) if len(BA_propensities) > 0 else 0.0
     max_list = [max_AA, max_BB, max_AB, max_BA]
-    max_keys = ['A:A', 'B:B', 'A:B', 'B:A']
     max_mc = max(max_list[2], max_list[3])
     max_sc = max(max_list[0], max_list[1])
+
+    max_keys = ['A:A*', 'B:B*', 'A:B', 'B:A'] if max_sc in AA_intra_propensities or max_sc in BB_intra_propensities \
+        else ['A:A', 'B:B', 'A:B', 'B:A']
 
     return [round((max_mc - max_sc), 2),
             max_keys[max_list.index(max(max_list))],
@@ -323,7 +333,7 @@ def make_mc_report(identifier, results, directory, diagram_file, chart_file):
     launch_word_processor(output_file)
 
 
-def main(structure, work_directory, failure_directory, library, csdrefcode, force_run):
+def main(structure, work_directory, failure_directory, library, csdrefcode, ignore_intra, force_run):
     # This loads up the CSD if a refcode is requested, otherwise loads the structural file supplied
     if csdrefcode:
         try:
@@ -371,10 +381,9 @@ def main(structure, work_directory, failure_directory, library, csdrefcode, forc
                 propensities, donors, acceptors = hbp_calculator.calculate()
                 coordination_scores = coordination_scores_calc(crystal, directory)
                 pair_output(crystal.identifier, propensities, donors, acceptors, coordination_scores, directory)
+                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier, ignore_intra)
                 with open(os.path.join(directory, "success.json"), "w") as file:
-                    tdata = get_mc_scores(propensities, crystal.identifier)
-                    json.dump(tdata, file)
-                mc_dictionary[coformer_name] = get_mc_scores(propensities, crystal.identifier)
+                    json.dump(mc_dictionary[coformer_name], file)
             except Exception as error_message:
                 print("Propensity calculation failure for %s!" % coformer_name)
                 error_string = f"{coformer_name}: {error_message}"
@@ -429,7 +438,8 @@ if __name__ == '__main__':
                         default=ccdc_coformers_dir)
     parser.add_argument('-f', '--failure_directory', type=str,
                         help='The location where the failures file should be generated')
-
+    parser.add_argument('-i', '--ignore_intra', type=bool, action='store_true', default=False,
+                        help='Ignore intramolecular hydrogen bonds when ranking pairs')
     parser.add_argument('--force_run_disordered', action="store_true",
                         help='Forces running the script on disordered entries. (NOT RECOMMENDED)', default=False)
 
@@ -447,4 +457,4 @@ if __name__ == '__main__':
         parser.error('%s - library not found.' % args.coformer_library)
 
     main(args.input_structure, args.directory, args.failure_directory, args.coformer_library, refcode,
-         args.force_run_disordered)
+         args.ignore_intra, args.force_run_disordered)
