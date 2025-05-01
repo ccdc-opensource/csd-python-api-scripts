@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     outfile = sys.stdout
     if args.output_file is not None:
-        outfile = open(args.output_file, 'wb')
+        outfile = open(args.output_file, 'w', encoding='utf-8')
 
     filterer = entry_property_calculator.parse_control_file(open(control_file, "r").readlines())
 

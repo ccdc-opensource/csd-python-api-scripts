@@ -85,6 +85,20 @@ class _RangeFilter(_Filter):
         return value >= self.minimum and value <= self.maximum
 
 
+class _ValueFilter(_Filter):
+    def __init__(self, args):
+        values = [p for p in args.split()]
+        #To do: add option for two values?
+        self.expected_value = values[0]
+
+    def value(self, theobject):
+        raise NotImplementedError  # override this
+
+    def __call__(self, theobject):
+        value = self.value(theobject)
+        return value == self.expected_value
+
+
 class AllowedAtomicNumbersFilter(_Filter):
     def __init__(self, args):
         self.allowed_atomic_numbers = [int(atomic_number) for atomic_number in args.strip().split()]
@@ -411,6 +425,30 @@ class SpacegroupNumberFilter(_RangeFilter):
 
 
 register(SpacegroupNumberFilter)
+
+
+class ChiralityFilter(_ValueFilter):
+    def __init__(self, args):
+        super().__init__(args)
+
+    @staticmethod
+    def name():
+        return "chirality"
+
+    @staticmethod
+    def helptext():
+        return "specify the chirality value to be used as filter"
+
+    def value(self, entry):
+        try:
+            molecule = entry.crystal.molecule
+            chirality = next((atom.chirality for atom in molecule.atoms if atom.is_chiral), None)
+            return chirality
+        except TypeError:
+            return 0
+
+
+register(ChiralityFilter)
 
 
 class FilterEvaluation(object):
