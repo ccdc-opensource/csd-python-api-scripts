@@ -89,7 +89,10 @@ class _ValueFilter(_Filter):
     def __init__(self, args):
         values = [p for p in args.split()]
         #To do: add option for two values?
-        self.expected_value = values[0]
+        if values[0] == 'None':
+            self.expected_value = None
+        else:
+            self.expected_value = values[0]
 
     def value(self, theobject):
         raise NotImplementedError  # override this
@@ -212,6 +215,25 @@ class AllHaveSitesFilter(_ComparativeFilter):
 
 
 register(AllHaveSitesFilter)
+
+
+class Has3DStructure(_ComparativeFilter):
+    def __init__(self, args):
+        super().__init__(args)
+
+    @staticmethod
+    def name():
+        return "has 3D structure"
+
+    @staticmethod
+    def helptext():
+        return "whether 3D coordinates have been determined for the structure"
+
+    def value(self, entry):
+        return entry.has_3d_structure
+
+
+register(Has3DStructure)
 
 
 class DisorderedFilter(_ComparativeFilter):
@@ -445,7 +467,7 @@ class ChiralityFilter(_ValueFilter):
             chirality = next((atom.chirality for atom in molecule.atoms if atom.is_chiral), None)
             return chirality
         except TypeError:
-            return 0
+            return None
 
 
 register(ChiralityFilter)
@@ -463,7 +485,7 @@ class FilterEvaluation(object):
             try:
                 if not method(entry):
                     return False
-            except TypeError:
+            except (TypeError, RuntimeError):
                 return False
 
         return True
