@@ -85,6 +85,23 @@ class _RangeFilter(_Filter):
         return value >= self.minimum and value <= self.maximum
 
 
+class _ValueFilter(_Filter):
+    def __init__(self, args):
+        values = [p for p in args.split()]
+        #To do: add option for two values?
+        if values[0] == 'None':
+            self.expected_value = None
+        else:
+            self.expected_value = values[0]
+
+    def value(self, theobject):
+        raise NotImplementedError  # override this
+
+    def __call__(self, theobject):
+        value = self.value(theobject)
+        return value == self.expected_value
+
+
 class AllowedAtomicNumbersFilter(_Filter):
     def __init__(self, args):
         self.allowed_atomic_numbers = [int(atomic_number) for atomic_number in args.strip().split()]
@@ -198,6 +215,25 @@ class AllHaveSitesFilter(_ComparativeFilter):
 
 
 register(AllHaveSitesFilter)
+
+
+class Has3DStructure(_ComparativeFilter):
+    def __init__(self, args):
+        super().__init__(args)
+
+    @staticmethod
+    def name():
+        return "has 3D structure"
+
+    @staticmethod
+    def helptext():
+        return "whether 3D coordinates have been determined for the structure"
+
+    def value(self, entry):
+        return entry.has_3d_structure
+
+
+register(Has3DStructure)
 
 
 class DisorderedFilter(_ComparativeFilter):
@@ -413,6 +449,30 @@ class SpacegroupNumberFilter(_RangeFilter):
 register(SpacegroupNumberFilter)
 
 
+class ChiralityFilter(_ValueFilter):
+    def __init__(self, args):
+        super().__init__(args)
+
+    @staticmethod
+    def name():
+        return "chirality"
+
+    @staticmethod
+    def helptext():
+        return "specify the chirality value to be used as filter"
+
+    def value(self, entry):
+        try:
+            molecule = entry.crystal.molecule
+            chirality = next((atom.chirality for atom in molecule.atoms if atom.is_chiral), None)
+            return chirality
+        except TypeError:
+            return None
+
+
+register(ChiralityFilter)
+
+
 class FilterEvaluation(object):
     def __init__(self):
         self._methods = []
@@ -425,7 +485,7 @@ class FilterEvaluation(object):
             try:
                 if not method(entry):
                     return False
-            except TypeError:
+            except (TypeError, RuntimeError):
                 return False
 
         return True
