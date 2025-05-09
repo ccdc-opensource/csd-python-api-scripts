@@ -14,3 +14,5 @@ rules:
   document-start: disable
   line-length:
     max: 200
+  braces:
+    max-spaces-inside: 1
