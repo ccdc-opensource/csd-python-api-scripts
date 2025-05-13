@@ -3,23 +3,27 @@
 
 version: 2
 registries:
-  nuget-github:
+  nuget-artifactory:
     type: nuget-feed
-    url: https://nuget.pkg.github.com/ccdc-confidential/index.json
-    username: ${{ secrets.CCDC_GITHUB_NUGET_FEED_USER }}
-    password: ${{ secrets.CCDC_GITHUB_NUGET_FEED_PAT }}
-  nuget-public:
+    url: https://artifactory.ccdc.cam.ac.uk/artifactory/api/npm/v3/ccdc-nuget
+    username: ${{ secrets.ARTIFACTORY_GH_NUGET_READ_ONLY_USER }}
+    password: ${{ secrets.ARTIFACTORY_GH_NUGET_READ_ONLY_API }}
+  nuget-azure-devops:
     type: nuget-feed
-    url: https://api.nuget.org/v3/index.json
+    url: https://pkgs.dev.azure.com/ccdc/_packaging/ccdc/npm/v3/index.json
+    username: ${{ secrets.AZURE_NUGET_ARTIFACTS_READ_ONLY_USER }}
+    password: ${{ secrets.AZURE_NUGET_ARTIFACTS_READ_ONLY_TOKEN }}
 
-  npm-github:
-    type: npm-registry
-    url: https://npm.pkg.github.com
-    username: ${{ secrets.CCDC_GITHUB_NUGET_FEED_USER }}
-    password: ${{ secrets.CCDC_GITHUB_NUGET_FEED_PAT }}
-  npm-public:
-    type: npm-registry
-    url: https://registry.npmjs.org
+  npm-artifactory:
+    type: nuget-feed
+    url: https://artifactory.ccdc.cam.ac.uk/artifactory/api/npm/ccdc-npm-mix/
+    username: ${{ secrets.ARTIFACTORY_GH_NPM_READ_ONLY_USER }}
+    password: ${{ secrets.ARTIFACTORY_GH_NPM_READ_ONLY_API }}
+  npm-azure-devops:
+    type: nuget-feed
+    url: https://pkgs.dev.azure.com/ccdc/_packaging/ccdc/npm/registry/
+    username: ${{ secrets.AZURE_NPM_ARTIFACTS_READ_ONLY_USER }}
+    password: ${{ secrets.AZURE_NPM_ARTIFACTS_READ_ONLY_TOKEN }}
 
 updates:
   # Enable version updates for NuGet
