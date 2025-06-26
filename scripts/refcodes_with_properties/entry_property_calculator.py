@@ -411,6 +411,25 @@ class ZPrimeFilter(_RangeFilter):
 register(ZPrimeFilter)
 
 
+class AsymmUnitFilter(_RangeFilter):
+    def __init__(self, args):
+        super().__init__(args)
+
+    @staticmethod
+    def name():
+        return "asymmetric unit components"
+
+    @staticmethod
+    def helptext():
+        return "specify range of components in the asymmetric unit"
+
+    def value(self, entry):
+        return len(entry.crystal.asymmetric_unit_molecule.components)
+
+
+register(AsymmUnitFilter)
+
+
 class RfactorFilter(_RangeFilter):
     def __init__(self, args):
         super().__init__(args)
