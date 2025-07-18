@@ -91,14 +91,14 @@ def get_query_text():
     root.mainloop()
 
     # Vars are where it retrieves the app outputs (the values you entered) into the query
-    vars = {k: v for k, v in zip(pore_query_dict.keys(), app.outputs)}
+    values = {k: v for k, v in zip(pore_query_dict.keys(), app.outputs)}
 
     try:
         root.destroy()
     except:
         pass
 
-    return vars
+    return values
 
 
 def query_string_to_tuple(query_string, default_upper_limit=9999.9):
