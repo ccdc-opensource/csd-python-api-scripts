@@ -52,6 +52,10 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - A script for generating refcode lists with specific properties from an easy-to-read control file.
 
+## Void Search
+
+- A script to search on pre-calculated Void properties
+
 ## Tips
 
 A section for top tips in using the repository and GitHub.
