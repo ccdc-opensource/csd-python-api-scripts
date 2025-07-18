@@ -93,10 +93,8 @@ def get_query_text():
     # Vars are where it retrieves the app outputs (the values you entered) into the query
     values = {k: v for k, v in zip(pore_query_dict.keys(), app.outputs)}
 
-    try:
+    if root.winfo_exists():
         root.destroy()
-    except:
-        pass
 
     return values
 
@@ -170,7 +168,7 @@ def run_search(interface=None):
     query_report = str()
     # Error out if the compound name given is empty
     if len("".join(void_search_dict.values())) == 0:
-        interface.show_script_error('''Nothing was given to search for. Please enter either one number 
+        interface.show_script_error('''Nothing was given to search for. Please enter either one number
     (to search +/- 5 %) or two numbers separated by a "-" in one of the available boxes''')
         return
 
@@ -251,7 +249,7 @@ def run_search(interface=None):
                 data=f"""
                 Query: {query_report} <br>
                 Result:{len(refcode_list)} hits in {len(set(refcode_list))} structures <br>
-                More information on the pore calculations is available here: 
+                More information on the pore calculations is available here:
                 <a href="https://downloads.ccdc.cam.ac.uk/documentation/API/descriptive_docs/calculated_properties.html">
                 link
                 </a>
