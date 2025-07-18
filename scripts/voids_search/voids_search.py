@@ -31,14 +31,15 @@ import ccdc.utilities
 from jinja2 import Template
 from pathlib import Path
 
-from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT
+from tkinter import BOTH, X, LEFT
 from tkinter.ttk import Frame, Label, Entry, Button
 
 pore_query_dict = {"total_surface_area": "Pore Total Surface Area (Å^2)",
- "total_geometric_volume": "Pore Total Geometric Volume (Å^3)",
-   "pore_limiting_diameter": "Pore Limiting Diameter (Å)", 
-   "max_pore_diameter":"Pore Maximum Diameter (Å)", 
-   "num_percolated_dimensions":"Number of Percolated Dimensions"}
+                   "total_geometric_volume": "Pore Total Geometric Volume (Å^3)",
+                   "pore_limiting_diameter": "Pore Limiting Diameter (Å)",
+                   "max_pore_diameter": "Pore Maximum Diameter (Å)",
+                   "num_percolated_dimensions": "Number of Percolated Dimensions"}
+
 
 class VoidDialog(Frame):
 
@@ -62,8 +63,8 @@ class VoidDialog(Frame):
         self.master.title("Simple Dialog")
         self.pack(fill=BOTH, expand=True)
 
-        [self.generate_entry(text, output) for text,output in zip(pore_query_dict.values(), self.outputs)]
-        
+        [self.generate_entry(text, output) for text, output in zip(pore_query_dict.values(), self.outputs)]
+
         frame_button = Frame(self)
         frame_button.pack(fill=X)
 
@@ -75,7 +76,7 @@ class VoidDialog(Frame):
     def onSubmit(self):
         self.outputs = [x.get() for x in self.entries]
         self.quit()
-    
+
 
 def get_query_text():
     """Open a GUI dialog to ask for a search term.
@@ -86,11 +87,11 @@ def get_query_text():
     root = Tkinter.Tk()
     root.geometry("400x300+300+300")
     app = VoidDialog()
-    
+
     root.mainloop()
 
     # Vars are where it retrieves the app outputs (the values you entered) into the query
-    vars = {k:v for k,v in zip(pore_query_dict.keys(), app.outputs)}
+    vars = {k: v for k, v in zip(pore_query_dict.keys(), app.outputs)}
 
     try:
         root.destroy()
@@ -100,7 +101,7 @@ def get_query_text():
     return vars
 
 
-def query_string_to_tuple(query_string, default_upper_limit = 9999.9):
+def query_string_to_tuple(query_string, default_upper_limit=9999.9):
     """this converts a string to a tuple of values representing the upper and lower bounds.
     Compatible with a single value (x, <x, >x) or a range (x-y)"""
     if "-" in query_string:
@@ -113,23 +114,25 @@ def query_string_to_tuple(query_string, default_upper_limit = 9999.9):
         ul, _, ll = query_string.partition(">")
         ll = ll.lstrip("=")
         ul = ul.rstrip("=")
-    elif query_string in ("0","0.0"):
+    elif query_string in ("0", "0.0"):
         ll, ul = 0.0, 0.1
     else:
         ll, ul = float(query_string)*0.95, float(query_string)*1.05
-    
-    if ll!="":
+
+    if ll != "":
         lower_limit = float(ll)
     else:
-        lower_limit = 0.0 
-    if ul!="":
+        lower_limit = 0.0
+    if ul != "":
         upper_limit = float(ul)
     else:
         upper_limit = default_upper_limit
     return (lower_limit, upper_limit)
-    
+
+
 def convert_to_ascii(text):
     return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+
 
 def run_search(interface=None):
     """Search the CSD for a set of void descriptors. This will generate a list of structures
@@ -160,8 +163,8 @@ def run_search(interface=None):
 
         # Parse the commandline including checking for the compound parameter.
         interface.parse_commandline()
-        
-    ## open a GUI dialog asking for the search query.
+
+    # open a GUI dialog asking for the search query.
     void_search_dict = get_query_text()
 
     query_report = str()
@@ -173,31 +176,31 @@ def run_search(interface=None):
 
     # Set up and run the CSD search
     interface.update_progress('Running search for pore %s ...' % str(void_search_dict))
-    
+
     TNS = TextNumericSearch()
     if void_search_dict.get("total_surface_area", False):
         tsa = query_string_to_tuple(void_search_dict["total_surface_area"], 10000.0)
-        query_report +=  f"Pore Total Surface Area (&#8491;^2) {tsa[0]}-{tsa[1]} <br>"
+        query_report += f"Pore Total Surface Area (&#8491;^2) {tsa[0]}-{tsa[1]} <br>"
         TNS.add_pore_analysis_total_surface_area(tsa)
-        
+
     if void_search_dict.get("total_geometric_volume", False):
         tgv = query_string_to_tuple(void_search_dict["total_geometric_volume"], 100000.0)
-        query_report +=  f"Pore Total Geometric Volume (&#8491;^3): {tgv[0]}-{tgv[1]} <br>"
+        query_report += f"Pore Total Geometric Volume (&#8491;^3): {tgv[0]}-{tgv[1]} <br>"
         TNS.add_pore_analysis_total_geometric_volume(tgv)
 
     if void_search_dict.get("pore_limiting_diameter", False):
-        pld = query_string_to_tuple(void_search_dict["pore_limiting_diameter"],200.0)
-        query_report +=  f"Pore Limiting Diameter (&#8491;): {pld[0]}-{pld[1]} <br>"
+        pld = query_string_to_tuple(void_search_dict["pore_limiting_diameter"], 200.0)
+        query_report += f"Pore Limiting Diameter (&#8491;): {pld[0]}-{pld[1]} <br>"
         TNS.add_pore_analysis_pore_limiting_diameter(pld)
 
     if void_search_dict.get("max_pore_diameter", False):
-        pmd = query_string_to_tuple(void_search_dict["max_pore_diameter"],200.0)
-        query_report +=  f"Pore Maximum Diameter (&#8491;): {pmd[0]}-{pmd[1]} <br>"
+        pmd = query_string_to_tuple(void_search_dict["max_pore_diameter"], 200.0)
+        query_report += f"Pore Maximum Diameter (&#8491;): {pmd[0]}-{pmd[1]} <br>"
         TNS.add_pore_analysis_max_pore_diameter(pmd)
 
     if void_search_dict.get("num_percolated_dimensions", False):
-        npd = query_string_to_tuple(void_search_dict["num_percolated_dimensions"],3.1)
-        query_report +=  f"Number of Percolated Dimensions: {npd[0]}-{npd[1]} <br>"
+        npd = query_string_to_tuple(void_search_dict["num_percolated_dimensions"], 3.1)
+        query_report += f"Number of Percolated Dimensions: {npd[0]}-{npd[1]} <br>"
         TNS.add_pore_analysis_max_pore_diameter(npd)
 
     hits = TNS.search()
@@ -208,12 +211,12 @@ def run_search(interface=None):
     with ccdc.utilities.output_file(interface.output_gcd_file) as gcd_file, \
             ccdc.utilities.CSVWriter(interface.output_tsv_file,
                                      header=["Identifier",
-                                             "Pore Total Surface Area (\u212b^2)", 
+                                             "Pore Total Surface Area (\u212b^2)",
                                              "Pore Total Geometric Volume (\u212b^3)",
                                              "Pore Limiting Diameter (\u212b)",
                                              "Pore Maximum Diameter (\u212b)",
                                              "Pore Number of Percolated Dimensions",
-                                             'Chemical Name(s)', 
+                                             'Chemical Name(s)',
                                              ],
                                      delimiter='\t') as tsv_file:
 
@@ -227,14 +230,14 @@ def run_search(interface=None):
             print(h.identifier, file=gcd_file)
             pa = h.entry.calculated_properties.pore_analyser
             refcode_list.append(h.identifier)
-            tsv_file.write_row([h.identifier, 
+            tsv_file.write_row([h.identifier,
                                 pa.total_surface_area,
                                 pa.total_geometric_volume,
                                 pa.pore_limiting_diameter,
                                 pa.max_pore_diameter,
                                 pa.num_percolated_dimensions,
                                 names])
-            
+
     with open(interface.output_html_file, "w") as report:
         tl = Template(
             open(
@@ -244,7 +247,7 @@ def run_search(interface=None):
         )
         report.write(
             tl.render(
-                title="Voids_search", 
+                title="Voids_search",
                 data=f"""
                 Query: {query_report} <br>
                 Result:{len(refcode_list)} hits in {len(set(refcode_list))} structures <br>
