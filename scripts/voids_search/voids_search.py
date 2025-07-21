@@ -177,30 +177,30 @@ def run_search(interface=None):
 
     TNS = TextNumericSearch()
     if void_search_dict.get("total_surface_area", False):
-        tsa = query_string_to_tuple(void_search_dict["total_surface_area"], 10000.0)        
-        query_report +=  f"Pore Total Surface Area (&#8491;^2) {round(tsa[0],1)}-{round(tsa[1],1)} <br>"
+        tsa = query_string_to_tuple(void_search_dict["total_surface_area"], 10000.0)
+        query_report += f"Pore Total Surface Area (&#8491;^2) {round(tsa[0],1)}-{round(tsa[1],1)} <br>"
         TNS.add_pore_analysis_total_surface_area(tsa)
 
     if void_search_dict.get("total_geometric_volume", False):
         tgv = query_string_to_tuple(void_search_dict["total_geometric_volume"], 100000.0)
-        query_report +=  f"Pore Total Geometric Volume (&#8491;^3): {round(tgv[0],1)}-{round(tgv[1],1)} <br>"
+        query_report += f"Pore Total Geometric Volume (&#8491;^3): {round(tgv[0],1)}-{round(tgv[1],1)} <br>"
         TNS.add_pore_analysis_total_geometric_volume(tgv)
 
     if void_search_dict.get("pore_limiting_diameter", False):
         pld = query_string_to_tuple(void_search_dict["pore_limiting_diameter"], 200.0)
-        query_report +=  f"Pore Limiting Diameter (&#8491;): {round(pld[0],2)}-{round(pld[1],2)} <br>"
+        query_report += f"Pore Limiting Diameter (&#8491;): {round(pld[0],2)}-{round(pld[1],2)} <br>"
         TNS.add_pore_analysis_pore_limiting_diameter(pld)
 
     if void_search_dict.get("max_pore_diameter", False):
         pmd = query_string_to_tuple(void_search_dict["max_pore_diameter"], 200.0)
-        query_report +=  f"Pore Maximum Diameter (&#8491;): {round(pmd[0],2)}-{round(pmd[1],2)} <br>"
+        query_report += f"Pore Maximum Diameter (&#8491;): {round(pmd[0],2)}-{round(pmd[1],2)} <br>"
         TNS.add_pore_analysis_max_pore_diameter(pmd)
 
     if void_search_dict.get("num_percolated_dimensions", False):
-        npd = query_string_to_tuple(void_search_dict["num_percolated_dimensions"],3.1)
-        low, high = int(round(npd[0],0)), int(round(npd[1],0))
+        npd = query_string_to_tuple(void_search_dict["num_percolated_dimensions"], 3.1)
+        low, high = int(round(npd[0], 0)), int(round(npd[1], 0))
         range_text = f"{low}-{high}" if low != high else high
-        query_report +=  f"Number of Percolated Dimensions: {range_text} <br>"
+        query_report += f"Number of Percolated Dimensions: {range_text} <br>"
         TNS.add_pore_analysis_num_percolated_dimensions(npd)
 
     hits = TNS.search()
