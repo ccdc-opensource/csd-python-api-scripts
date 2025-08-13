@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+#
+# This script can be used for any purpose without limitation subject to the
+# conditions at http://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
+#
+# This permission notice and the following statement of attribution must be
+# included in all copies or substantial portions of this script.
+#
+
 import unittest
 
 from ccdc.io import EntryReader
