@@ -7,6 +7,10 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - Concatenates mol2 files present in working directory to a single `.mol2` file.
 
+## Conformer demo
+
+- A short script to generate conformers with some rudimentary analysis for a single molecule.
+
 ## Create CASTEP Input
 
 - Creates input files (`.cell` and `.param`) files for a given compound through Mercury.
@@ -36,6 +40,10 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - Performs a multi-component HBP calculation for a given library of co-formers.
 
+## November 2023 morphology webinar
+
+- A collection of scripts from the November 2023 CCDC Webinar on crystal morphologies.
+
 ## Packing similarity dendrogram
 
 - Construct a dendrogram for an input set of structures based on packing-similarity analysis.
@@ -44,17 +52,21 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - Calculates the simulated BFDH particle rugosity weighted by facet area.
 
-## Surface Charge
-
-- Calculates the surface charge for a given structure and surface terminations. Runs both from CMD and Mercury.
-
 ## Refcodes With Properties
 
 - A script for generating refcode lists with specific properties from an easy-to-read control file.
 
+## Show semiconductor properties
+
+- Displays semiconductor properties for the structure currently loaded in Mercury.
+
+## Surface Charge
+
+- Calculates the surface charge for a given structure and surface terminations. Runs both from CMD and Mercury.
+
 ## Void Search
 
-- A script to search on pre-calculated Void properties
+- A script to search on pre-calculated Void properties.
 
 ## Tips
 
