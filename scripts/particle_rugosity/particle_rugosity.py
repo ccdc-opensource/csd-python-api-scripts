@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+#
+# This script can be used for any purpose without limitation subject to the
+# conditions at http://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
+#
+# This permission notice and the following statement of attribution must be
+# included in all copies or substantial portions of this script.
+#
+
 # script for calculating the particle rugosity for a given crystal structure (.cif in local working directory, or refcode of a CSD entry)
 # requires a CCDC license, and loading of the CSD-python miniconda environment if run from Linux command line
 
