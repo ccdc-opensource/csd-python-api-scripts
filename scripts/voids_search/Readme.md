@@ -13,7 +13,7 @@ A .gcd file of refcodes in the search results is also written, and read into Mer
 
 ## Licensing Requirements
 
-- CSD-Core or above
+- CSD-Core
 
 ## Instructions for use
 

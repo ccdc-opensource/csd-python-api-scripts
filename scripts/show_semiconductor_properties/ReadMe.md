@@ -10,7 +10,7 @@ Mercury
 
 ## Licensing Requirements
 
-- CSD-Core and above
+- CSD-Core
 
 ## Instructions on Running
 
