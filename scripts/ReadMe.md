@@ -11,6 +11,10 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 
 - A short script to generate conformers with some rudimentary analysis for a single molecule.
 
+## Conformer Filter Density
+
+- A script to filter conformers based on a variety of torsion metrics.
+
 ## Create CASTEP Input
 
 - Creates input files (`.cell` and `.param`) files for a given compound through Mercury.
@@ -18,6 +22,10 @@ This folder contains scripts submitted by users or CCDC scientists for anyone to
 ## Create GAUSSIAN Input
 
 - Create GAUSSIAN input file (`.gjf`) for a given CSD refcode or `.mol2` file.
+
+## Filter poses
+
+- A script to filter docking poses based on torsion statistics
 
 ## Find Binding Conformation
 
