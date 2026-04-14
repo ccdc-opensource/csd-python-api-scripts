@@ -27,6 +27,10 @@ updates:
       interval: "daily"
       time: "15:30"
       timezone: "Europe/London"
+    allow:
+      - dependency-name: "Ccdc.ServiceDefaults"
+    ignore:
+      - dependency-name: "Ccdc.Csd.Protos"
     commit-message:
       # Prefix all commit messages with "NO_JIRA"
       prefix: "NO_JIRA"
