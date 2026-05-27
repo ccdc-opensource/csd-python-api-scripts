@@ -23,7 +23,7 @@ issue  ="43",
 pages  ="7233-7241",
 publisher  ="The Royal Society of Chemistry",
 doi  ="10.1039/D0CE00045K",
-url  ="http://dx.doi.org/10.1039/D0CE00045K",
+url  ="https://dx.doi.org/10.1039/D0CE00045K",
 """
 # For now, to prevent deprecation warnings tripping things up
 import warnings
