@@ -33,7 +33,7 @@ updates:
       - dependency-name: "Ccdc.Csd.Protos"
     commit-message:
       # Prefix all commit messages with "NO_JIRA"
-      prefix: "NO_JIRA"
+      prefix: "fix(NO_JIRA)"
 
   # Enable version updates for NPM
   - package-ecosystem: "npm"
@@ -60,4 +60,4 @@ updates:
       timezone: "Europe/London"
     commit-message:
       # Prefix all commit messages with "NO_JIRA"
-      prefix: "NO_JIRA"
+      prefix: "ci(NO_JIRA)"
