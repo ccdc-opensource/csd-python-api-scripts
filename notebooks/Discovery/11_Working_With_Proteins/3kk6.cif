@@ -4,7 +4,7 @@ _entry.id   3KK6
 # 
 _audit_conform.dict_name       mmcif_pdbx.dic 
 _audit_conform.dict_version    5.329 
-_audit_conform.dict_location   http://mmcif.pdb.org/dictionaries/ascii/mmcif_pdbx.dic 
+_audit_conform.dict_location   https://mmcif.pdb.org/dictionaries/ascii/mmcif_pdbx.dic
 # 
 loop_
 _database_2.database_id 
@@ -30416,15 +30416,15 @@ _software.location
 _software.language 
 _software.citation_id 
 1 DENZO       .     ?                          package 'Zbyszek Otwinowski' hkl@hkl-xray.com            'data reduction'  
-http://www.hkl-xray.com/                    ?   ? 
+https://www.hkl-xray.com/                    ?   ?
 2 SCALEPACK   .     ?                          package 'Zbyszek Otwinowski' hkl@hkl-xray.com            'data scaling'    
-http://www.hkl-xray.com/                    ?   ? 
+https://www.hkl-xray.com/                    ?   ?
 3 PHASER      1.3.3 'Wed Jul 23 12:36:49 2008' program 'Randy J. Read'      cimr-phaser@lists.cam.ac.uk phasing           
-http://www-structmed.cimr.cam.ac.uk/phaser/ ?   ? 
+https://www-structmed.cimr.cam.ac.uk/phaser/ ?   ?
 4 PHENIX      .     ?                          package 'Paul D. Adams'      PDAdams@lbl.gov             refinement        
-http://www.phenix-online.org/               C++ ? 
+https://www.phenix-online.org/               C++ ?
 5 PDB_EXTRACT 3.005 'June 11, 2008'            package PDB                  help@deposit.rcsb.org       'data extraction' 
-http://sw-tools.pdb.org/apps/PDB_EXTRACT/   C++ ? 
+https://sw-tools.pdb.org/apps/PDB_EXTRACT/   C++ ?
 # 
 _pdbx_entry_details.entry_id                 3KK6 
 _pdbx_entry_details.nonpolymer_details       ? 
