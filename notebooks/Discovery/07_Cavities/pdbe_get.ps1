@@ -4,7 +4,7 @@
     
     $pdb_code = $pdb_code.ToLower()
  
-    $uri = [System.Uri]"http://www.ebi.ac.uk/pdbe/entry-files/download/pdb${pdb_code}.ent"
+    $uri = [System.Uri]"https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${pdb_code}.ent"
 
     $pdb_file = Join-Path -Path $(Convert-Path '.') -ChildPath $uri.Segments[-1]  # Absolute path for output file
  

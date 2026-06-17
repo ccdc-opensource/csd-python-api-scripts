@@ -1,6 +1,6 @@
 #
 # This script can be used for any purpose without limitation subject to the
-# conditions at http://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
+# conditions at https://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
 #
 # This permission notice and the following statement of attribution must be
 # included in all copies or substantial portions of this script.
@@ -147,7 +147,7 @@ def get_sdf_hetid(pdbid, hetid, pdb_lig_filename):
 
     hetid = str(hetid)
     sflag = False
-    url = "http://ligand-expo.rcsb.org/files/%s/%s/isdf/" % (
+    url = "https://ligand-expo.rcsb.org/files/%s/%s/isdf/" % (
         hetid[0], hetid)
 
     try:
