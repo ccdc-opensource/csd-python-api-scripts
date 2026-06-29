@@ -35,6 +35,7 @@ Examples:
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 from typing import Any
 
@@ -275,23 +276,45 @@ def _write_cif_file(output_path: Path, lines: list[str]) -> None:
     output_path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def _validated_output_path(output_dir: Path, refcode: str) -> Path:
-    base_dir = output_dir.expanduser().resolve()
-    candidate = (base_dir / f"{refcode}.cif").resolve()
-    try:
-        candidate.relative_to(base_dir)
-    except ValueError as exc:
-        raise ValueError(f"Refusing to write outside output directory: {candidate}") from exc
-    return candidate
+_SAFE_REFCODE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9]{1,19}$")
 
 
-def export_full_cif_from_csd(refcode: str, output_path: Path) -> dict[str, Any]:
+def _sanitize_refcode(refcode: str) -> str:
+    """Ensure refcode contains only safe alphanumeric characters."""
+    if not _SAFE_REFCODE_RE.match(refcode):
+        raise ValueError(
+            f"Invalid refcode {refcode!r}: must be 2-20 alphanumeric characters starting with a letter"
+        )
+    return refcode
+
+
+def _safe_output_dir(raw_path: str) -> Path:
+    """Resolve and validate output directory, rejecting path traversal."""
+    # Only allow relative paths under the current working directory
+    if raw_path != Path(raw_path).as_posix().replace("\\", "/"):
+        cleaned = Path(raw_path).as_posix()
+    else:
+        cleaned = raw_path
+    if ".." in cleaned.split("/"):
+        raise ValueError(f"Path traversal not allowed in output directory: {raw_path!r}")
+    resolved = Path.cwd() / cleaned
+    resolved = resolved.resolve()
+    cwd = Path.cwd().resolve()
+    if not str(resolved).startswith(str(cwd)):
+        raise ValueError(f"Output directory must be under working directory: {resolved}")
+    return resolved
+
+
+def export_full_cif_from_csd(refcode: str, output_dir: Path) -> dict[str, Any]:
     """Export a CSD structure to CIF with occupancy and disorder metadata."""
     from ccdc.io import EntryReader
 
+    safe_name = _sanitize_refcode(refcode)
+    output_path = output_dir / f"{safe_name}.cif"
+
     with EntryReader("CSD") as reader:
-        entry = reader.entry(refcode)
-        crystal = reader.crystal(refcode)
+        entry = reader.entry(safe_name)
+        crystal = reader.crystal(safe_name)
 
     molecule = crystal.disordered_molecule or crystal.molecule
     disorder_map = _build_disorder_map(crystal)
@@ -324,12 +347,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    output_dir = Path(args.output_dir)
+    output_dir = _safe_output_dir(args.output_dir)
 
     print(f"Licence requirement: {LICENSE_REQUIREMENT}")
     for refcode in args.refcodes:
-        output_path = _validated_output_path(output_dir, refcode)
-        summary = export_full_cif_from_csd(refcode, output_path)
+        summary = export_full_cif_from_csd(refcode, output_dir)
         print(
             f"Exported {summary['refcode']} -> {summary['output']} "
             f"(atoms={summary['n_atoms']}, partial_occ={summary['n_partial_occupancy']}, bonds={summary['n_bonds']})"
