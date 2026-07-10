@@ -40,8 +40,6 @@ from pathlib import Path
 from typing import Any
 
 
-LICENSE_REQUIREMENT = "CSD-Materials or another licence tier with CSD Python API database access"
-
 
 def _escape_cif_string(value: str | None) -> str:
     return (value or "?").replace("'", "''")
@@ -349,7 +347,6 @@ def main() -> None:
     args = parse_args()
     output_dir = _safe_output_dir(args.output_dir)
 
-    print(f"Licence requirement: {LICENSE_REQUIREMENT}")
     for refcode in args.refcodes:
         summary = export_full_cif_from_csd(refcode, output_dir)
         print(
