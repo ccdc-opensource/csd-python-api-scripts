@@ -2,7 +2,13 @@ from pathlib import Path
 
 from ccdc.pharmacophore import Pharmacophore
 
+
 def search(query_file: Path, database_file: Path):
+    """
+    This is here as an example for users to perform a simple CrossMiner
+    pharmacophore search using the CCDC Python API.
+    It is not used in the main workflow.
+    """
     settings = Pharmacophore.Search.Settings()
     settings.max_hit_structures = 20
     settings.max_hits_per_structure = 1

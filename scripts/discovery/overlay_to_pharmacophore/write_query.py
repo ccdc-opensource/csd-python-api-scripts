@@ -12,6 +12,7 @@ class FeaturesToCrossMinerQuery:
         {}
     FEATURE_SUBSTRUCTURE_END
     """
+
     def __init__(
             self,
             pharm_feature_points: list[PharmFeaturePoint],
@@ -57,7 +58,6 @@ class FeaturesToCrossMinerQuery:
                 f"No feature definition file '{filename}' found in {self.feature_definitions}."
             )
         return matches[0]
-
 
     @staticmethod
     def _create_feature_vector_text(feature: PharmFeaturePoint) -> str:

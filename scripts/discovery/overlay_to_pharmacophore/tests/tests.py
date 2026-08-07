@@ -20,7 +20,7 @@ def run_from_repo_root(monkeypatch):
 
 @pytest.fixture
 def overlay_data(tmp_path) -> OverlayData:
-    """Overlay/pharmacophore file locations for the bundled ``job1`` example."""
+    """Overlay/pharmacophore file locations for the job1 example."""
     return OverlayData(
         input_folder=JOB_FOLDER,
         output_folder=tmp_path,
@@ -64,7 +64,7 @@ def test_projected_features_have_virtual_points(features):
 
 
 def test_unprojected_acceptors_have_no_virtual_points(overlay_data):
-    """With ``projected=False`` acceptors are kept as plain points."""
+    """With `projected=False` acceptors are kept as single points."""
     features = OverlayToPharmFeatures(overlay_data, projected=False).features
     acceptors = [f for f in features if f.label.startswith("acceptor")]
     assert acceptors, "No acceptor features extracted from pharmacophore."
@@ -102,4 +102,3 @@ def test_missing_feature_definitions_raises(features, tmp_path):
             feature_definitions=tmp_path / "does_not_exist",
             output_file=tmp_path / "query.cm",
         )
-

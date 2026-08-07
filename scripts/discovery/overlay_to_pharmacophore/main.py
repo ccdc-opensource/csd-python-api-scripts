@@ -1,3 +1,12 @@
+"""
+This script can be used for any purpose without limitation subject to the
+conditions at https://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
+This permission notice and the following statement of attribution must be
+included in all copies or substantial portions of this script.
+
+"date of creation": created by the Cambridge Crystallographic Data Centre
+"""
+
 import argparse
 from pathlib import Path
 
@@ -15,7 +24,8 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Create Pharmacophore Features from a Ligand Overlay"
     )
-    parser.add_argument('-i', '--input_folder', type=str, help='Input file(s) path.')
+    parser.add_argument('-i', '--input_folder', type=str, required=True,
+                        help='Input file(s) path.')
     parser.add_argument('-o', '--output_folder', type=str, default=None,
                         help="Output folder path. Defaults to a 'queries' folder in the current directory.")
     parser.add_argument('-f', '--feature_definitions', type=str, required=True,

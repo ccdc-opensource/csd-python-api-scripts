@@ -9,8 +9,8 @@ The pharmacophore queries are produced to be used with CrossMiner.
 - [CSD Python API](https://downloads.ccdc.cam.ac.uk/documentation/API/) installed.
 - Access to CSD CrossMiner and the feature definitions (`.cpf`) files.
 - Access to the CSD Ligand Overlay Tool.
-  
-## Licensing Requirements 
+
+## Licensing Requirements
 
 CSD-Discovery, CSD-Enterprise and Research Partner suites would all be sufficient.
 
@@ -36,11 +36,13 @@ written to a `queries` folder created in the current directory.
 * `cluster`: Cluster the similar pharmacophore features based on proximity
 * `projected`: Treat pharmacophore features as projected when appropriate e.g. acceptors and donors
 
-There is also the option to specify a specific Ligand Overlay from all the results. If this is not specified, all overlays are used.
+There is also the option to specify a specific Ligand Overlay from all the results. If this is not specified, all
+overlays are used.
 When all overlays are used, the pharmacophore query will be a union of all the features from all the overlays.
 These features are then clustered based on proximity AND prevalence.
 
 ### Using the Queries Generated
 
-If you would like to use the queries generated with this tool, they can be opened in CrossMiner to run a search. 
-A file `crossminer_search.py` has also been provided which contains a Python function for the most simply kind of CrossMiner search.
+If you would like to use the queries generated with this tool, they can be opened in CrossMiner to run a search.
+A file `crossminer_search.py` has also been provided which contains a Python function for the most simply kind of
+CrossMiner search.

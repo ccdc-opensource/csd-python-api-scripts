@@ -53,13 +53,13 @@ class PharmFeaturePoint(np.ndarray):
         self.label = getattr(obj, 'label', None)
         self.virtual_point = getattr(obj, 'virtual_point', None)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"PharmFeaturePoint({self.x}, {self.y}, {self.z}, "
-            f"label={self.label}, virtual_points={self.virtual_point}), "
+            f"label={self.label}, virtual_point={self.virtual_point}), "
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     @property
