@@ -1,3 +1,12 @@
+"""
+This script can be used for any purpose without limitation subject to the
+conditions at https://www.ccdc.cam.ac.uk/Community/Pages/Licences/v2.aspx
+This permission notice and the following statement of attribution must be
+included in all copies or substantial portions of this script.
+
+"07/08/2026": created by the Cambridge Crystallographic Data Centre
+"""
+
 from pathlib import Path
 
 from ccdc.pharmacophore import Pharmacophore
