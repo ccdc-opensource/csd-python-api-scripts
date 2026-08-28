@@ -27,7 +27,7 @@ jobs:
             echo "${delimiter}"
           } >> "$GITHUB_ENV"
       - name: Check pull request files with commit hook action
-        uses: ccdc-opensource/commit-hooks@v7
+        uses: ccdc-opensource/commit-hooks@v8
         with:
           commitMessage: ${{ env.commit_message }}
           # licenseCheck: true
