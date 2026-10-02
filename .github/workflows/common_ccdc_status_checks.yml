@@ -30,4 +30,4 @@ jobs:
         uses: ccdc-opensource/commit-hooks@v8
         with:
           commitMessage: ${{ env.commit_message }}
-          # licenseCheck: true
+          # licenceCheck: true
