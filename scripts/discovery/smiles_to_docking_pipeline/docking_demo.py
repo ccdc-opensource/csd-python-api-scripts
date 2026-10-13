@@ -31,13 +31,13 @@ def dock_single_ligand(protein_file, ligand_file, results_dir='results'):
     settings.add_protein_file(protein_file)
     settings.add_ligand_file(ligand_file)
 
-    ASP271 = [
+    ALA149 = [
         res for res in settings.proteins[0].residues
-        if res.identifier == 'A:ASP271'
+        if res.identifier == 'A:ALA149'
     ][0]
 
     settings.binding_site = settings.BindingSiteFromResidue(
-        settings.proteins[0], ASP271, 8.0
+        settings.proteins[0], ALA149, 8.0
     )
 
     settings.output_directory = results_dir
