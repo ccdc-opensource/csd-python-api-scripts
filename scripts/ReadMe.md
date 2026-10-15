@@ -31,6 +31,8 @@ Various scripts with no specific licence requirements that may be useful for a v
 |--------|-------------|
 | Find Binding Conformation | Generates idealized conformers for ligands and evaluates their RMSD to the conformation in the PDB. |
 | GOLD-multi | Use the CSD Docking API and the multiprocessing module to parallelize GOLD docking. |
+| Overlay to Pharmacophore | Generates a CrossMiner Pharmacophore query from a Ligand Overlay output. |
+| SMILES to Docking Pipeline | Virtual Workshop on creating a pipeline to dock multiple ligands from SMILES strings. |
 
 ## Materials
 
