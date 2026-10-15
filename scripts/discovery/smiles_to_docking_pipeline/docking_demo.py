@@ -77,5 +77,5 @@ def overlay_separate_files(*mol_files):
 if __name__ == '__main__':
     for name, smiles in example_ligands.items():
         smiles_to_3d(smiles, name)
-        dock_single_ligand('data/4hzr_prepared.cif', f'{name}.mol', f'{name}_results')
+        dock_single_ligand('data/7L25_prepared.cif', f'{name}.mol', f'{name}_results')
     overlay_separate_files('Gefitinib.mol', 'Erlotinib.mol', 'Afatinib.mol')
