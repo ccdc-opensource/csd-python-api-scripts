@@ -5,7 +5,10 @@ A molecular simplifier, akin to a "ribbon"-type protein representation, designed
 `Simplifier` takes a set of user-selected atoms in a molecule and creates a reusable SMARTS simplification rule and connectivity skeleton. This rule can then be applied to any crystal structure
 containing the same molecular substructure (such as polymorphs, solvates/hydrates, salts, or co-crystals) to replace the full molecule with a simplified skeletal representation.
 
-Information in the publication along with a set of guidelines in the supporting information "Simplifying crystal structures: a new tool for visualising packing motifs in molecular crystals as skeletal frameworks" DOI: <https://doi.org/10.1039/d6ce00813e>
+Information in the publication and guidelines in its supporting information:
+"Simplifying crystal structures: a new tool for visualising packing motifs in
+molecular crystals as skeletal frameworks"
+(DOI: <https://doi.org/10.1039/d6ce00813e>).
 
 ## Setup in Mercury
 
@@ -14,6 +17,8 @@ Information in the publication along with a set of guidelines in the supporting 
 3. Under **Additional Mercury Script Locations**, click **Add Location**, select the parent folder that contains the `simplifier` directory, and click **Save**.
 4. In the **CSD Python API** menu in Mercury, you will now see **simplifier** as a submenu containing `define_simplifier.py`, `use_simplifier.py`, and `use_simplifier_remove_unmatched.py`. We
    recommend starting with `define_simplifier.py`.
+
+This has been tested and validated against the 2026.2 version of Mercury and adjacent CSD Python API 3.0.8
 
 ## Mercury Workflow
 
@@ -48,19 +53,27 @@ python simplifier.py <idents...> [options]
 
 ### CLI Arguments
 
-| Argument                    | Description                                                                                                                                                                                |
-|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `idents`                    | One or more CSD refcodes (e.g., `HXACAN28`), structure files (`.cif`, `.mol2`), a `.gcd` refcode list file, or `cwd` to process all `.cif`/`.mol2` files in the current working directory. |
-| `-s`, `--smarts`            | Override the SMARTS simplification string (defaults to the first matching entry found in `simplifier_data.json`).                                                                          |
-| `-c`, `--connectivity`      | Override the connectivity string (e.g., `011223`). Defaults to the cached connectivity or sequential chain connectivity.                                                                   |
-| `-od`, `--output_directory` | Directory to write simplified output structures (`<ident>_s.<ext>` and `combined.mol2`). Defaults to the current working directory.                                                        |
-| `-ff`, `--file_format`      | Output file format for individual simplified structures (default: `mol2`).                                                                                                                 |
-| `-p`, `--parameters`        | Path to a JSON file containing CLI parameter overrides.                                                                                                                                    |
-| `-v`, `--verbose`           | Print progress for each structure processed.                                                                                                                                               |
-| `-rm`, `--remove_unmatched` | Remove unmatched molecular components from the simplified crystal structure.                                                                                                               |
-| `-ma`, `--match_all`        | Match each molecule independently rather than using the same SMARTS for all.                                                                                                               |
-| `-as`, `--add_smarts`       | Add a SMARTS rule (`ident` + `-s <smarts>` + optional `-c <connectivity>`) directly to `simplifier_data.json` and exit.                                                                    |
-| `-sd`, `--simplifier_data`  | Path to the `simplifier_data.json` cache file (defaults to `simplifier_data.json` in the `simplifier` script directory).                                                                   |
+- `idents`: One or more CSD refcodes (e.g., `HXACAN28`), structure files
+  (`.cif`, `.mol2`), a `.gcd` refcode list file, or `cwd` to process all
+  `.cif` and `.mol2` files in the current working directory.
+- `-s`, `--smarts`: Override the SMARTS simplification string. Defaults to the
+  first matching entry in `simplifier_data.json`.
+- `-c`, `--connectivity`: Override the connectivity string (e.g., `011223`).
+  Defaults to the cached connectivity or sequential chain connectivity.
+- `-od`, `--output_directory`: Directory for simplified output structures
+  (`<ident>_s.<ext>` and `combined.mol2`). Defaults to the current directory.
+- `-ff`, `--file_format`: Output format for individual structures (default:
+  `mol2`).
+- `-p`, `--parameters`: Path to a JSON file containing CLI parameter overrides.
+- `-v`, `--verbose`: Print progress for each structure processed.
+- `-rm`, `--remove_unmatched`: Remove unmatched molecular components from the
+  simplified crystal structure.
+- `-ma`, `--match_all`: Match each molecule independently rather than using the
+  same SMARTS for all.
+- `-as`, `--add_smarts`: Add a SMARTS rule (`ident` + `-s <smarts>` and optional
+  `-c <connectivity>`) to `simplifier_data.json`, then exit.
+- `-sd`, `--simplifier_data`: Path to the `simplifier_data.json` cache file.
+  Defaults to that file in the `simplifier` script directory.
 
 ### CLI Examples
 
@@ -84,9 +97,9 @@ python simplifier.py HYQUIN08 -as -s "[#8H:0]c1ccc([#8H:1])cc1" -c "01"
 
 ## Cache Storage (`simplifier_data.json`)
 
-- **In Mercury**: `MercuryInterface` stores the cache at `<Mercury working directory>/../../simplifier_cache/simplifier_data.json` so that rules defined in one Mercury session remain accessible across
+- **In Mercury**: `MercuryInterface` stores the cache in the user space `$PROFILE/simplifier_cache/simplifier_data.json` so that rules defined in one Mercury session remain accessible across
   different structures and runs.
-- **In the CLI**: Defaults to `scripts/simplifier/simplifier_data.json` unless overridden with `-sd` / `--simplifier_data`.
+- **In the CLI**: Defaults to `<script_location>/simplifier/simplifier_data.json` unless overridden with `-sd` / `--simplifier_data`.
 - **Privacy Note**: `simplifier_data.json` contains SMARTS/SMILES strings for structures you have defined. Do not share this file between organisations if it contains proprietary chemical structures.
 
 ## Files
@@ -103,7 +116,7 @@ python simplifier.py HYQUIN08 -as -s "[#8H:0]c1ccc([#8H:1])cc1" -c "01"
 Run the unit test suite using the CSD Python API Python environment:
 
 ```bash
-python -m unittest discover -s scripts/simplifier/tests -v
+python -m unittest discover -s simplifier/tests -v
 ```
 
 ## Author
