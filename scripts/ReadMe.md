@@ -24,6 +24,7 @@ Various scripts with no specific licence requirements that may be useful for a v
 | Refcodes With Properties | A script for generating refcode lists with specific properties from an easy-to-read control file. |
 | Show semiconductor properties | Displays semiconductor properties for the structure currently loaded in Mercury. |
 | Void Search | A script to search on pre-calculated Void properties. |
+| Simplifier | Simplify molecular complexity by creating skeletal frames. Works in Mercury and CLI. Information in the publication "Simplifying crystal structures: a new tool for visualising packing motifs in molecular crystals as skeletal frameworks" DOI: <https://doi.org/10.1039/d6ce00813e> |
 
 ## Discovery
 
