@@ -9,7 +9,7 @@ CSD-Enterprise licence.
 
 ## Getting started
 
-Every example reads prepared input files that are fetched from the RCSB PDB and
+Every example reads prepared input files that are fetched from the RCSB PDB (as mmCIF) and
 cleaned up by a shared script. Run it first:
 
 ```

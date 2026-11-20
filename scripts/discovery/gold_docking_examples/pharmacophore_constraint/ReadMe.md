@@ -27,7 +27,7 @@ python pharmacophore_constraint.py
 | `pharmacophore_constraint.py` | The example. |
 | `1KE7_protein.mol2` | Prepared CDK2 coordinates, written by `prepare_inputs.py`. |
 | `1KE7_reference.mol2` | LS3 in its crystallographic pose; the docking input and the RMSD reference. |
-| `1ke7.pdb` | Original protein structure as downloaded from the PDB. |
+| `1KE7.cif` | Original protein structure, downloaded from the RCSB PDB in mmCIF format by `prepare_inputs.py`. |
 | `LS3_ideal.sdf` | LS3 coordinates from the PDB chemical component dictionary, in an idealised geometry rather than the bound one. |
 | `reference_LS3.mol2` | Earlier copy of the LS3 bound coordinates, kept from the original version of this example. |
 

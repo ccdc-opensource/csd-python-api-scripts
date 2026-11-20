@@ -15,7 +15,7 @@ import urllib.request
 from ccdc import io
 from ccdc.protein import Protein
 
-PDB_DOWNLOAD_URL = 'https://files.rcsb.org/download/{code}.pdb'
+PDB_DOWNLOAD_URL = 'https://files.rcsb.org/download/{code}.cif'
 
 # PDB entry -> (output directory, het code of the ligand of interest)
 #
@@ -38,13 +38,13 @@ SYSTEMS = {
 }
 
 
-def fetch_pdb(code, directory):
-    """Download a PDB entry, unless it is already present."""
-    pdb_file = os.path.join(directory, f'{code}.pdb')
-    if not os.path.exists(pdb_file):
+def fetch_mmcif(code, directory):
+    """Download a PDB entry as mmCIF, unless it is already present."""
+    cif_file = os.path.join(directory, f'{code}.cif')
+    if not os.path.exists(cif_file):
         print(f'Fetching {code} from the RCSB PDB...')
-        urllib.request.urlretrieve(PDB_DOWNLOAD_URL.format(code=code), pdb_file)
-    return pdb_file
+        urllib.request.urlretrieve(PDB_DOWNLOAD_URL.format(code=code), cif_file)
+    return cif_file
 
 
 def pick_ligand(protein, het_code, keep_metals):
@@ -88,13 +88,13 @@ def prepare(code, directory, het_code, keep_metals=False, force=False):
             print(f'    {path}')
         return protein_file, reference_file
 
-    pdb_file = fetch_pdb(code, directory)
+    cif_file = fetch_mmcif(code, directory)
 
-    protein = Protein.from_file(pdb_file)
+    protein = Protein.from_file(cif_file)
     protein.remove_all_waters()
     protein.remove_unknown_atoms()
 
-    # Bond orders for the HET groups are not in the PDB file, so let the API
+    # Bond orders for the HET groups are not in the mmCIF file, so let the API
     # perceive them before we pull the ligand out.
     protein.detect_ligand_bonds()
 
