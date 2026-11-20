@@ -22,15 +22,16 @@ updates:
       - nuget-github
     # Look for `*.csproj` or `*.sln` files in the `root` directory
     directory: "/"
-    # Check the NuGet registry for updates every day (weekdays)
+    # Check the NuGet registry for updates every hour between 8am and 6pm UTC, Mon-Fri
     schedule:
-      interval: "daily"
-      time: "15:30"
-      timezone: "Europe/London"
+      interval: cron
+      cronjob: "0 8-18 * * 1-5"
     allow:
-      - dependency-name: "Ccdc.ServiceDefaults"
+      - dependency-name: "Ccdc.*"
     ignore:
       - dependency-name: "Ccdc.Csd.Protos"
+      - dependency-name: "Ccdc.DataStandards.CQL.Proto"
+      - dependency-name: "Ccdc.Csd.RequestDetailsContracts"
     commit-message:
       # Prefix all commit messages with "NO_JIRA"
       prefix: "fix(NO_JIRA)"
@@ -50,7 +51,7 @@ updates:
       # Prefix all commit messages with "NO_JIRA"
       prefix: "NO_JIRA"
 
-# Enable version update for GitHub Actions
+  # Enable version update for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     # Check GitHub Actions for updates every day (weekdays)
