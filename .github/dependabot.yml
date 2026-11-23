@@ -22,10 +22,11 @@ updates:
       - nuget-github
     # Look for `*.csproj` or `*.sln` files in the `root` directory
     directory: "/"
-    # Check the NuGet registry for updates every hour between 8am and 6pm UTC, Mon-Fri
+    # Check the NuGet registry for updates every day (weekdays)
     schedule:
-      interval: cron
-      cronjob: "0 8-18 * * 1-5"
+      interval: "daily"
+      time: "15:30"
+      timezone: "Europe/London"
     allow:
       - dependency-name: "Ccdc.*"
     ignore:
