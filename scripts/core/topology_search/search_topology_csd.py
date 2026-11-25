@@ -23,12 +23,11 @@ import sys
 
 import ccdc.utilities
 import ccdc.io
-import search_tools
 import sqlite3
-from pathlib import Path
 import pandas as pd
 
 DATABASE_PATHS = sorted(Path(ccdc.io.csd_directory()).glob("*.sqlite"))
+
 
 def string_to_query(variable: str, table: str, input: str):
     """
@@ -40,6 +39,7 @@ def string_to_query(variable: str, table: str, input: str):
         spec = search_tools.query_string_to_tuple(input, 3)
         return f"{table}.{variable} BETWEEN {spec[0]} AND {spec[1]}"
     return f"{table}.{variable} LIKE '%{input}%'"
+
 
 def perform_csd_topology_search(
         query_dict: dict = {},
@@ -71,24 +71,21 @@ def perform_csd_topology_search(
         results.append(cur.fetchall())
 
     tsv_columns = ["Identifier", "Vertex Symbol", "Unique Identifier", "RCSR Assignment", "Max Dimensionality"]
-    df = pd.DataFrame([a for b in results for a in b], columns = tsv_columns)
+    df = pd.DataFrame([a for b in results for a in b], columns=tsv_columns)
     if interface:
         search_tools.write_tsv_from_dataframe(df, interface.output_tsv_file)
         search_tools.write_search_result_html(
-        title="Search",
-        data=f"""
+            title="Search",
+            data=f"""
         Query: {query_dict} ({query}) <br>
         Result:{len(df)} hits in {len(df["Identifier"].unique())} structures in {len(results)} databases
         """,
-        path=interface.output_html_file)
+            path=interface.output_html_file)
     return df
 
-test_query_dict = {"MaxDimensionality": "3"}
-
-perform_csd_topology_search(test_query_dict)
 
 CSD_QUERY_DICT = {
-      "VertexSymbol":{
+      "VertexSymbol": {
             "label": "Vertex Symbol",
             "header": "VertexSymbol",
             "hovertext": """
@@ -96,29 +93,34 @@ CSD_QUERY_DICT = {
  HTML format - e.g. '4(4<sup>4</sup>.8<sub>2</sub><sup>2</sup>)'
  is the layers/sql network"""
             },
-      "RcsrAssignment":{
+      "RcsrAssignment": {
             "label": "RCSR Assignment",
             "header": "RcsrAssignment",
             "hovertext": "The exact three letter code from the RCSR list \n (where available)"
       },
-      "MaxDimensionality":{
+      "MaxDimensionality": {
             "label": "Dimensionality",
             "header": "MaxDimensionality",
             "hovertext": "The number of dimensions that are spanned by the \n connected network"
       },
-      "UniqueIdentifier":{
+      "UniqueIdentifier": {
             "label": "Unique Identifier",
             "header": "UniqueIdentifier",
             "hovertext": "a generated 8 letter code from SHA1 hash of the \n vertex and cs10 representations"
       }
       }
 
+
 def main():
     search_info = search_tools.get_query_text_with_hovertext(CSD_QUERY_DICT)
     if len(sys.argv) > 3 and sys.argv[3].endswith(".m2a"):
-        perform_csd_topology_search(search_info, interface = ccdc.utilities.ApplicationInterface())
+        perform_csd_topology_search(search_info, interface=ccdc.utilities.ApplicationInterface())
     else:
-        perform_csd_topology_search(search_info)
+        df = perform_csd_topology_search(search_info)
+        df.to_csv("output.csv")
+        print(df.head().to_markdown())
+        print("full results available at ./output.csv")
+
 
 if __name__ == "__main__":
     main()
